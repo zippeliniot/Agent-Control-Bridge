@@ -190,26 +190,26 @@ werden.
 
 ## Akzeptanzkriterien
 
-- [ ] `_board_rows()` liefert `machine` pro Zeile (gleiche Ermittlungslogik
+- [x] `_board_rows()` liefert `machine` pro Zeile (gleiche Ermittlungslogik
       wie Gesamtübersicht, kein doppelter Audit-Scan).
-- [ ] `_board_text()` (CLI, `bridge board`) crasht nicht, druckt weiterhin
+- [x] `_board_text()` (CLI, `bridge board`) crasht nicht, druckt weiterhin
       keine Maschinen-Spalte.
-- [ ] Web-UI „Board – wartet auf Weitergabe/Kopie“ und „Offene Aufträge
-      außerhalb des Boards“ zeigen je eine Maschinen-Spalte.
-- [ ] `overview_payload()` liefert zusätzliches `last_activity_ts`-Feld
+- [x] Web-UI „Board – wartet auf Weitergabe/Kopie” und „Offene Aufträge
+      außerhalb des Boards” zeigen je eine Maschinen-Spalte.
+- [x] `overview_payload()` liefert zusätzliches `last_activity_ts`-Feld
       (Zahl/`null`), bestehendes `last_activity` unverändert.
-- [ ] Spaltenköpfe der Tabelle „Alle Projekte – Gesamtübersicht“ (außer
+- [x] Spaltenköpfe der Tabelle „Alle Projekte – Gesamtübersicht” (außer
       `#`) klickbar, 3-Stufen-Sortierung (auf/ab/Standard).
-- [ ] „Aktiv vor“ sortiert chronologisch über `last_activity_ts`, nicht
+- [x] „Aktiv vor” sortiert chronologisch über `last_activity_ts`, nicht
       alphabetisch über den Anzeigetext.
-- [ ] Inaktiv/aktiv-Trennzeile nur bei Standard-Sortierung sichtbar, bei
+- [x] Inaktiv/aktiv-Trennzeile nur bei Standard-Sortierung sichtbar, bei
       explizitem Spalten-Sort ausgeblendet.
-- [ ] Bestehende Filter bleiben bei aktivem Spalten-Sort wirksam.
-- [ ] `#f-projekt` ist ein `<select>` mit „(alle)“-Option, Werte dynamisch
+- [x] Bestehende Filter bleiben bei aktivem Spalten-Sort wirksam.
+- [x] `#f-projekt` ist ein `<select>` mit „(alle)”-Option, Werte dynamisch
       aus geladenen Daten abgeleitet, kein hartkodierter Projekt-Katalog.
-- [ ] Status- und Auftrag-Filter unverändert (weiterhin Freitext/
+- [x] Status- und Auftrag-Filter unverändert (weiterhin Freitext/
       Teilstring).
-- [ ] `CCB-STEUERCHAT-REFERENZ.md` Teil 4 aktualisiert.
-- [ ] Bestehende Tests weiterhin grün, neue Tests grün, frischer Klon
+- [x] `CCB-STEUERCHAT-REFERENZ.md` Teil 4 aktualisiert.
+- [x] Bestehende Tests weiterhin grün, neue Tests grün, frischer Klon
       verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.

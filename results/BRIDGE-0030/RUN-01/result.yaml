@@ -1,0 +1,49 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0030
+project_id: codex-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: Codex-Control-Bridge
+branch: main
+head: 39d9ba50640a780d101a248827b9ffccb5d3ac94
+executor: claude-code
+started_at: '2026-09-13T13:21:12Z'
+ended_at: '2026-09-13T14:12:10Z'
+created_by: claude-code@unknown
+base_head: 8233cbc
+commits:
+- sha: 82fefa6c153918a2f24be1557431a532d1dfacd0
+  message: 'Ops: BRIDGE-0029 archive (Steuerchat-Aktion via Web-UI)'
+- sha: ce437a09988796bf1641de9e43b556861bb80852
+  message: 'Work-Package BRIDGE-030: Web-UI Maschine/Sortierung/Dropdown'
+- sha: a1e19325ac7ea226070e08b5052d7dc39e295a9b
+  message: 'Ops: BRIDGE-0030 task create + run start'
+- sha: 159057cb509c8dd0e6587f54051916bbd3bcc147
+  message: 'BRIDGE-030: Maschinen-Spalte in Board/Other, last_activity_ts, sortierbare
+    OV-Spalten, Projekt-Dropdown'
+- sha: 17eb39c946ce5b5be1cab588dbaa9f613ee193d5
+  message: 'BRIDGE-030: Neue Tests fuer Maschinen-Spalte, last_activity_ts, Sort,
+    Projekt-Dropdown'
+- sha: 39d9ba50640a780d101a248827b9ffccb5d3ac94
+  message: 'BRIDGE-030: CCB-STEUERCHAT-REFERENZ.md Teil 4 aktualisiert'
+changed_files:
+- audit/audit.jsonl
+- docs/CCB-STEUERCHAT-REFERENZ.md
+- results/BRIDGE-0030/RUN-01/heartbeat.json
+- src/bridge/cli.py
+- src/bridge/webui.py
+- tasks/BRIDGE-0029/task.yaml
+- tasks/BRIDGE-0030/task.yaml
+- tests/test_cli.py
+- tests/test_webui.py
+- work-packages/BRIDGE-030.md
+summary: 'Maschinen-Spalte jetzt auch in Board und ''Offene Auftraege ausserhalb des
+  Boards'' (bestehende Ermittlungslogik aus der Gesamtuebersicht wiederverwendet,
+  _board_text() Terminal-Ausgabe bewusst ohne neue Spalte). overview_payload() liefert
+  zusaetzlich rohen Zeitstempel ''last_activity_ts'' fuer korrekte chronologische
+  Sortierung. Spaltenkoepfe der Gesamtuebersicht-Tabelle klickbar sortierbar (3-Stufen:
+  auf/ab/Standard), Trennzeile aktiv/inaktiv nur bei Standard-Sortierung sichtbar.
+  Projekt-Filter von Freitext zu <select> mit dynamisch aus geladenen Daten abgeleiteten
+  Werten (kein hartkodierter Projekt-Katalog). Status- und Auftrag-Filter bewusst
+  unveraendert (Teilstring-Suche bleibt nuetzlich bzw. Wertemenge zu gross).'
