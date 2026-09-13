@@ -1,0 +1,58 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0030
+project_id: codex-control-bridge
+title: Web-UI - Maschinen-Spalte ueberall, sortierbare Uebersicht, Projekt-Dropdown
+description: 'Drei fachliche Web-UI-Wuensche aus dem Steuerchat, gebuendelt da alle
+  drei src/bridge/webui.py betreffen. (1) Maschinen-Spalte, die aktuell nur in "Alle
+  Projekte - Gesamtuebersicht" existiert, zusaetzlich in "Board - wartet auf Weitergabe/Kopie"
+  und "Offene Auftraege ausserhalb des Boards" - bestehende Ermittlungslogik (_overview_audit_scan
+  + _overview_task_info) wiederverwenden, _board_rows()-Tupel um machine erweitern,
+  _board_text() (CLI-Textausgabe) entsprechend anpassen (korrektes Entpacken, bewusst
+  KEINE neue Terminal-Spalte). (2) overview_payload() liefert zusaetzlich einen rohen
+  Zeitstempel last_activity_ts (Unix-Epoch oder null), da der bestehende last_activity-Wert
+  nur ein bereits formatierter Anzeigetext ("vor 5 Min") ist und fuer chronologische
+  Sortierung ungeeignet waere. (3) Spaltenkoepfe der Tabelle "Alle Projekte - Gesamtuebersicht"
+  (ausser #) klickbar sortierbar, 3-Stufen (auf/ab/Standard), Prio ueber Rang, Aktiv
+  vor ueber last_activity_ts, Rest alphabetisch. Die inaktiv/aktiv-Trennzeile nur
+  bei Standard-Sortierung sichtbar. Bestehende Filter bleiben bei aktivem Spalten-Sort
+  wirksam. (4) Projekt-Filter (#f-projekt) von Freitext-Input zu <select> mit "(alle)"-Option,
+  Werte dynamisch aus den aktuell geladenen Zeilen abgeleitet (gleiches Muster wie
+  das bestehende updateStatusList() fuer den Status-Filter) - kein hartkodierter Projekt-Katalog.
+  Status- und Auftrag-Filter bewusst UNVERAENDERT: Status bleibt Freitext + Datalist
+  (Teilstring-Suche wie "WAITING" faengt mehrere Zustaende gleichzeitig, waere mit
+  starrem <select> nicht mehr moeglich), Auftrag bleibt Freitext (zu viele/wachsende
+  Werte). Details in work-packages/BRIDGE-030.md.'
+task_class: FEATURE
+repository: Codex-Control-Bridge
+branch: main
+git:
+  expected_head: 8233cbc
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- _board_rows() liefert machine pro Zeile (gleiche Ermittlungslogik wie Gesamtuebersicht,
+  kein doppelter Audit-Scan)
+- _board_text() (CLI, bridge board) crasht nicht, druckt weiterhin keine Maschinen-Spalte
+- Web-UI "Board" und "Offene Auftraege ausserhalb des Boards" zeigen je eine Maschinen-Spalte
+- overview_payload() liefert zusaetzliches last_activity_ts-Feld (Zahl/null), bestehendes
+  last_activity unveraendert
+- 'Spaltenkoepfe der Tabelle "Alle Projekte - Gesamtuebersicht" (ausser #) klickbar,
+  3-Stufen-Sortierung (auf/ab/Standard)'
+- Aktiv vor sortiert chronologisch ueber last_activity_ts, nicht alphabetisch ueber
+  den Anzeigetext
+- Inaktiv/aktiv-Trennzeile nur bei Standard-Sortierung sichtbar, bei explizitem Spalten-Sort
+  ausgeblendet
+- Bestehende Filter bleiben bei aktivem Spalten-Sort wirksam
+- '#f-projekt ist ein <select> mit "(alle)"-Option, Werte dynamisch aus geladenen
+  Daten abgeleitet, kein hartkodierter Projekt-Katalog'
+- Status- und Auftrag-Filter unveraendert (weiterhin Freitext/Teilstring)
+- CCB-STEUERCHAT-REFERENZ.md Teil 4 aktualisiert
+- Bestehende Tests weiterhin gruen, neue Tests gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-13T00:00:00Z'
+created_by: browser-claude
