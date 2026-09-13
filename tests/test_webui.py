@@ -344,6 +344,108 @@ class WebUiReadTests(WebUiBase):
         code, body = self.get("/")
         self.assertIn("Prio", body)
 
+    # -- BRIDGE-030: Maschinen-Spalte, last_activity_ts, Sortierung, Dropdown ---
+
+    def test_api_board_board_row_contains_machine(self):
+        """board-Payload: jede Board-Zeile hat ein 'machine'-Feld."""
+        self.make_task("BRIDGE-0901", "WAITING_FOR_COPY_TO_CONTROL")
+        self.start()
+        code, body = self.get("/api/board")
+        self.assertEqual(code, 200)
+        data = json.loads(body)
+        self.assertGreater(len(data["board"]), 0)
+        row = data["board"][0]
+        self.assertIn("machine", row)
+        # Kein Heartbeat, kein Audit mit machine -> '?'
+        self.assertEqual(row["machine"], "?")
+
+    def test_api_board_other_row_contains_machine(self):
+        """board-Payload 'other': jede Zeile hat ein 'machine'-Feld."""
+        self.make_task("BRIDGE-0902", "RUNNING")
+        self.start()
+        code, body = self.get("/api/board")
+        data = json.loads(body)
+        other = [r for r in data["other"] if r["bridge_task_id"] == "BRIDGE-0902"]
+        self.assertEqual(len(other), 1)
+        self.assertIn("machine", other[0])
+
+    def test_api_overview_last_activity_ts_field_present(self):
+        """overview-Payload: last_activity_ts-Feld ist vorhanden (None oder float)."""
+        self.make_task("BRIDGE-0901")
+        self.start()
+        code, body = self.get("/api/overview")
+        self.assertEqual(code, 200)
+        data = json.loads(body)
+        row = next(r for r in data["overview"] if r["bridge_task_id"] == "BRIDGE-0901")
+        self.assertIn("last_activity_ts", row)
+        ts = row["last_activity_ts"]
+        # Immer None oder numerisch (float/int) — niemals ein String
+        self.assertTrue(ts is None or isinstance(ts, (int, float)),
+                        f"last_activity_ts muss None oder numerisch sein, war: {type(ts)}")
+
+    def test_api_overview_last_activity_ts_null_when_no_audit(self):
+        """overview-Payload: last_activity_ts ist null wenn Audit leer und kein Heartbeat."""
+        self.make_task("BRIDGE-0901")
+        # Audit-Datei leeren, damit kein Timestamp aus Audit kommt
+        audit_file = self.tmp / "audit" / "audit.jsonl"
+        if audit_file.exists():
+            audit_file.write_text("", encoding="utf-8")
+        self.start()
+        _, body = self.get("/api/overview")
+        data = json.loads(body)
+        row = next(r for r in data["overview"] if r["bridge_task_id"] == "BRIDGE-0901")
+        self.assertIsNone(row["last_activity_ts"])
+
+    def test_api_overview_last_activity_ts_numeric_with_heartbeat(self):
+        """overview-Payload: last_activity_ts ist eine Zahl wenn Heartbeat vorhanden."""
+        import json as _json
+        from datetime import datetime, timezone
+        self.make_task("BRIDGE-0901", "RUNNING")
+        hb_dir = self.tmp / "results" / "BRIDGE-0901" / "RUN-01"
+        hb_dir.mkdir(parents=True, exist_ok=True)
+        now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        (hb_dir / "heartbeat.json").write_text(_json.dumps({
+            "kind": "bridge_heartbeat", "bridge_task_id": "BRIDGE-0901",
+            "run_id": "RUN-01", "last_seen": now_ts,
+        }), encoding="utf-8")
+        self.start()
+        _, body = self.get("/api/overview")
+        data = _json.loads(body)
+        row = next(r for r in data["overview"] if r["bridge_task_id"] == "BRIDGE-0901")
+        self.assertIsNotNone(row["last_activity_ts"])
+        self.assertIsInstance(row["last_activity_ts"], float)
+
+    def test_api_overview_last_activity_text_unchanged(self):
+        """overview-Payload: 'last_activity' (Anzeigetext) bleibt unveraendert."""
+        self.make_task("BRIDGE-0901")
+        self.start()
+        _, body = self.get("/api/overview")
+        data = json.loads(body)
+        row = next(r for r in data["overview"] if r["bridge_task_id"] == "BRIDGE-0901")
+        # Beides muss vorhanden sein
+        self.assertIn("last_activity", row)
+        self.assertIn("last_activity_ts", row)
+        # Anzeigetext ist ein String (z. B. "?" oder "vor 5 Min")
+        self.assertIsInstance(row["last_activity"], str)
+
+    def test_page_html_machine_column_in_board_table(self):
+        """HTML enthaelt <th>Maschine</th> im Board-Bereich (#board)."""
+        self.start()
+        code, body = self.get("/")
+        self.assertEqual(code, 200)
+        # <th>Maschine</th> muss mindestens zweimal vorkommen (board + other)
+        self.assertGreaterEqual(body.count("Maschine"), 2)
+
+    def test_page_html_select_for_projekt_filter(self):
+        """HTML enthaelt <select id='f-projekt'> (kein <input> mehr) mit (alle)-Option."""
+        self.start()
+        code, body = self.get("/")
+        self.assertEqual(code, 200)
+        self.assertIn('<select id="f-projekt"', body)
+        self.assertIn("(alle)", body)
+        # Kein standalone-input fuer f-projekt mehr
+        self.assertNotIn('<input id="f-projekt"', body)
+
 
 class WebUiActionTests(WebUiBase):
     """RUN-02: POST-Endpunkte task copied / archive / run finish."""
@@ -618,6 +720,63 @@ class WebUiFrontendTests(unittest.TestCase):
         self.assertEqual(webui._Handler._POST_ROUTES["run"], {"finish": "finish"})
 
     # -- seiteneffektfreie Logik per node ------------------------
+
+    # -- BRIDGE-030: Struktur/Regression ----------------------------
+
+    def test_page_html_sort_state_variables_in_script(self):
+        """JS enthaelt ovSortCol und ovSortDir fuer Spalten-Sort (BRIDGE-030)."""
+        self.assertIn("ovSortCol", self.SCRIPT)
+        self.assertIn("ovSortDir", self.SCRIPT)
+
+    def test_page_html_sorted_overview_rows_function(self):
+        """JS enthaelt sortedOverviewRows()-Funktion (BRIDGE-030)."""
+        self.assertIn("sortedOverviewRows", self.SCRIPT)
+
+    def test_page_html_prio_rank_mapping(self):
+        """JS enthaelt PRIO_RANK_OV-Mapping fuer kunden-seitige Prioritaets-Sortierung."""
+        self.assertIn("PRIO_RANK_OV", self.SCRIPT)
+
+    def test_page_html_sort_col_data_attrs_in_ov_table(self):
+        """ov-table hat data-sort-col-Attribute fuer alle sortierbaren Spalten."""
+        for col in ("priority", "projekt", "bridge_task_id", "status",
+                    "machine", "last_activity_ts", "fuehrung"):
+            self.assertIn(f'data-sort-col="{col}"', self.PAGE,
+                          f"Sortierspalte '{col}' fehlt im ov-table-Header")
+
+    def test_page_html_render_ov_headers_called_from_render_overview(self):
+        """renderOverview() ruft renderOvHeaders() auf (Sort-Indikatoren aktualisieren)."""
+        render_ov_body = re.search(
+            r"function renderOverview\(.*?\n\}\n", self.SCRIPT, re.S).group(0)
+        self.assertIn("renderOvHeaders()", render_ov_body)
+
+    def test_page_html_separator_hidden_when_sort_active(self):
+        """ov-sep wird nur bei Standard-Sortierung eingefuegt (isDefaultSort-Bedingung)."""
+        render_ov_body = re.search(
+            r"function renderOverview\(.*?\n\}\n", self.SCRIPT, re.S).group(0)
+        # Trennzeile wird durch isDefaultSort-Flag konditioniert
+        self.assertIn("isDefaultSort", render_ov_body)
+        self.assertIn("ov-sep", render_ov_body)
+
+    def test_page_html_update_projekt_list_function(self):
+        """JS enthaelt updateProjektList()-Funktion (BRIDGE-030)."""
+        self.assertIn("updateProjektList", self.SCRIPT)
+
+    def test_page_html_update_projekt_list_called_from_refresh(self):
+        """refresh() ruft updateProjektList() auf."""
+        refresh_body = re.search(
+            r"async function refresh\(.*?\n\}\n", self.SCRIPT, re.S).group(0)
+        self.assertIn("updateProjektList()", refresh_body)
+
+    def test_page_html_f_projekt_change_listener_present(self):
+        """JS hat einen change-Listener fuer #f-projekt (Absicherung fuer select-Element)."""
+        self.assertIn('"change"', self.SCRIPT)
+
+    def test_page_html_sort_click_handler_for_ov_table(self):
+        """JS hat einen Klick-Handler am #ov-table fuer Spalten-Sort."""
+        self.assertIn("ov-table", self.SCRIPT)
+        self.assertIn("data-sort-col", self.SCRIPT)
+
+    # -- seiteneffektfreie Logik per node ----------------------------
 
     @unittest.skipUnless(_NODE, "node nicht verfügbar")
     def test_filter_rows_projekt_status_id_and_combined(self):

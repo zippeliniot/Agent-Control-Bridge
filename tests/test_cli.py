@@ -770,6 +770,116 @@ class CliPriorityTests(unittest.TestCase):
         rows = _overview_rows(store)
         self.assertEqual(rows[0][7], "MEDIUM")
 
+    # -- BRIDGE-030: Maschinen-Spalte in Board, last_activity_ts in overview ---
+
+    def test_board_rows_includes_machine_question_mark_fallback(self):
+        """_board_rows() liefert machine '?' wenn kein Heartbeat und kein Audit-Eintrag."""
+        from bridge.cli import _board_rows
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")  # WAITING_FOR_HANDOFF_TO_EXECUTOR
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _board_rows(store)
+        self.assertEqual(len(rows), 1)
+        # Tupel hat jetzt 8 Felder; index 7 = machine
+        self.assertEqual(len(rows[0]), 8)
+        self.assertEqual(rows[0][7], "?",
+                         "Kein Heartbeat, kein Audit-Eintrag -> machine muss '?' sein")
+
+    def test_board_rows_machine_from_audit(self):
+        """_board_rows() liest machine aus dem letzten Audit-Eintrag."""
+        import json
+        from bridge.cli import _board_rows
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")
+        # Audit-Eintrag mit machine manuell einfuegen
+        audit_file = self.tmp / "audit" / "audit.jsonl"
+        existing = audit_file.read_text(encoding="utf-8") if audit_file.exists() else ""
+        with audit_file.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({
+                "bridge_task_id": "BRIDGE-0901",
+                "machine": "HAM01",
+                "timestamp": "2026-01-01T12:00:00Z",
+                "event_type": "TEST",
+            }) + "\n")
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _board_rows(store)
+        self.assertEqual(rows[0][7], "HAM01",
+                         "machine soll aus dem Audit-Eintrag kommen")
+
+    def test_board_text_does_not_crash_and_no_machine_column(self):
+        """_board_text() crasht nicht mit dem neuen 8-Tupel und druckt keine Maschinen-Spalte."""
+        from bridge.cli import _board_rows, _board_text
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _board_rows(store)
+        # Muss ohne Exception durchlaufen
+        text = _board_text(rows)
+        self.assertIn("BRIDGE-0901", text)
+        # Keine separate Maschinen-Spalte im Terminal (bewusste Design-Entscheidung)
+        self.assertNotIn("Maschine", text)
+
+    def test_overview_rows_includes_last_activity_ts(self):
+        """_overview_rows() liefert 9-Tupel; index 8 = last_activity_ts (None oder float)."""
+        from bridge.cli import _overview_rows
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _overview_rows(store)
+        # 9-Tupel-Pruefung: Feld muss vorhanden sein
+        self.assertEqual(len(rows[0]), 9)
+        last_ts = rows[0][8]
+        # last_activity_ts ist immer None oder float (nie String/Dict/etc.)
+        # Task create erzeugt Audit-Eintraege mit Timestamps -> float erwartet
+        self.assertTrue(last_ts is None or isinstance(last_ts, float),
+                        f"last_activity_ts muss None oder float sein, war: {type(last_ts)}")
+
+    def test_overview_rows_last_activity_ts_none_without_any_timestamp(self):
+        """_overview_rows() liefert last_activity_ts=None wenn Audit leer und kein Heartbeat."""
+        from bridge.cli import _overview_rows
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")
+        # Audit-Datei leeren, damit kein Timestamp aus Audit kommt
+        audit_file = self.tmp / "audit" / "audit.jsonl"
+        if audit_file.exists():
+            audit_file.write_text("", encoding="utf-8")
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _overview_rows(store)
+        self.assertEqual(len(rows[0]), 9)
+        self.assertIsNone(rows[0][8],
+                          "last_activity_ts muss None sein wenn Audit leer und kein Heartbeat")
+
+    def test_overview_rows_last_activity_ts_numeric_with_heartbeat(self):
+        """_overview_rows() liefert last_activity_ts als float wenn Heartbeat vorhanden."""
+        import json
+        from bridge.cli import _overview_rows
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")
+        self.cli("task", "set-status", "BRIDGE-0901", "CLAIMED", "--actor", "x")
+        self.cli("task", "set-status", "BRIDGE-0901", "RUNNING", "--actor", "x")
+        # Heartbeat anlegen
+        hb_dir = self.tmp / "results" / "BRIDGE-0901" / "RUN-01"
+        hb_dir.mkdir(parents=True, exist_ok=True)
+        (hb_dir / "heartbeat.json").write_text(json.dumps({
+            "kind": "bridge_heartbeat", "bridge_task_id": "BRIDGE-0901",
+            "run_id": "RUN-01", "last_seen": "2026-06-15T10:00:00Z",
+        }), encoding="utf-8")
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _overview_rows(store)
+        row = next(r for r in rows if r[0] == "BRIDGE-0901")
+        self.assertIsNotNone(row[8])
+        self.assertIsInstance(row[8], float)
+
+    def test_overview_text_still_works_with_9_tuple(self):
+        """_overview_text() crasht nicht mit dem neuen 9-Tupel (bewusste Rueckwaertskompatibilitaet)."""
+        from bridge.cli import _overview_rows, _overview_text
+        from bridge.store import Store
+        self._make_task("BRIDGE-0901")
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        rows = _overview_rows(store)
+        text = _overview_text(rows)
+        self.assertIn("BRIDGE-0901", text)
+
 
 class CliCommitTests(unittest.TestCase):
     """Prueft das --commit-Flag auf den 5 Subcommands (BRIDGE-025).
