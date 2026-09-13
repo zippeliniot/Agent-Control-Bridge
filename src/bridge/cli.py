@@ -542,14 +542,21 @@ def _board_depends_note(store, task) -> str:
     return "  ".join(notes)
 
 
-def _board_rows(store, *, now=None):
+def _board_rows(store, *, now=None, audit_data=None):
     """Ermittelt die Board-Zeilen (reine Daten, keine Ausgabe).
 
     Rueckgabe: sortierte Liste von Tupeln
-    ``(task_id, projekt, fuehrung, richtung, wartezeit, hinweis, prioritaet)``.
+    ``(task_id, projekt, fuehrung, richtung, wartezeit, hinweis, prioritaet, maschine)``.
     Sortierung: (Prioritaets_Rang, bridge_task_id) — Prioritaet vor ID (BRIDGE-028).
+
+    ``audit_data``: optionales Ergebnis von ``_overview_audit_scan(store)`` — wird
+    einmal von aussen übergeben, wenn der Aufrufer (z. B. ``board_payload()``) den
+    Scan bereits fuer andere Zwecke benoetigt (kein doppelter Scan, BRIDGE-030).
+    Fehlt der Parameter, wird einmalig intern gescannt.
     """
     now = now or datetime.now(timezone.utc)
+    if audit_data is None:
+        audit_data = _overview_audit_scan(store)
     rows = []
     for task in _list_task_docs(store):
         status = task.get("status")
@@ -565,6 +572,8 @@ def _board_rows(store, *, now=None):
                 wait = _fmt_wait((now - when).total_seconds())
             except ValueError:
                 wait = "?"
+        task_audit = audit_data.get(task_id, {"machine": None, "timestamp": None})
+        machine, _, _ = _overview_task_info(store, task, task_audit, now)
         rows.append((
             task_id,
             _board_project(store, task),
@@ -573,19 +582,25 @@ def _board_rows(store, *, now=None):
             wait,
             _board_depends_note(store, task),
             _task_priority(task),    # Prioritaet (BRIDGE-028)
+            machine,                 # Maschine (BRIDGE-030)
             _priority_rank(task),    # Hilfsspalte fuer Sortierung
         ))
-    rows.sort(key=lambda r: (r[7], r[0]))   # (Prioritaets_Rang, task_id)
-    return [r[:7] for r in rows]             # Hilfsspalte entfernen
+    rows.sort(key=lambda r: (r[8], r[0]))   # (Prioritaets_Rang, task_id)
+    return [r[:8] for r in rows]             # Hilfsspalte entfernen
 
 
 def _board_text(rows) -> str:
-    """Baut aus den Board-Zeilen den Tabellentext (Einmal- und Watch-Modus)."""
+    """Baut aus den Board-Zeilen den Tabellentext (Einmal- und Watch-Modus).
+
+    ``machine`` ist seit BRIDGE-030 Teil des Tupels (Index 7), wird in der
+    Terminal-Ausgabe bewusst NICHT als eigene Spalte gedruckt — das Board
+    bleibt kompakt, Maschinen-Info gibt es separat ueber ``bridge overview``.
+    """
     if not rows:
         return "(keine Auftraege warten auf Kopie)"
     lines = [f"{'#':<3}{'Prio':<7}{'Projekt':<13}{'Führung/Prüfung':<34}"
              f"{'Auftrag':<13}{'Richtung':<24}Wartet seit"]
-    for i, (task_id, projekt, fuehrung, richtung, wait, note, prio) in enumerate(rows, start=1):
+    for i, (task_id, projekt, fuehrung, richtung, wait, note, prio, machine) in enumerate(rows, start=1):
         line = f"{i:<3}{prio:<7}{projekt:<13}{fuehrung:<34}{task_id:<13}{richtung:<24}{wait}"
         if note:
             line = f"{line}  {note}"
@@ -742,6 +757,8 @@ def _overview_rows(store, project_filter: "str | None" = None, now=None) -> list
         last_act_str = _fmt_wait((now - last_act).total_seconds()) if last_act else "?"
         # Sortier-Timestamp: None -> epoch (kommt ans Ende der jeweiligen Gruppe)
         sort_ts = last_act.timestamp() if last_act is not None else 0.0
+        # Roher Timestamp fuer die Web-UI-Sortierung (BRIDGE-030): None wenn kein Wert.
+        last_activity_ts = last_act.timestamp() if last_act is not None else None
         prio = _task_priority(task)
         prio_rank = _priority_rank(task)
         rows_raw.append((
@@ -753,13 +770,15 @@ def _overview_rows(store, project_filter: "str | None" = None, now=None) -> list
             last_act_str,
             is_active,
             prio,
-            sort_ts,        # Hilfsspalte fuer Sortierung, wird am Ende entfernt
-            prio_rank,      # Hilfsspalte fuer Sortierung, wird am Ende entfernt
+            sort_ts,           # Hilfsspalte fuer Sortierung (0.0 fuer None), wird entfernt
+            prio_rank,         # Hilfsspalte fuer Sortierung, wird entfernt
+            last_activity_ts,  # Rohwert fuer Web-UI-Sortierung (BRIDGE-030), wird zurueckgegeben
         ))
 
     # (Aktiv-Gruppe, Prioritaets-Rang, -Zeitstempel)
     rows_raw.sort(key=lambda r: (0 if r[6] else 1, r[9], -r[8]))
-    return [r[:8] for r in rows_raw]
+    # Hilfsspalten (index 8, 9) entfernen; last_activity_ts (index 10) behalten.
+    return [r[:8] + (r[10],) for r in rows_raw]
 
 
 def _overview_text(rows) -> str:
@@ -769,7 +788,9 @@ def _overview_text(rows) -> str:
     lines = [f"{'#':<3}{'Prio':<7}{'Projekt':<13}{'Auftrag':<13}{'Status':<30}"
              f"{'Maschine':<14}{'Aktiv vor':<12}Fuehrung/Pruefung"]
     prev_active = None
-    for i, (task_id, projekt, fuehrung, status, machine, last_act_str, is_active, prio) in \
+    # BRIDGE-030: _overview_rows() gibt jetzt 9-Tupel zurueck (index 8 = last_activity_ts).
+    # last_activity_ts wird in der Terminal-Ausgabe nicht benoetigt (nur Web-UI-Sortierung).
+    for i, (task_id, projekt, fuehrung, status, machine, last_act_str, is_active, prio, _) in \
             enumerate(rows, start=1):
         if prev_active is True and not is_active:
             lines.append("--- inaktiv / unterbrochen ---")

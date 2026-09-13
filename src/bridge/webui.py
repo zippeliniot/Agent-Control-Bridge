@@ -48,7 +48,8 @@ from bridge import gitops, importer, runner, state_machine
 # `bridge task archive` - garantiert keine zweite, abweichende Implementierung.
 from bridge.cli import (
     _BOARD_STATES, _board_rows, _fmt_wait, _list_task_docs,
-    _overview_rows, _OVERVIEW_INACTIVE_THRESHOLD_MINUTES,
+    _overview_rows, _overview_audit_scan, _overview_task_info,
+    _OVERVIEW_INACTIVE_THRESHOLD_MINUTES,
     task_archive, task_copied, task_set_priority,
 )
 from bridge.store import StoreError
@@ -65,7 +66,7 @@ _FINISH_TARGETS = ("COMPLETED", "FAILED", "BLOCKED", "REVIEW_REQUIRED",
                    "APPROVAL_REQUIRED")
 
 _BOARD_FIELDS = ("bridge_task_id", "projekt", "fuehrung", "richtung",
-                 "wartet_seit", "hinweis", "priority")
+                 "wartet_seit", "hinweis", "priority", "machine")
 
 # Fehlerklassen der Engine, die als "im aktuellen Zustand nicht erlaubt" gelten.
 _ENGINE_ERRORS = (StoreError, state_machine.TransitionError,
@@ -124,11 +125,15 @@ def board_payload(store) -> dict:
     und ``actions`` (zulaessige Buttons) ergaenzt. ``other`` ist die schlanke
     Zusatzliste aller nicht archivierten Auftraege, die nicht bereits im
     Board stehen.
+
+    BRIDGE-030: Audit-Scan einmalig hier — wird sowohl an ``_board_rows()``
+    als auch an die ``other``-Schleife weitergegeben (kein doppelter Scan).
     """
     now = datetime.now(timezone.utc)
+    audit_data = _overview_audit_scan(store)
 
     board = []
-    for row in _board_rows(store):
+    for row in _board_rows(store, audit_data=audit_data):
         entry = dict(zip(_BOARD_FIELDS, row))
         try:
             entry["status"] = store.load_task(entry["bridge_task_id"]).get("status")
@@ -144,12 +149,15 @@ def board_payload(store) -> dict:
         task_id = task.get("bridge_task_id", "?")
         if status in _BOARD_STATES or status == "ARCHIVED" or task_id in on_board:
             continue
+        task_audit = audit_data.get(task_id, {"machine": None, "timestamp": None})
+        machine, _, _ = _overview_task_info(store, task, task_audit, now)
         other.append({
             "bridge_task_id": task_id,
             "projekt": task.get("project_id", "?"),
             "status": status,
             "wartet_seit": _wait_since(store, task_id, status, now),
             "actions": _row_actions(status),
+            "machine": machine,
         })
     other.sort(key=lambda r: r["bridge_task_id"])
 
@@ -164,7 +172,12 @@ def overview_payload(store) -> dict:
 
     Gibt ``{"overview": [...], "inactive_threshold_minutes": N}`` zurueck.
     Jede Zeile hat:
-    ``bridge_task_id, projekt, fuehrung, status, machine, last_activity, is_active``.
+    ``bridge_task_id, projekt, fuehrung, status, machine, last_activity, is_active,
+    priority, last_activity_ts``.
+
+    ``last_activity_ts`` (BRIDGE-030): roher Unix-Epoch-Timestamp (float) oder
+    ``null``, damit die Web-UI chronologisch statt alphabetisch sortieren kann.
+    ``last_activity`` (Anzeigetext, z. B. „vor 5 Min") bleibt unveraendert.
     """
     now = datetime.now(timezone.utc)
     rows = _overview_rows(store, now=now)
@@ -178,8 +191,10 @@ def overview_payload(store) -> dict:
             "last_activity": last_activity,
             "is_active": is_active,
             "priority": priority,
+            "last_activity_ts": last_activity_ts,
         }
-        for task_id, projekt, fuehrung, status, machine, last_activity, is_active, priority in rows
+        for task_id, projekt, fuehrung, status, machine, last_activity, is_active,
+            priority, last_activity_ts in rows
     ]
     return {
         "overview": overview,
@@ -313,6 +328,8 @@ _PAGE = r"""<!doctype html>
   table { border-collapse: collapse; width: 100%; max-width: 78rem; }
   th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid #8884; vertical-align: top; }
   th { font-weight: 600; }
+  th[data-sort-col] { cursor: pointer; user-select: none; }
+  th[data-sort-col]:hover { background: rgba(128,128,128,.1); }
   td.id { font-family: ui-monospace, monospace; white-space: nowrap; }
   button { font: inherit; margin: 0 .25rem .25rem 0; padding: .15rem .5rem; cursor: pointer; }
   .empty { color: #888; font-style: italic; }
@@ -332,7 +349,7 @@ _PAGE = r"""<!doctype html>
 <div id="flash"></div>
 
 <div class="bar" id="filters">
-  <label>Projekt <input id="f-projekt" size="14" autocomplete="off"></label>
+  <label>Projekt <select id="f-projekt"><option value="">(alle)</option></select></label>
   <label>Status <input id="f-status" size="18" autocomplete="off" list="statuslist"></label>
   <label>Auftrag <input id="f-id" size="14" autocomplete="off"></label>
   <button type="button" id="f-clear">Filter zur&uuml;cksetzen</button>
@@ -344,12 +361,12 @@ _PAGE = r"""<!doctype html>
 <h2>Board &ndash; wartet auf Weitergabe / Kopie</h2>
 <table id="board"><thead><tr>
   <th>#</th><th>Prio</th><th>Projekt</th><th>F&uuml;hrung/Pr&uuml;fung</th>
-  <th>Richtung</th><th>Auftrag</th><th>Wartet seit</th><th>Hinweis</th><th>Aktionen</th>
+  <th>Richtung</th><th>Auftrag</th><th>Maschine</th><th>Wartet seit</th><th>Hinweis</th><th>Aktionen</th>
 </tr></thead><tbody></tbody></table>
 
 <h2>Offene Auftr&auml;ge au&szlig;erhalb des Boards</h2>
 <table id="other"><thead><tr>
-  <th>#</th><th>Auftrag</th><th>Projekt</th><th>Status</th><th>Wartet seit</th><th>Aktionen</th>
+  <th>#</th><th>Auftrag</th><th>Projekt</th><th>Maschine</th><th>Status</th><th>Wartet seit</th><th>Aktionen</th>
 </tr></thead><tbody></tbody></table>
 
 <p class="note">
@@ -371,8 +388,14 @@ _PAGE = r"""<!doctype html>
   <code>WAITING_FOR_RESUME</code>/<code>INTERRUPTED</code>.
 </p>
 <table id="ov-table"><thead><tr>
-  <th>#</th><th>Prio</th><th>Projekt</th><th>Auftrag</th><th>Status</th>
-  <th>Maschine</th><th>Aktiv vor</th><th>F&uuml;hrung/Pr&uuml;fung</th>
+  <th>#</th>
+  <th data-sort-col="priority" data-label="Prio">Prio</th>
+  <th data-sort-col="projekt" data-label="Projekt">Projekt</th>
+  <th data-sort-col="bridge_task_id" data-label="Auftrag">Auftrag</th>
+  <th data-sort-col="status" data-label="Status">Status</th>
+  <th data-sort-col="machine" data-label="Maschine">Maschine</th>
+  <th data-sort-col="last_activity_ts" data-label="Aktiv vor">Aktiv vor</th>
+  <th data-sort-col="fuehrung" data-label="F&uuml;hrung/Pr&uuml;fung">F&uuml;hrung/Pr&uuml;fung</th>
 </tr></thead><tbody></tbody></table>
 
 <script>
@@ -435,15 +458,71 @@ function renderTables() {
     ? board.map((r, i) => row([
         i + 1, esc(r.priority || "MEDIUM"), esc(r.projekt), esc(r.fuehrung), esc(r.richtung),
         "<span class='id'>" + esc(r.bridge_task_id) + "</span>",
+        esc(r.machine || "?"),
         esc(r.wartet_seit), esc(r.hinweis), actionButtons(r.bridge_task_id)(r.actions)])).join("")
     : row(["<span class='empty'>keine passenden Auftr&auml;ge</span>"]);
 
   document.querySelector("#other tbody").innerHTML = other.length
     ? other.map((r, i) => row([
         i + 1, "<span class='id'>" + esc(r.bridge_task_id) + "</span>",
-        esc(r.projekt), esc(r.status), esc(r.wartet_seit),
+        esc(r.projekt), esc(r.machine || "?"), esc(r.status), esc(r.wartet_seit),
         actionButtons(r.bridge_task_id)(r.actions)])).join("")
     : row(["<span class='empty'>nichts passt</span>"]);
+}
+
+// BRIDGE-030: Projekt-Dropdown mit dynamisch ermittelten Werten (wie updateStatusList()).
+function updateProjektList() {
+  const seen = {};
+  (lastData.board || []).forEach(function(r) { if (r.projekt) seen[r.projekt] = 1; });
+  (lastData.other || []).forEach(function(r) { if (r.projekt) seen[r.projekt] = 1; });
+  (lastOverviewData || []).forEach(function(r) { if (r.projekt) seen[r.projekt] = 1; });
+  const sel = document.getElementById("f-projekt");
+  const current = sel.value;
+  const opts = Object.keys(seen).sort();
+  sel.innerHTML = "<option value=''>(alle)</option>" +
+    opts.map(function(p) {
+      return "<option value='" + esc(p) + "'" + (p === current ? " selected" : "") + ">" + esc(p) + "</option>";
+    }).join("");
+  if (opts.indexOf(current) >= 0) sel.value = current;
+}
+
+// BRIDGE-030: Spalten-Sort fuer #ov-table (3-Stufen: auf/ab/Standard).
+const PRIO_RANK_OV = {HIGH: 0, MEDIUM: 1, LOW: 2};
+let ovSortCol = null;   // aktive Sortierspalte (null = Standard-Sortierung)
+let ovSortDir = 0;      // 0 = Standard, 1 = aufsteigend, -1 = absteigend
+
+function sortedOverviewRows(rows) {
+  if (!ovSortCol || ovSortDir === 0) return rows;
+  const col = ovSortCol, dir = ovSortDir;
+  return rows.slice().sort(function(a, b) {
+    var ka, kb;
+    if (col === "priority") {
+      ka = PRIO_RANK_OV[a.priority] != null ? PRIO_RANK_OV[a.priority] : 1;
+      kb = PRIO_RANK_OV[b.priority] != null ? PRIO_RANK_OV[b.priority] : 1;
+    } else if (col === "last_activity_ts") {
+      // Chronologisch: roher Timestamp (BRIDGE-030), null-Werte ans Ende.
+      ka = a.last_activity_ts != null ? a.last_activity_ts : -Infinity;
+      kb = b.last_activity_ts != null ? b.last_activity_ts : -Infinity;
+    } else {
+      ka = String(a[col] == null ? "" : a[col]).toLowerCase();
+      kb = String(b[col] == null ? "" : b[col]).toLowerCase();
+    }
+    if (ka < kb) return -dir;
+    if (ka > kb) return dir;
+    return 0;
+  });
+}
+
+function renderOvHeaders() {
+  document.querySelectorAll("#ov-table th[data-sort-col]").forEach(function(th) {
+    var label = th.dataset.label;
+    var col = th.dataset.sortCol;
+    if (col === ovSortCol) {
+      th.textContent = label + " " + (ovSortDir === 1 ? "▲" : "▼");
+    } else {
+      th.textContent = label;
+    }
+  });
 }
 
 // BRIDGE-026: Gesamtuebersicht-Tabelle rendern.
@@ -458,11 +537,13 @@ function prioSelect(id, current) {
 }
 function renderOverview() {
   const f = {projekt: filterState.projekt, status: filterState.status, id: filterState.id};
-  const rows = filterRows(lastOverviewData, f);
+  const filtered = filterRows(lastOverviewData, f);
+  const rows = sortedOverviewRows(filtered);    // BRIDGE-030: kunden-seitiger Sort
+  const isDefaultSort = (ovSortDir === 0);      // Trennzeile nur bei Standard-Sortierung
   const cells = [];
   let prevActive = null;
   rows.forEach(function(r, i) {
-    if (prevActive === true && !r.is_active) {
+    if (isDefaultSort && prevActive === true && !r.is_active) {
       cells.push("<tr class='ov-sep'><td colspan='8'>&mdash; inaktiv / unterbrochen &mdash;</td></tr>");
     }
     cells.push(row([
@@ -475,6 +556,7 @@ function renderOverview() {
   document.querySelector("#ov-table tbody").innerHTML = rows.length
     ? cells.join("")
     : row(["<span class='empty'>keine Aufträge</span>"]);
+  renderOvHeaders();    // BRIDGE-030: Sort-Indikatoren (▲/▼) aktualisieren
 }
 
 function updateStatusList() {
@@ -561,6 +643,7 @@ async function refresh() {
     if (!actorInput.value && data.actor) actorInput.value = data.actor;  // nur wenn leer
 
     updateStatusList();
+    updateProjektList();  // BRIDGE-030: Projekt-Dropdown aus geladenen Daten befuellen
     renderTables();   // beruecksichtigt den zuletzt aktiven Filter erneut
 
     meta.textContent = "Aktualisiert: " + new Date().toISOString()
@@ -576,8 +659,9 @@ async function refresh() {
     const ovData = await ovRes.json();
     if (ovRes.ok && !ovData.error) {
       lastOverviewData = ovData.overview || [];
-      updateStatusList();  // Zustaende aus Overview ebenfalls anbieten
-      renderOverview();    // beruecksichtigt den zuletzt aktiven Filter
+      updateStatusList();   // Zustaende aus Overview ebenfalls anbieten
+      updateProjektList();  // BRIDGE-030: Projekt-Dropdown nach Overview-Daten aktualisieren
+      renderOverview();     // beruecksichtigt den zuletzt aktiven Filter
     }
   } catch(e) { /* Fehler in Overview stoeren das Board nicht */ }
 }
@@ -592,10 +676,33 @@ async function refresh() {
     renderOverview();
   });
 });
+// BRIDGE-030: <select> fuer f-projekt loest sowohl input- als auch change-Event aus
+// (Absicherung, falls ein Browser bei <select> kein input-Event feuert).
+document.getElementById("f-projekt").addEventListener("change", ev => {
+  filterState.projekt = ev.target.value;
+  renderTables();
+  renderOverview();
+});
+
 document.getElementById("f-clear").addEventListener("click", () => {
   filterState.projekt = filterState.status = filterState.id = "";
   ["f-projekt", "f-status", "f-id"].forEach(x => { document.getElementById(x).value = ""; });
   renderTables();
+  renderOverview();
+});
+
+// BRIDGE-030: Spalten-Sort-Klick in #ov-table.
+document.getElementById("ov-table").addEventListener("click", function(ev) {
+  var th = ev.target.closest("th[data-sort-col]");
+  if (!th) return;
+  var col = th.dataset.sortCol;
+  if (ovSortCol === col) {
+    if (ovSortDir === 1) { ovSortDir = -1; }
+    else { ovSortCol = null; ovSortDir = 0; }  // 3. Klick -> Standard
+  } else {
+    ovSortCol = col;
+    ovSortDir = 1;  // 1. Klick -> aufsteigend
+  }
   renderOverview();
 });
 
