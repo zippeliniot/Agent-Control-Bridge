@@ -244,11 +244,15 @@ möglich.
 **Was sie zeigt:**
 - **Board — wartet auf Weitergabe/Kopie:** ausschließlich Aufträge in
   `WAITING_FOR_HANDOFF_TO_EXECUTOR` oder `WAITING_FOR_COPY_TO_CONTROL`
-  (Spalte „Richtung" zeigt welche). Läuft ein Auftrag gerade
-  (`RUNNING`/`CLAIMED`), erscheint er dort **nicht** — das ist Absicht,
-  nicht ein Bug (Regel 5 der Übergabe).
+  (Spalte „Richtung" zeigt welche). Seit **BRIDGE-030** zusätzlich eine
+  **Maschinen-Spalte** — dieselbe Ermittlungslogik wie die
+  Gesamtübersicht (Heartbeat > letzter Audit-Eintrag > `?`). Läuft ein
+  Auftrag gerade (`RUNNING`/`CLAIMED`), erscheint er dort **nicht** —
+  das ist Absicht, nicht ein Bug (Regel 5 der Übergabe).
 - **Offene Aufträge außerhalb des Boards:** alle anderen nicht-terminalen
-  Zustände (`REVIEW_REQUIRED` etc.), mit passenden Aktionen.
+  Zustände (`REVIEW_REQUIRED` etc.), mit passenden Aktionen. Seit
+  **BRIDGE-030** ebenfalls mit **Maschinen-Spalte** (gleiche
+  Ermittlungslogik; kein zweiter Audit-Scan, gemeinsamer Scan mit Board).
 - **Alle Projekte — Gesamtübersicht** (seit BRIDGE-026, Endpunkt
   `GET /api/overview`): alle Aufträge über **alle** Zustände, inkl.
   `RUNNING`/`CLAIMED` — genau was das Board bewusst versteckt. Spalten:
@@ -256,15 +260,23 @@ möglich.
   kein `--machine`-Flag übergeben wurde), letzte Aktivität (Heartbeat-
   Alter). Aktive Aufträge (`RUNNING`/`CLAIMED` + HB < 30 Min.) oben,
   inaktive (staler HB, `WAITING_FOR_RESUME`, `INTERRUPTED`) darunter
-  mit Trennlinie. Der Client-Filter gilt auch hier. Dasselbe Ergebnis
-  wie `bridge overview --project <id>` im Terminal.
+  mit Trennlinie — die Trennlinie erscheint **nur bei Standard-Sortierung**
+  (bei aktivem Spalten-Sort ausgeblendet, s. u.). Der Client-Filter gilt
+  auch hier. Dasselbe Ergebnis wie `bridge overview --project <id>` im
+  Terminal.
 - **Persistenter, scrollbarer Aktions-Log** (seit BRIDGE-023): jede
   ausgeführte Aktion mit Zeitstempel, Aktion, betroffener ID und
   Ergebnis — bleibt über Auto-Refresh-Ticks erhalten, wird **nicht**
   vom 15-Sekunden-Refresh überschrieben.
 - **Client-Filter** (seit BRIDGE-023): Projekt/Status/Auftrags-ID,
   überlebt Auto-Refresh, kein neuer Server-Endpoint dahinter. Gilt
-  jetzt auch für die Gesamtübersicht.
+  jetzt auch für die Gesamtübersicht. Seit **BRIDGE-030** ist der
+  Projekt-Filter ein **Dropdown** (`<select>`): Werte werden dynamisch
+  aus den aktuell geladenen Zeilen abgeleitet (gleiche Logik wie der
+  Status-Filter mit `<datalist>`), kein hartkodierter Projekt-Katalog.
+  Status- und Auftrags-Filter bleiben bewusst Freitext-Eingaben
+  (Teilstring-Suche bei Status nützlich, z. B. `WAITING` zeigt alle
+  `WAITING_FOR_*`-Zustände; Auftrags-ID hat zu viele wachsende Werte).
 
 **Aktions-Buttons** (`Kopiert → Review`, `Archivieren`, `Lauf
 abschließen`): rufen serverseitig **dieselbe** Store-/Runner-Logik wie
@@ -286,6 +298,18 @@ es zum Rebase-Konflikt → `rebase --abort`, Commit bleibt lokal (Log
 zeigt Fehlertext), kein Force-Push. Andere Fehler (kein Remote, Auth)
 lösen keinen Retry aus. Maximal ein Retry-Versuch; Details in
 `docs/security/SECURITY-MODEL.md` Abschnitt 5c.
+
+**Sortierbare Spaltenköpfe** (seit BRIDGE-030): Die Spaltenüberschriften
+der Gesamtübersicht-Tabelle sind klickbar — 3-Stufen-Sortierung: 1. Klick
+→ aufsteigend (`▲`), 2. Klick auf dieselbe Spalte → absteigend (`▼`),
+3. Klick → zurück zur Standard-Sortierung (serverseitig: aktiv/inaktiv +
+Priorität + letzte Aktivität). Sortierschlüssel: `Prio` über Rang
+(HIGH → MEDIUM → LOW), `Aktiv vor` chronologisch über einen rohen
+Zeitstempel (`last_activity_ts` im API-Payload, nicht den Anzeigetext),
+alle anderen Spalten alphabetisch. Die aktiv/inaktiv-Trennlinie ist **nur
+bei Standard-Sortierung** sichtbar, bei explizitem Spalten-Sort
+ausgeblendet. Bestehende Client-Filter bleiben bei aktivem Spalten-Sort
+wirksam.
 
 **Prioritätszuweisung** (seit BRIDGE-028): In der Gesamtübersicht
 (`/api/overview`) enthält jede Auftragszeile ein `<select>`-Dropdown
