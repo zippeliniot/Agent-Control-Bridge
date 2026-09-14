@@ -9,7 +9,7 @@
 | permission | WORKTREE_WRITE, TEST_EXECUTION, GIT_PUSH |
 | executor | claude-code |
 | review_roles | lead: anthropic, support: openai (aus Projektprofil übernommen) |
-| Modell/Denkstufe | Claude Code, Denkstufe MEDIUM — berührt drei Dateien (`cli.py`, `webui.py`, `importer.py`) mit mehreren Aufrufstellen, aber das Muster ist an jeder Stelle identisch und vollständig vorgegeben (bestehende Funktion `registry.machine_name()` verdrahten statt neu entwerfen), kein neues Sicherheitsmodell, keine neue Architektur. |
+| Modell/Denkstufe | Claude Sonnet 5, Denkstufe MEDIUM — berührt drei Dateien (`cli.py`, `webui.py`, `importer.py`) mit mehreren Aufrufstellen, aber das Muster ist an jeder Stelle identisch und vollständig vorgegeben (bestehende Funktion `registry.machine_name()` verdrahten statt neu entwerfen), kein neues Sicherheitsmodell, keine neue Architektur. Kein Opus nötig (kein Entwurf, keine Mehrdeutigkeit), Haiku zu schwach für konsistente Änderungen an mehreren, teils zirkularitätssensiblen Modulen (Import-Reihenfolge `registry`/`store`/`profiles`). |
 
 > **Verbindlich für diesen und jeden CCB-Auftrag:**
 > - Jede Zustandsänderung läuft über die Bridge-CLI, kein direktes Bearbeiten
