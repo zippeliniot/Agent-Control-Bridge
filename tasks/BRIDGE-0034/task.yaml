@@ -1,0 +1,58 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0034
+project_id: codex-control-bridge
+title: Dorfschaft/Codex-Integrationsgrundlage haerten - Profil, CODEX.md, task_prefix-Kollision
+description: 'Ausgeloest durch eine Bereitschaftspruefung von ChatGPT (OpenAI-Seite,
+  Controller-Rolle fuer Codex/Dorfschaft), gegengeprueft gegen frischen Code. Ziel:
+  CCB-seitige Integrationsgrundlage fuer den spaeteren ersten echten Dorfschaft/Codex-Testauftrag
+  haerten, OHNE diesen Testauftrag selbst schon anzulegen. Drei verifizierte Befunde:
+  (1) projects/dorfschaft/project.yaml hat read_only: false, git_policy.allow_push:
+  true - keine Altlast sondern bewusste Entscheidung aus Commit 69a5d9b ("dorfschaft
+  jetzt schreibend"), nie in README.md/CCB-PROJEKT-INTEGRATION.md nachgezogen (die
+  weiterhin "reiner Read-only-Test" sagen). Wird vorruebergehend auf read_only: true
+  zurueckgesetzt. WICHTIG: read_only greift technisch NUR fuer den separaten Beobachtungs-Adapter
+  (adapter.py, BRIDGE-011/012), NICHT fuer normale task_class: FEATURE-Auftraege mit
+  Schreibrechten (profiles.py-Kommentar bestaetigt das als bewusst offen). Die technische
+  Absicherung des ersten Pilotlaufs kommt aus BRIDGE-032 (READONLY_CHECK erzwingt
+  permissions: [READ_ONLY]) auf Auftragsebene. (2) CODEX.md behauptet weiterhin "kein
+  aktives Projektprofil mit executor: codex" - tatsaechlich drei (bess-msrechner,
+  bess-platform, dorfschaft), keins je praktisch genutzt (Audit-Trail: 0 codex-Actor-Eintraege).
+  (3) task_prefix-Kollision wird nicht technisch verhindert (profiles.py-Docstring
+  bestaetigt: "folgt bewusst spaeter (BRIDGE-011)" - BRIDGE-011 lieferte aber nur
+  den Adapter, nicht diese Pruefung). Ausdruecklich NICHT Teil: WSL-/Worktree-Pfadaufloesung
+  fuer den konkreten AP15-RP2-Checkout (realer Linux-Mountpfad vom Steuerchat aus
+  nicht verifizierbar ohne zu raten, folgt als eigener Auftrag sobald bestaetigt),
+  allgemeine read_only-Durchsetzung fuer alle task_class-Werte (eigenes Architekturthema),
+  AGENTS.md im Dorfschaft-Repo selbst (fremdes Repository). Details in work-packages/BRIDGE-034.md.'
+task_class: BUGFIX
+repository: Codex-Control-Bridge
+branch: main
+git:
+  expected_head: 25bf9d8
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- projects/dorfschaft/project.yaml - read_only true, git_policy.allow_push false,
+  erklaerender Kommentar mit Verweis auf BRIDGE-034 und Commit 69a5d9b
+- CODEX.md - Statusabsatz korrigiert (drei aktive Profile, weiterhin nie praktisch
+  genutzt), Rest unveraendert
+- create_task() lehnt einen neuen Auftrag fail-closed ab, wenn dessen Zielprojekt
+  einen task_prefix traegt, der mit einem anderen bestehenden Projektprofil kollidiert
+- Kollisionspruefung liest alle Profile unter projects/*, nicht nur das Zielprofil
+- save_task() bleibt unveraendert (Kollisionspruefung nur bei create_task())
+- Neue Tests - synthetische Kollision wird abgelehnt; die sieben echten bestehenden
+  Profile bleiben beim normalen Auftraglegen unveraendert funktionsfaehig
+- Regressionsanker-Test - dorfschaft-Profil hat read_only true
+- Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag
+- Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-14T00:00:00Z'
+created_by: browser-claude
+priority: MEDIUM
