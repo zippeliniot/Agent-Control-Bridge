@@ -1,0 +1,64 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0031
+project_id: codex-control-bridge
+title: Maschinenaufloesung vereinheitlichen - COMPUTERNAME-Autodefault an allen Schreibstellen
+  + BRIDGE_MACHINE-Inkonsistenz beseitigen
+description: 'registry.machine_name() (explicit -> COMPUTERNAME -> platform.node())
+  existiert bereits und ist korrekt, wird aber ausschliesslich innerhalb von resolve_base()
+  aufgerufen (Pfadaufloesung fuer bridge board/bridge commands). Alle Audit-schreibenden
+  Stellen reichen machine=None hartkodiert (task_copied(), task_archive() in cli.py,
+  webui.py /api/run/<id>/finish) oder rohes args.machine ohne Fallback durch (task
+  set-status, task set-priority, run start/beat/finish/resume) - dadurch tragen 0
+  von 144 bestehenden Audit-Eintraegen einen machine-Wert. Fix: registry.machine_name(machine)
+  an jeder dieser Stellen aufrufen statt None hartzukodieren bzw. roh durchzureichen.
+  task copied und task archive bekommen zusaetzlich ein optionales --machine-Flag
+  (fehlt bisher, anders als set-status/set-priority/run *). Zusaetzlich (April-Entscheidung,
+  Steuerchat-Sitzung): zweiten, unabhaengigen Mechanismus in importer.py vereinheitlichen
+  - import_result() loest machine aktuell ueber eine eigene, nie gesetzte Env-Var
+  BRIDGE_MACHINE auf (getrennt von COMPUTERNAME), was den Actor "claude-code@unknown"
+  in result.yaml/created_by und physical_machine=null erklaert. BRIDGE_MACHINE-Fallback
+  durch registry.machine_name() ersetzen, danach nur noch eine Quelle der Maschinenaufloesung
+  im gesamten System. Bestehende Audit-Eintraege werden NICHT rueckwirkend korrigiert
+  (reine Vorwaertskorrektur). Neue Tests in test_cli.py, test_webui.py, test_importer.py
+  fuer alle Aufrufstellen (COMPUTERNAME gesetzt -> Wert erscheint; expliziter --machine/machine=-Wert
+  hat weiterhin Vorrang). Bestehende "?"-Fallback-Tests (kein Heartbeat, kein Audit-Eintrag)
+  bleiben unveraendert gruen. Details in work-packages/BRIDGE-031.md.'
+task_class: BUGFIX
+repository: Codex-Control-Bridge
+branch: main
+git:
+  expected_head: 0c8e7a7
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- task copied und task archive haben ein optionales --machine-Flag
+- task_copied()/task_archive()/task_set_priority() loesen die Maschine ueber registry.machine_name(machine)
+  auf statt None hartzukodieren oder roh durchzureichen
+- run start/beat/finish/resume (CLI) loesen args.machine vor Uebergabe an runner.*
+  ueber registry.machine_name() auf
+- result import (CLI) loest args.machine ebenso auf
+- webui.py-Aktionsendpunkte (copied, archive, run finish) uebergeben registry.machine_name()
+  statt None
+- importer.import_result() nutzt registry.machine_name() statt der BRIDGE_MACHINE-Env-Var;
+  BRIDGE_MACHINE wird im Code nirgendwo mehr referenziert
+- Ohne --machine/expliziten machine-Parameter und mit gesetztem COMPUTERNAME - neue
+  Audit-Eintraege sowie result.yaml (physical_machine, created_by) tragen die aufgeloeste
+  Maschine, nicht null/unknown
+- Mit explizitem --machine/machine=-Parameter - dieser hat weiterhin Vorrang vor COMPUTERNAME
+- Bestehende Tests fuer den "?"-Fallback-Fall (kein Heartbeat, kein Audit-Eintrag)
+  bleiben unveraendert gruen
+- Neue Tests in test_cli.py, test_webui.py, test_importer.py fuer alle Aufrufstellen,
+  gruen
+- Bestehende Audit-Eintraege unveraendert (keine rueckwirkende Korrektur)
+- CCB-STEUERCHAT-REFERENZ.md um den Hinweis zur jetzt aktiven Autoaufloesung ergaenzt
+- Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-14T00:00:00Z'
+created_by: browser-claude
