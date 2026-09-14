@@ -256,9 +256,13 @@ möglich.
 - **Alle Projekte — Gesamtübersicht** (seit BRIDGE-026, Endpunkt
   `GET /api/overview`): alle Aufträge über **alle** Zustände, inkl.
   `RUNNING`/`CLAIMED` — genau was das Board bewusst versteckt. Spalten:
-  Projekt, Auftrag, Status, **Maschine** (letzte bekannte, `?` wo
-  kein `--machine`-Flag übergeben wurde), letzte Aktivität (Heartbeat-
-  Alter). Aktive Aufträge (`RUNNING`/`CLAIMED` + HB < 30 Min.) oben,
+  Projekt, Auftrag, Status, **Maschine** (letzte bekannte; seit
+  **BRIDGE-031** an allen Schreibstellen aktiv über
+  `registry.machine_name()` aufgelöst — `COMPUTERNAME`-Autodefault greift
+  jetzt auch **ohne** manuelles `--machine`-Flag, `?` erscheint daher nur
+  noch, wenn für den Auftrag noch **gar kein** Heartbeat/Audit-Eintrag
+  existiert, z. B. direkt nach `task create` ohne weitere Aktion), letzte
+  Aktivität (Heartbeat-Alter). Aktive Aufträge (`RUNNING`/`CLAIMED` + HB < 30 Min.) oben,
   inaktive (staler HB, `WAITING_FOR_RESUME`, `INTERRUPTED`) darunter
   mit Trennlinie — die Trennlinie erscheint **nur bei Standard-Sortierung**
   (bei aktivem Spalten-Sort ausgeblendet, s. u.). Der Client-Filter gilt
