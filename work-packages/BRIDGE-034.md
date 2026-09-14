@@ -151,23 +151,26 @@ vergessen):
 
 ## Akzeptanzkriterien
 
-- [ ] `projects/dorfschaft/project.yaml`: `read_only: true`,
+- [x] `projects/dorfschaft/project.yaml`: `read_only: true`,
       `git_policy.allow_push: false`, erklärender Kommentar mit Verweis
       auf BRIDGE-034 und Commit `69a5d9b`.
-- [ ] `CODEX.md`: Statusabsatz korrigiert (drei aktive Profile, weiterhin
+- [x] `CODEX.md`: Statusabsatz korrigiert (drei aktive Profile, weiterhin
       nie praktisch genutzt), Rest unverändert.
-- [ ] `create_task()` lehnt einen neuen Auftrag fail-closed ab, wenn
+- [x] `create_task()` lehnt einen neuen Auftrag fail-closed ab, wenn
       dessen Zielprojekt einen `task_prefix` trägt, der mit einem
       anderen bestehenden Projektprofil kollidiert.
-- [ ] Kollisionsprüfung liest alle Profile unter `projects/*/`, nicht
+- [x] Kollisionsprüfung liest alle Profile unter `projects/*/`, nicht
       nur das Zielprofil.
-- [ ] `save_task()` bleibt unverändert (Kollisionsprüfung nur bei
+- [x] `save_task()` bleibt unverändert (Kollisionsprüfung nur bei
       `create_task()`).
-- [ ] Neue Tests: synthetische Kollision wird abgelehnt; die sieben
+- [x] Neue Tests: synthetische Kollision wird abgelehnt; die sieben
       echten bestehenden Profile bleiben beim normalen Auftraglegen
       unverändert funktionsfähig (kein falsches Positiv).
-- [ ] Regressionsanker-Test: `dorfschaft`-Profil hat `read_only: true`.
-- [ ] Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag.
-- [ ] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
-      Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] Regressionsanker-Test: `dorfschaft`-Profil hat `read_only: true`.
+- [x] Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag
+      (ausschließlich `projects/dorfschaft/project.yaml`, `CODEX.md`,
+      `src/bridge/store.py`, `tests/test_store.py` geändert).
+- [x] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
+      Klon verifiziert (363 Tests je Lauf: 359 Basis + 4 neu; drei
+      separate `unittest discover`-Läufe grün gezählt).
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.
