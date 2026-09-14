@@ -199,34 +199,48 @@ Maschinenauflösung im ganzen System statt zwei inkonsistenter.
 
 ## Akzeptanzkriterien
 
-- [ ] `task copied` und `task archive` haben ein optionales `--machine`-Flag
+- [x] `task copied` und `task archive` haben ein optionales `--machine`-Flag
       (Parität zu `set-status`/`set-priority`/`run *`).
-- [ ] `task_copied()`/`task_archive()`/`task_set_priority()` lösen die
+- [x] `task_copied()`/`task_archive()`/`task_set_priority()` lösen die
       Maschine über `registry.machine_name(machine)` auf statt `None`
       hartzukodieren oder roh durchzureichen.
-- [ ] `run start`/`beat`/`finish`/`resume` (CLI) lösen `args.machine` vor
+- [x] `run start`/`beat`/`finish`/`resume` (CLI) lösen `args.machine` vor
       Übergabe an `runner.*` über `registry.machine_name()` auf.
-- [ ] `result import` (CLI) löst `args.machine` ebenso auf.
-- [ ] `webui.py`-Aktionsendpunkte (`copied`, `archive`, `run finish`)
+- [x] `result import` (CLI) löst `args.machine` ebenso auf.
+- [x] `webui.py`-Aktionsendpunkte (`copied`, `archive`, `run finish`)
       übergeben `registry.machine_name()` statt `None`.
-- [ ] `importer.import_result()` nutzt `registry.machine_name()` statt der
+- [x] `importer.import_result()` nutzt `registry.machine_name()` statt der
       `BRIDGE_MACHINE`-Env-Var; `BRIDGE_MACHINE` wird im Code nirgendwo
       mehr referenziert.
-- [ ] Ohne `--machine`/expliziten `machine`-Parameter und mit gesetztem
+- [x] Ohne `--machine`/expliziten `machine`-Parameter und mit gesetztem
       `COMPUTERNAME`: neue Audit-Einträge sowie `result.yaml`
       (`physical_machine`, `created_by`) tragen die aufgelöste Maschine,
       nicht `null`/`"unknown"`.
-- [ ] Mit explizitem `--machine`/`machine=`-Parameter: dieser hat weiterhin
+- [x] Mit explizitem `--machine`/`machine=`-Parameter: dieser hat weiterhin
       Vorrang vor `COMPUTERNAME` (bestehendes Verhalten von
       `machine_name()` unverändert).
-- [ ] Bestehende Tests für den `"?"`-Fallback-Fall (kein Heartbeat, kein
+- [x] Bestehende Tests für den `"?"`-Fallback-Fall (kein Heartbeat, kein
       Audit-Eintrag) bleiben unverändert grün.
-- [ ] Neue Tests in `test_cli.py`, `test_webui.py`, `test_importer.py` für
+- [x] Neue Tests in `test_cli.py`, `test_webui.py`, `test_importer.py` für
       alle oben gelisteten Aufrufstellen, grün.
-- [ ] Bestehende Audit-Einträge unverändert (keine rückwirkende
+- [x] Bestehende Audit-Einträge unverändert (keine rückwirkende
       Korrektur).
-- [ ] `CCB-STEUERCHAT-REFERENZ.md` um den Hinweis zur jetzt aktiven
+- [x] `CCB-STEUERCHAT-REFERENZ.md` um den Hinweis zur jetzt aktiven
       Autoauflösung ergänzt.
-- [ ] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
+- [x] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
       Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.
+
+## RUN-01 — Hinweis zur Commit-Historie
+
+Die Implementierung in `src/bridge/cli.py`/`webui.py`/`importer.py` (Abschnitt
+2-4) wurde lokal umgesetzt und zum Commit vorgemerkt (`git add`), landete dann
+aber nicht unter einer eigenen BRIDGE-0031-Commit-Message, sondern wurde von
+einem **parallelen Prozess im selben Arbeitsverzeichnis** (Commit `f6b26c2`,
+Nachricht "Docs: Standardstart-Prompt um fehlende Verifikationspflichten aus
+ARBEITSWEISE.md ergaenzt") mit committet und bereits gepusht, bevor dieser
+Lauf selbst committen konnte. Der Dateiinhalt wurde per `git diff` gegen die
+Spezifikation verifiziert — identisch zu dem, was dieser Auftrag umsetzen
+sollte, keine fremden/unerwuenschten Aenderungen an diesen drei Dateien.
+Die anschliessenden Schritte (Tests, Doku, dieses Register) wurden regulaer
+unter eigenen BRIDGE-0031-Commits committet und sofort gepusht.
