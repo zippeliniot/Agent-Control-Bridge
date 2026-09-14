@@ -1,0 +1,59 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0033
+project_id: codex-control-bridge
+title: Zwei Bugfixes - Work-Package-Whitelist-Mismatch (--commit) + flaky Sortiertest
+description: 'Bei der Vier-Punkte-Pruefung von BRIDGE-032 gefunden: --commit bei run
+  finish scheitert systematisch am Checkbox-Commit des Work-Packages (zum zweiten
+  Mal in Folge, BRIDGE-031 und BRIDGE-032, jeweils manuell nachgezogen). Root Cause
+  in src/bridge/gitops.py expected_git_files(): erwartet work-packages/{volle 4-stellige
+  bridge_task_id}.md (z.B. BRIDGE-0032.md), tatsaechliche Konvention aller 32 bestehenden
+  Work-Package-Dateien ist 3-stellig ohne fuehrende Null (BRIDGE-032.md) - Whitelist
+  matcht nie. Fix: neue Hilfsfunktion _workpackage_filename() in gitops.py, konvertiert
+  korrekt (fuehrende Null entfernt, -R<n>-Suffix erhalten, robust fuer >=1000). Bestehende
+  32 Dateien werden NICHT umbenannt, gitops.py wird an die etablierte Konvention angepasst.
+  Zwei bestehende Tests in test_gitops.py muessen an die korrigierte Erwartung angepasst
+  werden. Zweiter, unabhaengiger Fund (von Claude Code bei BRIDGE-032 bereits diagnostiziert):
+  tests/test_cli.py test_overview_sort_active_before_inactive versucht ungueltigen
+  RUNNING->WAITING_FOR_RESUME-Uebergang (laut state-model.yaml nur ueber INTERRUPTED
+  erlaubt), CLI-Aufruf schlaegt unbemerkt fehl (Rueckgabewert nicht geprueft), beide
+  Testauftraege landen dadurch in derselben Aktiv-Sortiergruppe - daher die beobachtete
+  Flakiness, kein Produktionscode-Fehler. Fix: gueltigen Zwei-Schritt-Pfad nutzen,
+  alle CLI-Aufrufe im Test auf Exit-Code pruefen. Realer Regressionscheck von Fix
+  1 im Rahmen des eigenen Auftragsabschlusses durchfuehren und dokumentieren. Details
+  in work-packages/BRIDGE-033.md.'
+task_class: BUGFIX
+repository: Codex-Control-Bridge
+branch: main
+git:
+  expected_head: '8384473'
+model: Claude Sonnet 5
+reasoning_level: LOW
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- gitops.py - neue Hilfsfunktion konvertiert bridge_task_id korrekt in den etablierten
+  Work-Package-Dateinamen (3-stellig, fuehrende Null entfernt, -R<n>-Suffix erhalten,
+  robust auch fuer >=1000)
+- expected_git_files() nutzt diese Funktion fuer den work-packages/-Whitelist-Eintrag
+  statt des rohen task_id
+- Bestehende 32 Work-Package-Dateien NICHT umbenannt
+- test_gitops.py - beide betroffenen bestehenden Tests korrigiert, mindestens ein
+  neuer Test fuer den -R<n>-Fall
+- test_overview_sort_active_before_inactive nutzt den gueltigen RUNNING -> INTERRUPTED
+  -> WAITING_FOR_RESUME-Pfad
+- Alle self.cli(...)-Aufrufe in diesem Test pruefen ihren Exit-Code
+- Test mehrfach einzeln wiederholt (5-10x) durchgaengig gruen, nicht nur einmal im
+  Gesamtlauf
+- Realer Regressionscheck von Fix 1 durchgefuehrt (nicht nur Unit-Test behauptet)
+  und im Work-Package dokumentiert
+- Volle Testsuite (bestehend + angepasst) dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt (Ausnahme siehe Hinweis im Pflichtblock
+  zu diesem einen letzten moeglichen Whitelist-Mismatch)
+status: RUNNING
+created_at: '2026-09-14T00:00:00Z'
+created_by: browser-claude
+priority: MEDIUM
