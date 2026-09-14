@@ -32,6 +32,7 @@ Push-Retry (BRIDGE-029):
 
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 
@@ -41,6 +42,38 @@ _GIT_PUSH_TIMEOUT = 60  # Sekunden, Timeout fuer git push (Netz)
 # Muster in stderr/stdout, die auf einen Non-Fast-Forward-Push-Fehler hinweisen.
 # Nur bei diesen Mustern wird ein Rebase-Retry ausgeloest (BRIDGE-029).
 _NON_FAST_FORWARD_PATTERNS = ("rejected", "non-fast-forward", "fetch first")
+
+# Zerlegt eine bridge_task_id in Praefix, Nummer und optionalen -R<n>-Suffix.
+# Lokale, eigenstaendige Kopie (kein Cross-Import mit store.py, BRIDGE-033).
+_TASK_ID_RE = re.compile(r"^(?P<prefix>[A-Z]{1,8})-(?P<number>[0-9]{4})(?P<suffix>-R[0-9]+)?$")
+
+
+def _workpackage_filename(task_id: str) -> str:
+    """Bildet ``bridge_task_id`` auf den etablierten Work-Package-Dateinamen ab.
+
+    Alle 32 bestehenden Work-Package-Dateien (BRIDGE-001.md ... BRIDGE-032.md)
+    folgen der 3-stelligen Konvention ohne fuehrende Null - anders als
+    ``bridge_task_id`` selbst, die immer 4-stellig ist (BRIDGE-0032). Die
+    Dateien werden nicht umbenannt (BRIDGE-033); stattdessen bildet diese
+    Funktion korrekt ab: fuehrende Null entfernt, -R<n>-Suffix erhalten,
+    robust auch fuer Nummern ab 1000 (kein starres Abschneiden auf 3 Stellen).
+
+    Beispiele: BRIDGE-0032 -> BRIDGE-032, BRIDGE-0027-R1 -> BRIDGE-027-R1,
+    BRIDGE-1000 -> BRIDGE-1000.
+
+    Passt ``task_id`` nicht auf das erwartete Muster (z. B. DORF-0042, das
+    keine eigenen Work-Package-Dateien in diesem Repo hat), wird ``task_id``
+    unveraendert zurueckgegeben - fail-closed waere hier falsch, da die
+    Whitelist dann schlicht keinen Treffer landet statt einen Fehler zu
+    werfen.
+    """
+    match = _TASK_ID_RE.match(task_id)
+    if match is None:
+        return task_id
+    prefix = match.group("prefix")
+    number = int(match.group("number"))
+    suffix = match.group("suffix") or ""
+    return f"{prefix}-{number:03d}{suffix}"
 
 
 def expected_git_files(kind: str, task_id: str,
@@ -64,7 +97,7 @@ def expected_git_files(kind: str, task_id: str,
             # Alles unter dem Lauf-Verzeichnis (result.yaml, heartbeat.json, ...)
             base.append(f"results/{task_id}/{run_id}/")
         # Work-Package wird ggf. mit Checkbox-Aenderungen committet
-        base.append(f"work-packages/{task_id}.md")
+        base.append(f"work-packages/{_workpackage_filename(task_id)}.md")
 
     elif kind == "run_start":
         if run_id:

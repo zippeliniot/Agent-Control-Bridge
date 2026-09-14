@@ -73,12 +73,14 @@ class ExpectedGitFilesTests(unittest.TestCase):
         self.assertIn("tasks/BRIDGE-0001/task.yaml", files)
         self.assertIn("audit/audit.jsonl", files)
         self.assertIn("results/BRIDGE-0001/RUN-01/", files)
-        self.assertIn("work-packages/BRIDGE-0001.md", files)
+        # BRIDGE-033: Work-Package-Dateiname folgt der etablierten 3-stelligen
+        # Konvention (ohne fuehrende Null), nicht der 4-stelligen bridge_task_id.
+        self.assertIn("work-packages/BRIDGE-001.md", files)
 
     def test_finish_webui_includes_results_and_workpackage(self):
         files = gitops.expected_git_files("finish", "BRIDGE-0001", "RUN-01")
         self.assertIn("results/BRIDGE-0001/RUN-01/", files)
-        self.assertIn("work-packages/BRIDGE-0001.md", files)
+        self.assertIn("work-packages/BRIDGE-001.md", files)
 
     def test_task_copied(self):
         files = gitops.expected_git_files("task_copied", "BRIDGE-0002")
@@ -103,6 +105,33 @@ class ExpectedGitFilesTests(unittest.TestCase):
         files = gitops.expected_git_files("archive", "BRIDGE-0005")
         self.assertIn("tasks/BRIDGE-0005/task.yaml", files)
         self.assertIn("audit/audit.jsonl", files)
+
+
+# --------------------------------------------------------------------------- #
+# _workpackage_filename (BRIDGE-033)
+# --------------------------------------------------------------------------- #
+
+class WorkpackageFilenameTests(unittest.TestCase):
+    """bridge_task_id -> etablierter Work-Package-Dateiname (3-stellig,
+    ohne fuehrende Null, -R<n>-Suffix erhalten, robust auch fuer >=1000)."""
+
+    def test_plain_id_drops_leading_zero(self):
+        self.assertEqual(gitops._workpackage_filename("BRIDGE-0032"), "BRIDGE-032")
+
+    def test_review_suffix_id_preserved(self):
+        self.assertEqual(
+            gitops._workpackage_filename("BRIDGE-0027-R1"), "BRIDGE-027-R1")
+
+    def test_four_digit_number_unaffected(self):
+        # Ab 1000 ist die Nummer bereits 4-stellig - kein starres Abschneiden.
+        self.assertEqual(gitops._workpackage_filename("BRIDGE-1000"), "BRIDGE-1000")
+
+    def test_unrecognized_id_returned_unchanged(self):
+        # Faellt nicht auf das erwartete Muster (z.B. dreistellige Nummer) ->
+        # unveraendert zurueckgeben statt zu werfen (kein eigener
+        # Work-Package-Anwendungsfall betroffen, Whitelist landet dann einfach
+        # keinen Treffer).
+        self.assertEqual(gitops._workpackage_filename("BRIDGE-042"), "BRIDGE-042")
 
 
 # --------------------------------------------------------------------------- #

@@ -614,8 +614,18 @@ class CliOverviewTests(unittest.TestCase):
         }), encoding="utf-8")
 
         # BRIDGE-0902: WAITING_FOR_RESUME -> immer inaktiv
+        # RUNNING -> WAITING_FOR_RESUME ist laut state-model.yaml KEIN gueltiger
+        # Uebergang (nur ueber INTERRUPTED erlaubt) - gueltiger Zwei-Schritt-Pfad,
+        # jeder Schritt auf Erfolg geprueft (BRIDGE-033: ein stillschweigend
+        # fehlschlagender Testaufbau darf nicht unbemerkt bleiben).
         self._make_task("BRIDGE-0902", target_status="RUNNING")
-        self.cli("task", "set-status", "BRIDGE-0902", "WAITING_FOR_RESUME", "--actor", "x")
+        code, _, err = self.cli(
+            "task", "set-status", "BRIDGE-0902", "INTERRUPTED",
+            "--actor", "x", "--reason", "Test")
+        self.assertEqual(code, 0, err)
+        code, _, err = self.cli(
+            "task", "set-status", "BRIDGE-0902", "WAITING_FOR_RESUME", "--actor", "x")
+        self.assertEqual(code, 0, err)
 
         store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
         rows = _overview_rows(store, now=now)
