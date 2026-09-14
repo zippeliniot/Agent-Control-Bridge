@@ -1,0 +1,67 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0032
+project_id: codex-control-bridge
+title: Review-Unternummern-Schema - -R<n>-Suffix + fail-closed Durchsetzung von READONLY_CHECK
+description: 'Urspruenglich als BRIDGE-0030 in docs/CCB-ORCHESTRATOR-KONZEPT.md geplant,
+  durch zwei zwischenzeitlich eingeschobene Auftraege zweimal verschoben (jetzt BRIDGE-0032).
+  Ziel laut Konzeptdokument: Support-KI-Pruefauftraege bekommen eine sichtbare Unternummer
+  (z.B. BRIDGE-0027-R1), task_class: READONLY_CHECK, technisch auf reine Leserechte
+  beschraenkt. Vor der Spezifikation der echte Code geprueft: task_class READONLY_CHECK
+  existiert bereits im Schema-Enum (genutzt von scripts/integration_readonly.py),
+  aber nirgends technisch durchgesetzt - ein READONLY_CHECK-Auftrag mit z.B. GIT_PUSH-Recht
+  wuerde heute anstandslos angelegt. review_roles ist rein anzeigend, kein Auth-Mechanismus
+  fuer actor/created_by vorhanden - "technische Durchsetzung als Leserrolle" kann
+  daher nur Rechte-Erzwingung (permissions exakt [READ_ONLY]) bedeuten, keine Identitaetspruefung.
+  Sechs synchron zu haltende Fundstellen des aktuellen ID-Patterns (^[A-Z]{1,8}-[0-9]{4}$):
+  task.schema.yaml (bridge_task_id UND depends_on-Items - zwei Stellen), audit-event.schema.yaml,
+  result.schema.yaml, heartbeat.schema.yaml, store.py/_ID_RE, heartbeat.py/_ID_RE
+  - alle auf ^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$ erweitern. Neue fail-closed Geschaeftsregel
+  in store.py (create_task UND save_task, gleiche Pruefmethode): (a) task_class==READONLY_CHECK
+  -> permissions muss exakt [READ_ONLY] sein: (b) -R<n>-Suffix -> task_class muss
+  READONLY_CHECK sein; (c) -R<n>-Suffix -> Basis-ID (Teil vor -R<n>) muss bereits
+  als Auftrag im Store existieren (Steuerchat-Default-Entscheidung, verhindert Review-IDs
+  ohne existierenden Basis-Auftrag, kein depends_on-Zwang). Bestehender Anwendungsfall
+  BRIDGE-0912 (integration_readonly.py, READONLY_CHECK + [READ_ONLY], kein -R<n>-Suffix)
+  muss unveraendert lauffaehig bleiben - als Regressionscheck ausfuehren. Neue Tests
+  in tests/test_store.py fuer alle Ablehnungs- und Erfolgsfaelle. docs/CCB-ORCHESTRATOR-KONZEPT.md
+  Roadmap-Tabelle aktualisieren (Historie sichtbar lassen) und klarstellen, dass "technische
+  Durchsetzung als Leserrolle" Rechte-Erzwingung meint, keine Identitaetspruefung.
+  schemas/state-model.yaml bleibt unveraendert (kein neuer Zustand). Details in work-packages/BRIDGE-032.md.'
+task_class: FEATURE
+repository: Codex-Control-Bridge
+branch: main
+git:
+  expected_head: '0026643'
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- bridge_task_id-Pattern an allen sechs Fundstellen synchron auf ^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$
+  erweitert
+- task.schema.yaml - sowohl bridge_task_id als auch die depends_on-Items-Pattern erweitert
+- create_task() und save_task() rufen dieselbe neue Geschaeftsregel-Pruefung auf,
+  kein Duplicated Code
+- READONLY_CHECK-Auftrag mit permissions != [READ_ONLY] wird fail-closed abgelehnt
+  (create_task und save_task)
+- -R<n>-ID mit task_class != READONLY_CHECK wird fail-closed abgelehnt
+- -R<n>-ID ohne existierende Basis-ID im Store wird fail-closed abgelehnt
+- Bestehender READONLY_CHECK-Anwendungsfall ohne -R<n>-Suffix (scripts/integration_readonly.py,
+  BRIDGE-0912) bleibt unveraendert lauffaehig - als Regressionscheck ausgefuehrt
+- Neue Tests in tests/test_store.py fuer alle sechs Faelle (vier Ablehnungen, ein
+  Erfolgsfall, ein Eskalations-Verhinderungsfall ueber save_task), gruen
+- docs/CCB-ORCHESTRATOR-KONZEPT.md Roadmap-Tabelle aktualisiert, Historie (urspruenglich
+  BRIDGE-0030) sichtbar erhalten
+- docs/CCB-ORCHESTRATOR-KONZEPT.md stellt klar - technische Durchsetzung als Leserrolle
+  = Rechte-Erzwingung, keine Identitaetspruefung
+- schemas/state-model.yaml unveraendert (kein neuer Zustand noetig)
+- Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-14T00:00:00Z'
+created_by: browser-claude
+priority: MEDIUM
