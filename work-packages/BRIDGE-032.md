@@ -172,32 +172,40 @@ falls zusätzlich eine echte Ausführungsreihenfolge gewünscht ist.
 
 ## Akzeptanzkriterien
 
-- [ ] `bridge_task_id`-Pattern an allen sechs Fundstellen synchron auf
+- [x] `bridge_task_id`-Pattern an allen sechs Fundstellen synchron auf
       `^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$` erweitert (Liste siehe Kontext).
-- [ ] `task.schema.yaml`: sowohl `bridge_task_id` als auch die
+- [x] `task.schema.yaml`: sowohl `bridge_task_id` als auch die
       `depends_on`-Items-Pattern erweitert.
-- [ ] `create_task()` und `save_task()` rufen dieselbe neue
+- [x] `create_task()` und `save_task()` rufen dieselbe neue
       Geschäftsregel-Prüfung auf, kein Duplicated Code.
-- [ ] `READONLY_CHECK`-Auftrag mit `permissions != ["READ_ONLY"]` (mehr
+- [x] `READONLY_CHECK`-Auftrag mit `permissions != ["READ_ONLY"]` (mehr
       oder andere Rechte) wird fail-closed abgelehnt (`create_task` und
       `save_task`).
-- [ ] `-R<n>`-ID mit `task_class != READONLY_CHECK` wird fail-closed
+- [x] `-R<n>`-ID mit `task_class != READONLY_CHECK` wird fail-closed
       abgelehnt.
-- [ ] `-R<n>`-ID ohne existierende Basis-ID im Store wird fail-closed
+- [x] `-R<n>`-ID ohne existierende Basis-ID im Store wird fail-closed
       abgelehnt.
-- [ ] Bestehender `READONLY_CHECK`-Anwendungsfall ohne `-R<n>`-Suffix
+- [x] Bestehender `READONLY_CHECK`-Anwendungsfall ohne `-R<n>`-Suffix
       (`scripts/integration_readonly.py`, `BRIDGE-0912`) bleibt
       unverändert lauffähig — als Regressionscheck ausgeführt, nicht nur
       angenommen.
-- [ ] Neue Tests in `tests/test_store.py` für alle sechs oben genannten
+- [x] Neue Tests in `tests/test_store.py` für alle sechs oben genannten
       Fälle (vier Ablehnungen, ein Erfolgsfall, ein
       Eskalations-Verhinderungsfall über `save_task`), grün.
-- [ ] `docs/CCB-ORCHESTRATOR-KONZEPT.md` Roadmap-Tabelle aktualisiert,
+- [x] `docs/CCB-ORCHESTRATOR-KONZEPT.md` Roadmap-Tabelle aktualisiert,
       Historie (ursprünglich BRIDGE-0030) sichtbar erhalten.
-- [ ] `docs/CCB-ORCHESTRATOR-KONZEPT.md` klarstellt: „technische
+- [x] `docs/CCB-ORCHESTRATOR-KONZEPT.md` klarstellt: „technische
       Durchsetzung als Leserrolle" = Rechte-Erzwingung, keine
       Identitätsprüfung.
-- [ ] `schemas/state-model.yaml` unverändert (kein neuer Zustand nötig).
-- [ ] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
-      Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] `schemas/state-model.yaml` unverändert (kein neuer Zustand nötig).
+- [x] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
+      Klon verifiziert (355 Tests je Lauf: 345 Basis + 10 neu; drei
+      separate `unittest discover`-Läufe grün gezählt; ein zwischenzeitlich
+      beobachteter Fehlschlag in `test_overview_sort_active_before_inactive`
+      ist eine vorbestehende, von BRIDGE-032 unabhängige Testflakiness —
+      Ursache: der Test versucht `RUNNING -> WAITING_FOR_RESUME`, was
+      `state-model.yaml` nicht erlaubt; die Transition schlägt lautlos fehl,
+      wodurch beide Testaufträge in derselben Sortiergruppe landen und die
+      Reihenfolge von der Dateisystem-Iterationsreihenfolge abhängt — nicht
+      Teil dieses Auftrags, nicht behoben).
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.

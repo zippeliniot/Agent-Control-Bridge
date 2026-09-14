@@ -1,0 +1,50 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0032
+project_id: codex-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: Codex-Control-Bridge
+branch: main
+head: 563c7faf081880b2446364d6f9d61125a6c0e89c
+executor: claude-code
+started_at: '2026-09-14T12:51:04Z'
+ended_at: '2026-09-14T13:32:26Z'
+created_by: claude-code@HAM11
+base_head: '0026643'
+commits:
+- sha: 9993ee2cd19fd34901369ed5cc497b2eb20e8c5b
+  message: 'Work-Package BRIDGE-032: Review-Unternummern-Schema'
+- sha: 9e9e95fbfb4a4ce23bdb67665c77afe0f68db012
+  message: 'Ops: BRIDGE-0032 run_start (Steuerchat-Aktion via CLI)'
+- sha: 563c7faf081880b2446364d6f9d61125a6c0e89c
+  message: 'BRIDGE-032: Review-Unternummern-Schema (-R<n>-Suffix) + fail-closed READONLY_CHECK-Durchsetzung'
+changed_files:
+- audit/audit.jsonl
+- docs/CCB-ORCHESTRATOR-KONZEPT.md
+- results/BRIDGE-0032/RUN-01/heartbeat.json
+- schemas/audit-event.schema.yaml
+- schemas/heartbeat.schema.yaml
+- schemas/result.schema.yaml
+- schemas/task.schema.yaml
+- src/bridge/heartbeat.py
+- src/bridge/store.py
+- tasks/BRIDGE-0032/task.yaml
+- tests/test_heartbeat.py
+- tests/test_store.py
+- work-packages/BRIDGE-032.md
+summary: 'Review-Unternummern-Schema umgesetzt: bridge_task_id-Pattern an sechs synchron
+  zu haltenden Stellen (task.schema.yaml x2, audit-event.schema.yaml, result.schema.yaml,
+  heartbeat.schema.yaml, store.py/_ID_RE, heartbeat.py/_ID_RE) um optionalen -R<n>-Suffix
+  erweitert. Neue fail-closed Geschaeftsregel in store.py (create_task + save_task):
+  READONLY_CHECK-Auftraege muessen permissions exakt [READ_ONLY] haben, -R<n>-IDs
+  muessen READONLY_CHECK sein und eine existierende Basis-ID referenzieren. Technische
+  Durchsetzung heisst konkret Rechte-Erzwingung, keine Identitaetspruefung (kein Auth-Mechanismus
+  fuer actor/created_by vorhanden). Orchestrator-Konzept-Roadmap aktualisiert. Bestehender
+  READONLY_CHECK-Anwendungsfall (BRIDGE-0912, integration_readonly.py) unveraendert
+  lauffaehig, als Regressionscheck ausgefuehrt. Volle Testsuite dreimal frisch gruen
+  gezaehlt (355 Tests je Lauf: 345 Basis + 10 neu); dabei vorbestehende, von diesem
+  Auftrag unabhaengige Flakiness in test_overview_sort_active_before_inactive (test_cli.py)
+  entdeckt und dokumentiert (im Work-Package vermerkt), nicht behoben (ausserhalb
+  des Scopes).'
+physical_machine: HAM11
