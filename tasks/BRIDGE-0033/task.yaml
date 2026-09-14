@@ -53,7 +53,7 @@ acceptance_criteria:
 - Volle Testsuite (bestehend + angepasst) dreimal frisch gruen, frischer Klon verifiziert
 - Jeder Commit sofort gepusht, nicht gesammelt (Ausnahme siehe Hinweis im Pflichtblock
   zu diesem einen letzten moeglichen Whitelist-Mismatch)
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-09-14T00:00:00Z'
 created_by: browser-claude
 priority: MEDIUM

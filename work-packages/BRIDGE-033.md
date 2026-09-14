@@ -151,23 +151,25 @@ Testproblem.
 
 ## Akzeptanzkriterien
 
-- [ ] `gitops.py`: neue Hilfsfunktion konvertiert `bridge_task_id` korrekt
+- [x] `gitops.py`: neue Hilfsfunktion konvertiert `bridge_task_id` korrekt
       in den etablierten Work-Package-Dateinamen (3-stellig, führende
       Null entfernt, `-R<n>`-Suffix erhalten, robust auch für ≥1000).
-- [ ] `expected_git_files()` nutzt diese Funktion für den
+- [x] `expected_git_files()` nutzt diese Funktion für den
       `work-packages/`-Whitelist-Eintrag statt des rohen `task_id`.
-- [ ] Bestehende 32 Work-Package-Dateien **nicht** umbenannt.
-- [ ] `test_gitops.py`: beide betroffenen bestehenden Tests korrigiert,
+- [x] Bestehende 32 Work-Package-Dateien **nicht** umbenannt.
+- [x] `test_gitops.py`: beide betroffenen bestehenden Tests korrigiert,
       mindestens ein neuer Test für den `-R<n>`-Fall.
-- [ ] `test_overview_sort_active_before_inactive`: nutzt den gültigen
+- [x] `test_overview_sort_active_before_inactive`: nutzt den gültigen
       `RUNNING -> INTERRUPTED -> WAITING_FOR_RESUME`-Pfad.
-- [ ] Alle `self.cli(...)`-Aufrufe in diesem Test prüfen ihren Exit-Code.
-- [ ] Test mehrfach einzeln wiederholt (5–10×) durchgängig grün, nicht
-      nur einmal im Gesamtlauf.
+- [x] Alle `self.cli(...)`-Aufrufe in diesem Test prüfen ihren Exit-Code.
+- [x] Test mehrfach einzeln wiederholt (5–10×) durchgängig grün, nicht
+      nur einmal im Gesamtlauf (10/10 Einzelläufe grün).
 - [ ] Realer Regressionscheck von Fix 1 durchgeführt (nicht nur Unit-Test
       behauptet) und im Work-Package dokumentiert.
-- [ ] Volle Testsuite (bestehend + angepasst) dreimal frisch grün,
-      frischer Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt (Ausnahme siehe
+- [x] Volle Testsuite (bestehend + angepasst) dreimal frisch grün,
+      frischer Klon verifiziert (359 Tests je Lauf: 355 Basis + 4 neu;
+      drei separate `unittest discover`-Läufe grün gezählt, inkl. der
+      zuvor flakigen `test_overview_sort_active_before_inactive`).
+- [x] Jeder Commit sofort gepusht, nicht gesammelt (Ausnahme siehe
       Hinweis im Pflichtblock zu diesem einen letzten möglichen
       Whitelist-Mismatch).
