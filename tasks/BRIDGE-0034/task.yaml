@@ -52,7 +52,7 @@ acceptance_criteria:
 - Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag
 - Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
 - Jeder Commit sofort gepusht, nicht gesammelt
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-09-14T00:00:00Z'
 created_by: browser-claude
 priority: MEDIUM
