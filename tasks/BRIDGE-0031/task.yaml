@@ -59,7 +59,7 @@ acceptance_criteria:
 - CCB-STEUERCHAT-REFERENZ.md um den Hinweis zur jetzt aktiven Autoaufloesung ergaenzt
 - Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
 - Jeder Commit sofort gepusht, nicht gesammelt
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-09-14T00:00:00Z'
 created_by: browser-claude
 priority: HIGH
