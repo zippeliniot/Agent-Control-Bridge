@@ -5,6 +5,7 @@ Startet einen echten Server auf einem vom OS vergebenen Port (0), ruft ihn per
 """
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -347,17 +348,22 @@ class WebUiReadTests(WebUiBase):
     # -- BRIDGE-030: Maschinen-Spalte, last_activity_ts, Sortierung, Dropdown ---
 
     def test_api_board_board_row_contains_machine(self):
-        """board-Payload: jede Board-Zeile hat ein 'machine'-Feld."""
-        self.make_task("BRIDGE-0901", "WAITING_FOR_COPY_TO_CONTROL")
-        self.start()
-        code, body = self.get("/api/board")
-        self.assertEqual(code, 200)
-        data = json.loads(body)
-        self.assertGreater(len(data["board"]), 0)
-        row = data["board"][0]
-        self.assertIn("machine", row)
-        # Kein Heartbeat, kein Audit mit machine -> '?'
-        self.assertEqual(row["machine"], "?")
+        """board-Payload: jede Board-Zeile hat ein 'machine'-Feld.
+
+        Seit BRIDGE-031 loest 'task set-status' (hier via make_task()'s
+        Zustandswanderung genutzt) die Maschine ueber COMPUTERNAME auf statt
+        None hartzukodieren -> Audit-Eintrag traegt jetzt die echte Maschine.
+        """
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-BOARD"}):
+            self.make_task("BRIDGE-0901", "WAITING_FOR_COPY_TO_CONTROL")
+            self.start()
+            code, body = self.get("/api/board")
+            self.assertEqual(code, 200)
+            data = json.loads(body)
+            self.assertGreater(len(data["board"]), 0)
+            row = data["board"][0]
+            self.assertIn("machine", row)
+            self.assertEqual(row["machine"], "TESTHOST-BOARD")
 
     def test_api_board_other_row_contains_machine(self):
         """board-Payload 'other': jede Zeile hat ein 'machine'-Feld."""
@@ -526,6 +532,27 @@ class WebUiActionTests(WebUiBase):
         self.assertEqual(code, 200)
         self.assertEqual(self.status_of("BRIDGE-0901"), "ARCHIVED")
 
+    # -- Maschinenaufloesung (BRIDGE-031) -------------------------
+
+    def test_copied_writes_computername_to_audit(self):
+        self.make_task("BRIDGE-0901", "WAITING_FOR_COPY_TO_CONTROL")
+        self.start()
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-COPIED"}):
+            code, _ = self.post_json("/api/task/BRIDGE-0901/copied",
+                                     {"actor": "human", "confirm": True})
+        self.assertEqual(code, 200)
+        self.assertEqual(self.audit_lines()[-1].get("machine"), "TESTHOST-COPIED")
+
+    def test_archive_writes_computername_to_audit(self):
+        self.make_task("BRIDGE-0901", "REVIEW_REQUIRED")
+        self.start()
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-ARCHIVE"}):
+            code, _ = self.post_json("/api/task/BRIDGE-0901/archive",
+                                     {"actor": "human", "confirm": True,
+                                      "reason": "fertig"})
+        self.assertEqual(code, 200)
+        self.assertEqual(self.audit_lines()[-1].get("machine"), "TESTHOST-ARCHIVE")
+
     def test_finish_success_auto_chains_and_writes_result(self):
         self.make_task("BRIDGE-0901")                 # -> WAITING_FOR_HANDOFF
         self.cli("run", "start", "BRIDGE-0901", "--actor", "x")   # -> RUNNING + Heartbeat
@@ -541,6 +568,21 @@ class WebUiActionTests(WebUiBase):
         self.assertEqual(self.status_of("BRIDGE-0901"), "WAITING_FOR_COPY_TO_CONTROL")
         self.assertTrue((self.tmp / "results" / "BRIDGE-0901" / "RUN-01"
                          / "result.yaml").exists())
+
+    def test_finish_writes_computername_to_result(self):
+        self.make_task("BRIDGE-0901")                 # -> WAITING_FOR_HANDOFF
+        self.cli("run", "start", "BRIDGE-0901", "--actor", "x")   # -> RUNNING + Heartbeat
+        self.start()
+        with mock.patch.object(importer, "collect_git_info", self._git_stub), \
+             mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-FINISH"}):
+            code, data = self.post_json(
+                "/api/run/BRIDGE-0901/finish",
+                {"actor": "human", "confirm": True, "status": "COMPLETED",
+                 "summary": "Web-Abschluss Testlauf"})
+        self.assertEqual(code, 200, data)
+        doc = yaml.safe_load((self.tmp / "results" / "BRIDGE-0901" / "RUN-01"
+                              / "result.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(doc["physical_machine"], "TESTHOST-FINISH")
 
     def test_finish_without_summary_is_400(self):
         self.make_task("BRIDGE-0901", "RUNNING")

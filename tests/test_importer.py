@@ -5,6 +5,7 @@ importer.collect_git_info gestubbt - kein echtes Git nötig.
 """
 
 import io
+import os
 import re
 import shutil
 import sys
@@ -145,6 +146,29 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(doc["summary"], "aus flag")
 
+    # -- Maschinenaufloesung (BRIDGE-031) -----------------------------
+
+    def test_machine_resolved_from_computername_when_not_given(self):
+        """Ohne expliziten machine-Parameter: COMPUTERNAME statt 'unknown'
+        (ersetzt die frueher genutzte, nie gesetzte BRIDGE_MACHINE-Env-Var)."""
+        with mock.patch.dict(os.environ,
+                             {"COMPUTERNAME": "TESTHOST-IMPORT"}, clear=False):
+            os.environ.pop("BRIDGE_MACHINE", None)
+            doc = importer.build_result(self.store, "BRIDGE-0900", "COMPLETED",
+                                        git_info_fn=git_stub)
+        self.assertEqual(doc["physical_machine"], "TESTHOST-IMPORT")
+        self.assertEqual(doc["created_by"], "claude-code@TESTHOST-IMPORT")
+
+    def test_machine_explicit_wins_over_computername(self):
+        """Expliziter machine-Parameter hat weiterhin Vorrang vor COMPUTERNAME."""
+        with mock.patch.dict(os.environ,
+                             {"COMPUTERNAME": "TESTHOST-IMPORT"}, clear=False):
+            doc = importer.build_result(self.store, "BRIDGE-0900", "COMPLETED",
+                                        machine="EXPLICIT-MACHINE",
+                                        git_info_fn=git_stub)
+        self.assertEqual(doc["physical_machine"], "EXPLICIT-MACHINE")
+        self.assertEqual(doc["created_by"], "claude-code@EXPLICIT-MACHINE")
+
     # -- INTERRUPTED / fail-closed -----------------------------------
 
     def test_interrupted_without_reason_fails_closed(self):
@@ -199,6 +223,33 @@ class ImporterTests(unittest.TestCase):
             code, _, err = self.cli("result", "import", "BRIDGE-0900")
         self.assertEqual(code, 2)
         self.assertNotIn("Traceback", err)
+
+    # -- Maschinenaufloesung (BRIDGE-031) -----------------------------
+
+    def test_cli_import_resolves_computername_without_machine_flag(self):
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-IMPORT"},
+                             clear=False), \
+             mock.patch.object(importer, "collect_git_info", git_stub):
+            code, out, err = self.cli("result", "import", "BRIDGE-0900",
+                                      "--status", "COMPLETED",
+                                      "--base-head", "a" * 40)
+        self.assertEqual(code, 0, err)
+        doc = yaml.safe_load((self.tmp / "results" / "BRIDGE-0900" / "RUN-01"
+                              / "result.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(doc["physical_machine"], "TESTHOST-IMPORT")
+
+    def test_cli_import_explicit_machine_wins(self):
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-IMPORT"},
+                             clear=False), \
+             mock.patch.object(importer, "collect_git_info", git_stub):
+            code, out, err = self.cli("result", "import", "BRIDGE-0900",
+                                      "--status", "COMPLETED",
+                                      "--base-head", "a" * 40,
+                                      "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        doc = yaml.safe_load((self.tmp / "results" / "BRIDGE-0900" / "RUN-01"
+                              / "result.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(doc["physical_machine"], "EXPLICIT-M")
 
 
 if __name__ == "__main__":

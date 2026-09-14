@@ -173,6 +173,67 @@ class CliTests(unittest.TestCase):
                      "task", "archive", "BRIDGE-0900"])
         self.assertEqual(code, 2)
 
+    # -- Maschinenaufloesung (BRIDGE-031) --------------------------
+
+    def _last_audit_machine(self, task_id):
+        import json
+        events = [json.loads(l) for l in
+                  (self.tmp / "audit" / "audit.jsonl").read_text(encoding="utf-8").splitlines()
+                  if l.strip()]
+        events = [e for e in events if e.get("bridge_task_id") == task_id]
+        self.assertTrue(events, f"keine Audit-Eintraege fuer {task_id}")
+        return events[-1].get("machine")
+
+    def test_task_copied_resolves_computername_without_machine_flag(self):
+        self.cli("task", "create", str(self.write_yaml("t.yaml", task_doc())))
+        self._walk_to_waiting_copy("BRIDGE-0900")
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-COPIED"}, clear=False):
+            code, _, err = self.cli("task", "copied", "BRIDGE-0900", "--actor", "x")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self._last_audit_machine("BRIDGE-0900"), "TESTHOST-COPIED")
+
+    def test_task_copied_explicit_machine_wins(self):
+        self.cli("task", "create", str(self.write_yaml("t.yaml", task_doc())))
+        self._walk_to_waiting_copy("BRIDGE-0900")
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-COPIED"}, clear=False):
+            code, _, err = self.cli("task", "copied", "BRIDGE-0900", "--actor", "x",
+                                    "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self._last_audit_machine("BRIDGE-0900"), "EXPLICIT-M")
+
+    def test_task_archive_resolves_computername_without_machine_flag(self):
+        self.cli("task", "create", str(self.write_yaml("t.yaml", task_doc())))
+        self._walk("BRIDGE-0900", "CLAIMED", "RUNNING", "REVIEW_REQUIRED")
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-ARCHIVE"}, clear=False):
+            code, _, err = self.cli("task", "archive", "BRIDGE-0900", "--actor", "x")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self._last_audit_machine("BRIDGE-0900"), "TESTHOST-ARCHIVE")
+
+    def test_task_archive_explicit_machine_wins(self):
+        self.cli("task", "create", str(self.write_yaml("t.yaml", task_doc())))
+        self._walk("BRIDGE-0900", "CLAIMED", "RUNNING", "REVIEW_REQUIRED")
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-ARCHIVE"}, clear=False):
+            code, _, err = self.cli("task", "archive", "BRIDGE-0900", "--actor", "x",
+                                    "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self._last_audit_machine("BRIDGE-0900"), "EXPLICIT-M")
+
+    def test_set_status_resolves_computername_without_machine_flag(self):
+        self.cli("task", "create", str(self.write_yaml("t.yaml", task_doc())))
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-STATUS"}, clear=False):
+            code, _, err = self.cli("task", "set-status", "BRIDGE-0900", "CLAIMED",
+                                    "--actor", "x")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self._last_audit_machine("BRIDGE-0900"), "TESTHOST-STATUS")
+
+    def test_set_status_explicit_machine_wins(self):
+        self.cli("task", "create", str(self.write_yaml("t.yaml", task_doc())))
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-STATUS"}, clear=False):
+            code, _, err = self.cli("task", "set-status", "BRIDGE-0900", "CLAIMED",
+                                    "--actor", "x", "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self._last_audit_machine("BRIDGE-0900"), "EXPLICIT-M")
+
     # -- result / next-run --------------------------------------
 
     def test_result_write_and_next_run(self):
@@ -703,6 +764,31 @@ class CliPriorityTests(unittest.TestCase):
                   if l.strip()]
         types = [e["event_type"] for e in events]
         self.assertIn("PRIORITY_CHANGED", types)
+
+    def test_set_priority_resolves_computername_without_machine_flag(self):
+        """BRIDGE-031: set-priority ohne --machine loest COMPUTERNAME auf."""
+        import json
+        self._make_task("BRIDGE-0901")
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-PRIO"}, clear=False):
+            self.cli("task", "set-priority", "BRIDGE-0901", "HIGH", "--actor", "test")
+        events = [json.loads(l) for l in
+                  (self.tmp / "audit" / "audit.jsonl").read_text(encoding="utf-8").splitlines()
+                  if l.strip()]
+        prio_events = [e for e in events if e["event_type"] == "PRIORITY_CHANGED"]
+        self.assertEqual(prio_events[-1].get("machine"), "TESTHOST-PRIO")
+
+    def test_set_priority_explicit_machine_wins(self):
+        """BRIDGE-031: expliziter --machine-Wert hat Vorrang vor COMPUTERNAME."""
+        import json
+        self._make_task("BRIDGE-0901")
+        with mock.patch.dict(os.environ, {"COMPUTERNAME": "TESTHOST-PRIO"}, clear=False):
+            self.cli("task", "set-priority", "BRIDGE-0901", "HIGH", "--actor", "test",
+                     "--machine", "EXPLICIT-M")
+        events = [json.loads(l) for l in
+                  (self.tmp / "audit" / "audit.jsonl").read_text(encoding="utf-8").splitlines()
+                  if l.strip()]
+        prio_events = [e for e in events if e["event_type"] == "PRIORITY_CHANGED"]
+        self.assertEqual(prio_events[-1].get("machine"), "EXPLICIT-M")
 
     def test_set_priority_invalid_value_rejected(self):
         """Ungueltige Prioritaet wird mit Exit 2 (usage-Fehler) abgelehnt."""

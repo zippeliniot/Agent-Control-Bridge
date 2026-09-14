@@ -350,6 +350,106 @@ class CliRunTests(Base):
         self.assertEqual(code, 2)
         self.assertNotIn("Traceback", err)
 
+    # -- Maschinenaufloesung (BRIDGE-031) --------------------------
+
+    def test_run_start_resolves_computername_without_machine_flag(self):
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-START"},
+                             clear=False):
+            code, _, err = self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            heartbeat.read_heartbeat(self.tmp, "BRIDGE-0900", "RUN-01")["machine"],
+            "TESTHOST-START")
+
+    def test_run_start_explicit_machine_wins(self):
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-START"},
+                             clear=False):
+            code, _, err = self.cli("run", "start", "BRIDGE-0900", "--actor", "a",
+                                    "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            heartbeat.read_heartbeat(self.tmp, "BRIDGE-0900", "RUN-01")["machine"],
+            "EXPLICIT-M")
+
+    def test_run_beat_resolves_computername_without_machine_flag(self):
+        self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-BEAT"},
+                             clear=False):
+            code, _, err = self.cli("run", "beat", "BRIDGE-0900", "--actor", "a")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            heartbeat.read_heartbeat(self.tmp, "BRIDGE-0900", "RUN-01")["machine"],
+            "TESTHOST-BEAT")
+
+    def test_run_beat_explicit_machine_wins(self):
+        self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-BEAT"},
+                             clear=False):
+            code, _, err = self.cli("run", "beat", "BRIDGE-0900", "--actor", "a",
+                                    "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            heartbeat.read_heartbeat(self.tmp, "BRIDGE-0900", "RUN-01")["machine"],
+            "EXPLICIT-M")
+
+    def test_run_finish_resolves_computername_without_machine_flag(self):
+        self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-FINISH"},
+                             clear=False), \
+             mock.patch.object(importer, "collect_git_info", git_stub):
+            code, _, err = self.cli("run", "finish", "BRIDGE-0900",
+                                    "--status", "COMPLETED", "--actor", "a",
+                                    "--base-head", "a" * 40)
+        self.assertEqual(code, 0, err)
+        doc = yaml.safe_load((self.tmp / "results" / "BRIDGE-0900" / "RUN-01"
+                              / "result.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(doc["physical_machine"], "TESTHOST-FINISH")
+
+    def test_run_finish_explicit_machine_wins(self):
+        self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-FINISH"},
+                             clear=False), \
+             mock.patch.object(importer, "collect_git_info", git_stub):
+            code, _, err = self.cli("run", "finish", "BRIDGE-0900",
+                                    "--status", "COMPLETED", "--actor", "a",
+                                    "--base-head", "a" * 40, "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        doc = yaml.safe_load((self.tmp / "results" / "BRIDGE-0900" / "RUN-01"
+                              / "result.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(doc["physical_machine"], "EXPLICIT-M")
+
+    def _interrupt_via_cli(self):
+        draft_path = self.tmp / "draft.yaml"
+        draft_path.write_text(
+            yaml.safe_dump({"interruption_reason": "USAGE_LIMIT", "resumable": True}),
+            encoding="utf-8")
+        self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        with mock.patch.object(importer, "collect_git_info", git_stub):
+            self.cli("run", "finish", "BRIDGE-0900", "--status", "INTERRUPTED",
+                     "--actor", "a", "--base-head", "a" * 40,
+                     "--from", str(draft_path))
+
+    def test_run_resume_resolves_computername_without_machine_flag(self):
+        self._interrupt_via_cli()
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-RESUME"},
+                             clear=False):
+            code, _, err = self.cli("run", "resume", "BRIDGE-0900", "--actor", "a")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            heartbeat.read_heartbeat(self.tmp, "BRIDGE-0900", "RUN-02")["machine"],
+            "TESTHOST-RESUME")
+
+    def test_run_resume_explicit_machine_wins(self):
+        self._interrupt_via_cli()
+        with mock.patch.dict("os.environ", {"COMPUTERNAME": "TESTHOST-RESUME"},
+                             clear=False):
+            code, _, err = self.cli("run", "resume", "BRIDGE-0900", "--actor", "a",
+                                    "--machine", "EXPLICIT-M")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            heartbeat.read_heartbeat(self.tmp, "BRIDGE-0900", "RUN-02")["machine"],
+            "EXPLICIT-M")
+
 
 if __name__ == "__main__":
     unittest.main()
