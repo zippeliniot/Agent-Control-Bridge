@@ -51,7 +51,7 @@ properties:
   bridge_task_id:
     description: "Systemweit eindeutige Bridge-ID."
     type: string
-    pattern: "^[A-Z]{1,8}-[0-9]{4}$"      # BRIDGE-0001, DORF-0042, ... (BRIDGE-015)
+    pattern: "^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$"      # BRIDGE-0001, BRIDGE-0027-R1, DORF-0042, ... (BRIDGE-015, BRIDGE-032)
 
   project_id:
     description: "Projektkennung, z. B. codex-control-bridge oder dorfschaft."
@@ -209,5 +209,5 @@ properties:
     type: array
     items:
       type: string
-      pattern: "^[A-Z]{1,8}-[0-9]{4}$"
+      pattern: "^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$"
     default: []

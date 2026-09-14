@@ -70,7 +70,8 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-_ID_RE = re.compile(r"^[A-Z]{1,8}-[0-9]{4}$")
+_ID_RE = re.compile(r"^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$")
+_REVIEW_SUFFIX_RE = re.compile(r"^(?P<base>[A-Z]{1,8}-[0-9]{4})-R[0-9]+$")
 _RUN_RE = re.compile(r"^RUN-[0-9]{2,}$")
 _KIND_TO_SCHEMA = {
     "bridge_task": "task.schema.yaml",
@@ -168,6 +169,47 @@ class Store:
     def _task_path(self, task_id: str) -> Path:
         return self.tasks_dir / self._check_id(task_id) / "task.yaml"
 
+    def _check_readonly_consistency(self, doc: dict) -> None:
+        """Fail-closed Geschäftsregel (BRIDGE-032), aus create_task() und
+        save_task() aufgerufen:
+
+        a. task_class == READONLY_CHECK -> permissions muss exakt
+           ["READ_ONLY"] sein (nicht nur enthalten).
+        b. bridge_task_id hat -R<n>-Suffix -> task_class muss
+           READONLY_CHECK sein.
+        c. bridge_task_id hat -R<n>-Suffix -> die Basis-ID (Teil vor
+           -R<n>) muss bereits als Auftrag im Store existieren.
+
+        Technische Durchsetzung heißt hier Rechte-Erzwingung, keine
+        Identitätsprüfung (kein Auth-Mechanismus für actor/created_by).
+        """
+        task_id = doc.get("bridge_task_id")
+        task_class = doc.get("task_class")
+        permissions = doc.get("permissions")
+
+        if task_class == "READONLY_CHECK" and permissions != ["READ_ONLY"]:
+            raise StoreError(
+                f"READONLY_CHECK-Auftrag {task_id!r} muss permissions exakt "
+                f"['READ_ONLY'] haben, gefunden: {permissions!r}."
+            )
+
+        match = _REVIEW_SUFFIX_RE.match(task_id) if isinstance(task_id, str) else None
+        if match is None:
+            return
+
+        if task_class != "READONLY_CHECK":
+            raise StoreError(
+                f"Auftrag {task_id!r} hat -R<n>-Suffix, task_class muss "
+                f"READONLY_CHECK sein, gefunden: {task_class!r}."
+            )
+
+        base_id = match.group("base")
+        if not self._in_root(self._task_path(base_id)).exists():
+            raise StoreError(
+                f"Auftrag {task_id!r} referenziert Basis-ID {base_id!r}, "
+                f"die nicht im Store existiert."
+            )
+
     # ----- öffentliche API ------------------------------------------------
 
     def validate(self, doc_or_path):
@@ -190,6 +232,7 @@ class Store:
         path = self._task_path(task_id)
         if self._in_root(path).exists():
             raise StoreError(f"Auftrag existiert bereits: {task_id}")
+        self._check_readonly_consistency(doc)
         doc = dict(doc)
         doc["status"] = self.initial_state
         self._write_new(path, self._dump_yaml(doc))
@@ -211,6 +254,7 @@ class Store:
 
     def save_task(self, task):
         doc = self.validate(self._as_doc(task))
+        self._check_readonly_consistency(doc)
         path = self._in_root(self._task_path(doc["bridge_task_id"]))
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(self._dump_yaml(doc), encoding="utf-8")

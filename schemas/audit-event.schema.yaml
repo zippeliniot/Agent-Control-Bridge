@@ -60,7 +60,7 @@ properties:
   bridge_task_id:
     description: "Betroffener Auftrag."
     type: string
-    pattern: "^[A-Z]{1,8}-[0-9]{4}$"
+    pattern: "^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$"
 
   run_id:
     description: "Betroffener Lauf (RUN-01, ...) oder null bei laufunabhängigen Ereignissen."

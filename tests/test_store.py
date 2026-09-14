@@ -311,5 +311,88 @@ class IdFormatTests(unittest.TestCase):
             self.store.create_task(valid_task(bridge_task_id="ABCDEFGHI-0001"))
 
 
+class ReviewSuffixTests(unittest.TestCase):
+    """BRIDGE-032: -R<n>-Unternummern + fail-closed READONLY_CHECK-Durchsetzung."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-review-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        self.store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_review_suffix_without_readonly_check_task_class_rejected(self):
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0900"))
+        with self.assertRaises(StoreError):
+            self.store.create_task(valid_task(
+                bridge_task_id="BRIDGE-0900-R1",
+                task_class="FEATURE",
+                permissions=["READ_ONLY"],
+            ))
+        self.assertFalse((self.tmp / "tasks" / "BRIDGE-0900-R1").exists())
+
+    def test_readonly_check_with_extra_permissions_rejected(self):
+        with self.assertRaises(StoreError):
+            self.store.create_task(valid_task(
+                task_class="READONLY_CHECK",
+                permissions=["READ_ONLY", "WORKTREE_WRITE"],
+            ))
+        self.assertFalse((self.tmp / "tasks" / "BRIDGE-0900").exists())
+
+    def test_readonly_check_missing_read_only_rejected(self):
+        with self.assertRaises(StoreError):
+            self.store.create_task(valid_task(
+                task_class="READONLY_CHECK",
+                permissions=["WORKTREE_WRITE"],
+            ))
+        self.assertFalse((self.tmp / "tasks" / "BRIDGE-0900").exists())
+
+    def test_review_suffix_without_existing_base_task_rejected(self):
+        with self.assertRaises(StoreError):
+            self.store.create_task(valid_task(
+                bridge_task_id="BRIDGE-0901-R1",
+                task_class="READONLY_CHECK",
+                permissions=["READ_ONLY"],
+            ))
+        self.assertFalse((self.tmp / "tasks" / "BRIDGE-0901-R1").exists())
+
+    def test_review_suffix_with_existing_base_task_accepted(self):
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0900"))
+        doc = self.store.create_task(valid_task(
+            bridge_task_id="BRIDGE-0900-R1",
+            task_class="READONLY_CHECK",
+            permissions=["READ_ONLY"],
+        ))
+        self.assertEqual(doc["bridge_task_id"], "BRIDGE-0900-R1")
+        self.assertTrue(
+            (self.tmp / "tasks" / "BRIDGE-0900-R1" / "task.yaml").exists())
+
+    def test_save_task_rejects_permission_escalation_on_readonly_check(self):
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0900"))
+        doc = self.store.create_task(valid_task(
+            bridge_task_id="BRIDGE-0900-R1",
+            task_class="READONLY_CHECK",
+            permissions=["READ_ONLY"],
+        ))
+        doc = dict(doc)
+        doc["permissions"] = ["READ_ONLY", "GIT_PUSH"]
+        with self.assertRaises(StoreError):
+            self.store.save_task(doc)
+
+    def test_readonly_check_without_review_suffix_still_accepted(self):
+        """Regressionscheck: BRIDGE-0912-artiger Fall (integration_readonly.py)
+        bleibt unveraendert lauffaehig."""
+        doc = self.store.create_task(valid_task(
+            bridge_task_id="BRIDGE-0912",
+            task_class="READONLY_CHECK",
+            permissions=["READ_ONLY"],
+        ))
+        self.assertEqual(doc["bridge_task_id"], "BRIDGE-0912")
+        self.assertTrue(
+            (self.tmp / "tasks" / "BRIDGE-0912" / "task.yaml").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

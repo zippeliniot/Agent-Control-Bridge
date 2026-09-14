@@ -58,10 +58,17 @@ mehreren Projekten/Maschinen kann `git push` an Non-Fast-Forward scheitern.
 Lösung: automatisches `git pull --rebase` + Retry bei Push-Fehlschlag — nie
 `--force`. Eigener Auftrag **BRIDGE-0029**, nicht Teil dieses Auftrags.
 
-**Review-Unternummern (BRIDGE-0030):** Support-KI-Prüfaufträge bekommen eine
-sichtbare Unternummer (`BRIDGE-0027-R1` usw., Schema-Pattern-Erweiterung),
-`task_class: READONLY_CHECK`, technisch auf reine Leserechte beschränkt.
-Eigener Auftrag **BRIDGE-0030**, nicht Teil dieses Auftrags.
+**Review-Unternummern (BRIDGE-0030, umgesetzt als BRIDGE-0032):** Support-KI-
+Prüfaufträge bekommen eine sichtbare Unternummer (`BRIDGE-0027-R1` usw.,
+Schema-Pattern-Erweiterung), `task_class: READONLY_CHECK`, technisch auf
+reine Leserechte beschränkt. „Technische Durchsetzung als Leserrolle" heißt
+dabei konkret: `permissions` wird fail-closed auf exakt `[READ_ONLY]`
+erzwungen (in `Store.create_task()`/`save_task()`) — **keine**
+Identitätsprüfung, denn die Architektur hat keinen Auth-Mechanismus, der
+verifizieren könnte, dass der tatsächliche Ausführende wirklich die
+`support`-Partei aus `review_roles` ist (`actor`/`created_by` sind freie
+Textfelder ohne Verifikation). Eine künftige Sitzung sollte hier nicht mehr
+erwarten, als tatsächlich gebaut wurde.
 
 **Laufzeit-Einschränkung bleibt:** Die Web-UI läuft nur, solange jemand
 `webui serve` gestartet hat — kein 24/7-Betrieb ohne offenes Browserfenster,
@@ -74,7 +81,7 @@ kein Hintergrunddienst. Bewusst gewählt (nicht `watch loop`).
 | **BRIDGE-0027** | `orchestrator_policy`-Feld in `project.schema.yaml` + diese Entscheidungen dokumentiert | **abgeschlossen** |
 | **BRIDGE-0028** | Prioritätsfeld (`priority` in `task.schema.yaml`) + `bridge task set-priority` + Web-UI-Zuweisung + Sortierung nach Priorität in Board/Overview | geplant |
 | **BRIDGE-0029** | Git-Push-Retry (`pull --rebase` + Retry) in `gitops.py` | geplant |
-| **BRIDGE-0030** | Review-Unternummern-Pattern (`-R<n>`-Suffix) + technische Durchsetzung `review_roles.support` als Leserrolle | geplant |
+| **BRIDGE-0030** | Review-Unternummern-Pattern (`-R<n>`-Suffix) + technische Durchsetzung `review_roles.support` als Leserrolle | **abgeschlossen (BRIDGE-0032, ursprünglich als BRIDGE-0030 geplant)** |
 | **BRIDGE-0031** | Eigentliche Orchestrator-Auslöselogik, aufbauend auf `orchestrator_policy` + `priority` (erst nach 0027–0030 fertig) | geplant |
 
 ## Vorgeschlagener grober Aufbau (zur Implementierung, BRIDGE-0031)
