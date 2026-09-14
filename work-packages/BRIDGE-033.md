@@ -164,8 +164,15 @@ Testproblem.
 - [x] Alle `self.cli(...)`-Aufrufe in diesem Test prüfen ihren Exit-Code.
 - [x] Test mehrfach einzeln wiederholt (5–10×) durchgängig grün, nicht
       nur einmal im Gesamtlauf (10/10 Einzelläufe grün).
-- [ ] Realer Regressionscheck von Fix 1 durchgeführt (nicht nur Unit-Test
-      behauptet) und im Work-Package dokumentiert.
+- [x] Realer Regressionscheck von Fix 1 durchgeführt (nicht nur Unit-Test
+      behauptet) und im Work-Package dokumentiert: `run finish BRIDGE-0033
+      --commit` (Auftragsabschluss dieses Laufs) hatte genau das Szenario —
+      geänderte `work-packages/BRIDGE-033.md` (Checkbox-Updates) im
+      Working Tree. Mit dem bereits committeten Fix 1 (Commit `0c861db`)
+      griff die Whitelist diesmal korrekt: Commit `7f71c010cc389` enthält
+      `work-packages/BRIDGE-033.md` automatisch, **kein** manueller
+      `git add` nötig — anders als bei BRIDGE-031/032. Fix 1 damit real,
+      nicht nur per Unit-Test, verifiziert.
 - [x] Volle Testsuite (bestehend + angepasst) dreimal frisch grün,
       frischer Klon verifiziert (359 Tests je Lauf: 355 Basis + 4 neu;
       drei separate `unittest discover`-Läufe grün gezählt, inkl. der
