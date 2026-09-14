@@ -103,8 +103,9 @@ seinen letzten echten Stand zeigen, nicht einen veralteten.
 
 ## Status dieses Dokuments
 
-**Noch nicht in der Praxis erprobt** — bisher gibt es kein aktives
-Projektprofil mit `executor: codex` (das Dorfschaft-Beispiel unter
-`projects/examples/` ist eine Vorlage, kein aktives Profil). Vor dem
-ersten echten Einsatz: WSL-Zugriffspfad klären (siehe oben), und diesen
+**Noch nicht in der Praxis erprobt** — es gibt inzwischen drei aktive
+Projektprofile mit `executor: codex` (`bess-msrechner`, `bess-platform`,
+`dorfschaft`), aber keins davon wurde bisher praktisch genutzt (Audit-Trail-
+Beleg: `grep -c '"actor": "codex' audit/audit.jsonl` = 0). Vor dem ersten
+echten Einsatz: WSL-Zugriffspfad klären (siehe oben), und diesen
 Status-Absatz durch die erste reale Erfahrung ersetzen.

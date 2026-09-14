@@ -394,5 +394,79 @@ class ReviewSuffixTests(unittest.TestCase):
             (self.tmp / "tasks" / "BRIDGE-0912" / "task.yaml").exists())
 
 
+def _write_profile(projects_dir: Path, project_id: str, task_prefix: str) -> None:
+    """Minimales, schema-gueltiges Projektprofil fuer Tests (BRIDGE-034)."""
+    proj_dir = projects_dir / project_id
+    proj_dir.mkdir(parents=True, exist_ok=True)
+    doc = {
+        "schema_version": "1.0",
+        "kind": "bridge_project_profile",
+        "project_id": project_id,
+        "repository": project_id,
+        "default_branch": "main",
+        "task_prefix": task_prefix,
+        "read_only": True,
+    }
+    (proj_dir / "project.yaml").write_text(
+        yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
+
+
+class TaskPrefixCollisionTests(unittest.TestCase):
+    """BRIDGE-034: create_task() lehnt Auftraege fail-closed ab, wenn das
+    Zielprojekt einen mit einem anderen Projektprofil kollidierenden
+    task_prefix traegt. Nur create_task(), nicht save_task() (task_prefix
+    ist eine Projekt-, keine Auftragseigenschaft)."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-prefix-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        self.store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_synthetic_collision_rejected(self):
+        projects_dir = self.tmp / "projects"
+        _write_profile(projects_dir, "proj-a", "DUP")
+        _write_profile(projects_dir, "proj-b", "DUP")
+        with self.assertRaises(StoreError):
+            self.store.create_task(valid_task(
+                bridge_task_id="DUP-0001", project_id="proj-b"))
+        self.assertFalse((self.tmp / "tasks" / "DUP-0001").exists())
+
+    def test_no_collision_without_projects_dir(self):
+        """Hermetischer Store ohne projects/-Verzeichnis: Pruefung greift
+        nicht (kein falsches Positiv fuer bestehende Tests ohne Profile)."""
+        doc = self.store.create_task(valid_task())
+        self.assertEqual(doc["bridge_task_id"], "BRIDGE-0900")
+
+    def test_real_seven_profiles_collision_free(self):
+        """Regressionscheck gegen die echten projects/*/project.yaml-Dateien
+        (nicht nur synthetisch): kein falsches Positiv unter den sieben
+        bestehenden Profilen."""
+        from bridge import profiles
+        real_store = Store(root=REPO_ROOT, schema_dir=SCHEMA_DIR)
+        real_project_ids = profiles.list_profiles(REPO_ROOT)
+        self.assertGreaterEqual(len(real_project_ids), 7)
+        for project_id in real_project_ids:
+            doc = valid_task(project_id=project_id)
+            # Nur die private Pruefmethode, nicht create_task() - schreibt
+            # nichts ins echte Repo.
+            real_store._check_task_prefix_collision(doc)
+
+
+class DorfschaftProfileTests(unittest.TestCase):
+    """BRIDGE-034: Regressionsanker gegen versehentliches erneutes
+    Zurueckflippen von read_only ohne bewusste Entscheidung."""
+
+    def test_dorfschaft_profile_is_read_only(self):
+        from bridge import profiles
+        profile = profiles.load_profile(REPO_ROOT, "dorfschaft", schema_dir=SCHEMA_DIR)
+        self.assertIs(profile.get("read_only"), True)
+        git_policy = profile.get("git_policy") or {}
+        self.assertIs(git_policy.get("allow_push"), False)
+
+
 if __name__ == "__main__":
     unittest.main()

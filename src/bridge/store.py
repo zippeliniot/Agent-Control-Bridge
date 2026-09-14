@@ -210,6 +210,46 @@ class Store:
                 f"die nicht im Store existiert."
             )
 
+    def _check_task_prefix_collision(self, doc: dict) -> None:
+        """Fail-closed Geschäftsregel (BRIDGE-034), nur aus create_task()
+        aufgerufen (task_prefix ist eine Projekt-, keine Auftragseigenschaft
+        - ein bestehender Auftrag ändert seinen Präfix nie nachträglich,
+        daher keine Prüfung in save_task()).
+
+        Lädt ALLE Projektprofile unter projects/*/ (Wiederverwendung von
+        profiles.list_profiles()/load_profile(), kein Duplicated Code) und
+        lehnt ab, wenn das Zielprojekt des neuen Auftrags einen task_prefix
+        trägt, der mit dem eines ANDEREN bestehenden Projektprofils
+        kollidiert. Lazy-Import von profiles (vermeidet zirkulären Import,
+        profiles.py importiert selbst aus store.py).
+        """
+        project_id = doc.get("project_id")
+        if not project_id:
+            return
+
+        from bridge import profiles
+
+        target_path = profiles.profile_path(self.root, project_id)
+        if not target_path.is_file():
+            # Kein eigenes Profil fuer dieses Projekt (z.B. hermetische Tests
+            # ohne projects/-Verzeichnis) - nichts zu pruefen.
+            return
+
+        target_profile = profiles.load_profile(self.root, project_id, schema_dir=self.schema_dir)
+        target_prefix = target_profile.get("task_prefix")
+        if not target_prefix:
+            return
+
+        for other_id in profiles.list_profiles(self.root):
+            if other_id == project_id:
+                continue
+            other_profile = profiles.load_profile(self.root, other_id, schema_dir=self.schema_dir)
+            if other_profile.get("task_prefix") == target_prefix:
+                raise StoreError(
+                    f"task_prefix-Kollision: Projekte {project_id!r} und "
+                    f"{other_id!r} verwenden beide task_prefix {target_prefix!r}."
+                )
+
     # ----- öffentliche API ------------------------------------------------
 
     def validate(self, doc_or_path):
@@ -233,6 +273,7 @@ class Store:
         if self._in_root(path).exists():
             raise StoreError(f"Auftrag existiert bereits: {task_id}")
         self._check_readonly_consistency(doc)
+        self._check_task_prefix_collision(doc)
         doc = dict(doc)
         doc["status"] = self.initial_state
         self._write_new(path, self._dump_yaml(doc))

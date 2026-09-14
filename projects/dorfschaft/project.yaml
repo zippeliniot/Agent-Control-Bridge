@@ -1,8 +1,18 @@
-# Projektprofil Dorfschaft - schreibend, Codex-Executor unter ChatGPT-Kontrolle.
+# Projektprofil Dorfschaft - Codex-Executor unter ChatGPT-Kontrolle.
 # Claude Code bleibt trotzdem aussen vor - CLAUDE.md Regel 3/machines.md Schutzbereich
 # schuetzen die Windows-native Claude-Code-Instanz vor WSL-Uebergriffen, unabhaengig
 # von diesem Profil. Schreibzugriff erfolgt ausschliesslich ueber Codex (WSL) unter
 # menschlich freigegebenen, eng gefassten permissions pro Auftrag (siehe CONTROL.md).
+#
+# BRIDGE-034: read_only bewusst zurueck auf true gesetzt (vor diesem Auftrag:
+# false, git_policy.allow_push: true, seit Commit 69a5d9b "dorfschaft jetzt
+# schreibend (Codex/ChatGPT)"). Fuer den bevorstehenden ersten echten
+# Dorfschaft/Codex-Pilotlauf (READONLY_CHECK) wird der urspruenglich vorgesehene
+# Read-only-Pilotzustand wiederhergestellt - keine dauerhafte Ablehnung der
+# spaeteren Schreibintegration, nur der bewusste Ausgangszustand fuer den
+# ersten Testauftrag. read_only greift technisch nur fuer den Beobachtungs-
+# Adapter (src/bridge/adapter.py); die eigentliche Absicherung des Pilotlaufs
+# kommt aus der task_prefix-/READONLY_CHECK-Kollisionslogik (BRIDGE-032/034).
 schema_version: "1.0"
 kind: bridge_project_profile
 project_id: dorfschaft
@@ -10,7 +20,7 @@ description: Dorfschaft - Community-Verwaltungs-Webapp, gesteuert ueber ChatGPT 
 repository: Dorfschaft
 default_branch: main
 task_prefix: DORF
-read_only: false
+read_only: true
 executor: codex
 controller: openai
 review_roles:
@@ -19,7 +29,7 @@ review_roles:
 github_repo: zippeliniot/dorfschaft
 allowed_machines: [HAM11, DES11]
 git_policy:
-  allow_push: true
+  allow_push: false
   allow_merge: false
   allow_force_push: false
   protected_branches: [main]
