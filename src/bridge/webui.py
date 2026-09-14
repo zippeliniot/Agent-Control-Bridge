@@ -43,7 +43,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bridge import gitops, importer, runner, state_machine
+from bridge import gitops, importer, registry, runner, state_machine
 # Dieselben Funktionen wie `bridge board` / `bridge task copied` /
 # `bridge task archive` - garantiert keine zweite, abweichende Implementierung.
 from bridge.cli import (
@@ -233,7 +233,7 @@ def _apply_action(store, kind: str, task_id: str, body: dict) -> dict:
     actor = _require(body, "actor")
 
     if kind == "copied":
-        event = task_copied(store, task_id, actor)
+        event = task_copied(store, task_id, actor, registry.machine_name())
         git = _git_commit_and_push(store.root, kind, task_id, actor)
         return {"ok": True, "task": task_id, "old_state": event["old_state"],
                 "new_state": event["new_state"], "event_type": event["event_type"],
@@ -241,7 +241,7 @@ def _apply_action(store, kind: str, task_id: str, body: dict) -> dict:
 
     if kind == "archive":
         reason = body.get("reason") or None
-        event = task_archive(store, task_id, actor, reason)
+        event = task_archive(store, task_id, actor, reason, registry.machine_name())
         git = _git_commit_and_push(store.root, kind, task_id, actor)
         return {"ok": True, "task": task_id, "old_state": event["old_state"],
                 "new_state": event["new_state"], "event_type": event["event_type"],
@@ -252,7 +252,8 @@ def _apply_action(store, kind: str, task_id: str, body: dict) -> dict:
         summary = _require(body, "summary")   # BRIDGE-021: --summary ist Pflicht
         result, event = runner.finish(
             store, task_id, status,
-            draft={}, base_head=None, actor=actor, machine=None, summary=summary)
+            draft={}, base_head=None, actor=actor,
+            machine=registry.machine_name(), summary=summary)
         run_id = result["run_id"]
         git = _git_commit_and_push(store.root, kind, task_id, actor, run_id=run_id)
         return {"ok": True, "task": task_id, "run_id": run_id,

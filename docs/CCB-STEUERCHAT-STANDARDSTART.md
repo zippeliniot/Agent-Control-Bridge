@@ -77,14 +77,33 @@ nächsten Schritten aus der Übergabe fortfahren.
 ## Verbindliche Kommunikationsregeln (für die gesamte Sitzung, nicht nur den Start)
 
 - **Keine Erfindungen.** Jede Behauptung über den Repo-Zustand per frischem
-  Klon verifizieren, nie aus Erinnerung oder Trainingswissen behaupten.
+  Klon verifizieren, nie aus Erinnerung oder Trainingswissen behaupten. Gilt
+  genauso für Aussagen des Nutzers im Chat („ist gepusht", „läuft jetzt",
+  „ist erledigt") — nicht ungeprüft übernehmen, sondern per frischem
+  `git log`/Audit-Trail selbst nachprüfen, bevor der nächste Schritt darauf
+  aufbaut (Verifikationspflicht Nr. 1).
+- **Gilt auch umgekehrt:** Meldet ein Tool/eine Prüfung „alles ok", obwohl
+  der vorherige Status etwas anderes nahelegte, nicht vorschnell
+  „Fehlalarm" rufen — den tatsächlichen Zielzustand direkt prüfen, statt
+  die günstigere Meldung einfach zu glauben (Verifikationspflicht Nr. 2).
 - **Vor jeder Work-Package-Spezifikation den echten Funktionskörper lesen**,
   nicht nur Schema/Doku (Verifikationspflicht Nr. 3). Hat in bisherigen
   Sitzungen wiederholt Annahmen widerlegt, die aus der Doku allein falsch
   gewesen wären.
 - **Alle Deliverables als Datei zum Download liefern**, nicht als
   Copy-Paste-Codeblock im Chat — Work-Packages, Staging-YAMLs,
-  Übergabe-Dokumente.
+  Übergabe-Dokumente. Grund: der Steuerchat hat in dieser Sandbox **keine**
+  Push-Credentials für `github.com` (per `git push --dry-run` prüfbar) —
+  alles, was ins Repo soll, committet/pusht der Nutzer selbst per
+  PowerShell. Kein „ich lege das schon ins Repo"-Versprechen, das nicht
+  eingehalten werden kann (Verifikationspflicht Nr. 6).
+- **Anweisungen an Claude Code enthalten immer einen eigenen,
+  unübersehbaren Pflichtblock** (nicht im Fließtext versteckt) mit
+  mindestens: (1) Pflicht zur Nutzung der Bridge-CLI für jede
+  Zustandsänderung, nie direktes Bearbeiten von Store-Dateien; (2) Pflicht
+  zu `git push` am Ende, wenn `GIT_PUSH` im Berechtigungsprofil steht —
+  ohne Push kann der Steuerchat das Ergebnis nicht per frischem Klon
+  abrufen und prüfen.
 - **Ein-Auftrag-zur-Zeit-Disziplin.** Kein neuer Auftrag (`task create`),
   solange der vorherige nicht `ARCHIVED` ist. Vor dem Start eines neuen
   Auftrags aktiv gegenprüfen (nicht annehmen), ob der vorherige wirklich
@@ -111,6 +130,16 @@ nächsten Schritten aus der Übergabe fortfahren.
      früheren Sitzung einmal zu einer fälschlich vermuteten Lücke).
   4. Jedes Akzeptanzkriterium einzeln gegen den echten Code prüfen, nicht
      gegen die Zusammenfassung im Footer.
+- **Diagnosebefehle laufen im echten Arbeitsverzeichnis, nicht im
+  Verifikations-Scratch-Klon.** Ein für die Vier-Punkte-Prüfung frisch
+  angelegter Klon hat kein `.venv` und ist kein echter Store —
+  Store-verändernde Befehle (`bridge task ...`, `bridge run ...`) dürfen
+  dort nicht laufen, nur Lesebefehle/`git log`/`git diff`/Testsuite
+  (Verifikationspflicht Nr. 5).
+- **Nachtest-Seiteneffekte:** Schlägt ein Fund- oder Fix-Auftrag einen
+  Nachtest gegen einen anderen, bereits existierenden echten Auftrag vor,
+  danach auch dessen Audit-Trail prüfen (`audit show <ID>`) — nicht nur
+  den neuen/aktuellen Auftrag (Verifikationspflicht Nr. 4).
 - **Bei Unklarheit über fachliche Design-Entscheidungen**: eine kurze,
   konkrete Rückfrage mit wenigen Auswahloptionen stellen, nicht raten und
   nicht mit einer langen Liste offener Fragen blockieren. Eine bestätigte

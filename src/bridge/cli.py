@@ -56,6 +56,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "copied", help="Ergebnis wurde in den Steuerchat kopiert (-> REVIEW_REQUIRED)")
     tcopied.add_argument("task_id")
     tcopied.add_argument("--actor", required=True)
+    tcopied.add_argument("--machine")
     tcopied.add_argument("--commit", action="store_true",
                          help="nach erfolgreichem Uebergang lokal committen (kein Push, Exit 3 bei Fehler)")
     tarchive = tsub.add_parser(
@@ -63,6 +64,7 @@ def _build_parser() -> argparse.ArgumentParser:
     tarchive.add_argument("task_id")
     tarchive.add_argument("--actor", required=True)
     tarchive.add_argument("--reason", default=None)
+    tarchive.add_argument("--machine")
     tarchive.add_argument("--commit", action="store_true",
                           help="nach erfolgreichem Uebergang lokal committen (kein Push, Exit 3 bei Fehler)")
     tset = tsub.add_parser("set-status", help="Zustandswechsel")
@@ -237,7 +239,7 @@ def _cmd_validate(args, store) -> int:
     return 0
 
 
-def task_copied(store, task_id, actor):
+def task_copied(store, task_id, actor, machine=None):
     """'Ergebnis wurde in den Steuerchat kopiert' -> REVIEW_REQUIRED.
 
     Gemeinsame Logik fuer ``bridge task copied`` und den Web-Endpunkt - kein
@@ -249,7 +251,8 @@ def task_copied(store, task_id, actor):
         raise StoreError(
             f"{task_id}: 'copied' nur aus WAITING_FOR_COPY_TO_CONTROL "
             f"zulässig (aktueller Zustand: {current}).")
-    return store.set_status(task_id, "REVIEW_REQUIRED", actor, None,
+    return store.set_status(task_id, "REVIEW_REQUIRED", actor,
+                            registry.machine_name(machine),
                             reason="Ergebnis in Steuerchat kopiert")
 
 
@@ -260,10 +263,10 @@ def task_set_priority(store, task_id, priority, actor, machine=None):
     Ruft ``store.set_priority`` auf (BRIDGE-028). Fail-closed bei ungueltiger
     Prioritaet (StoreError) — kein stilles Ignorieren.
     """
-    return store.set_priority(task_id, priority, actor, machine)
+    return store.set_priority(task_id, priority, actor, registry.machine_name(machine))
 
 
-def task_archive(store, task_id, actor, reason=None):
+def task_archive(store, task_id, actor, reason=None, machine=None):
     """'Dieser Auftrag ist erledigt' -> ARCHIVED. Gemeinsame Logik fuer
     ``bridge task archive`` und den Web-Endpunkt.
 
@@ -271,7 +274,7 @@ def task_archive(store, task_id, actor, reason=None):
     erreichbar ist, regelt schemas/state-model.yaml bereits fail-closed
     (z. B. nicht direkt aus RUNNING).
     """
-    return store.set_status(task_id, "ARCHIVED", actor, None,
+    return store.set_status(task_id, "ARCHIVED", actor, registry.machine_name(machine),
                             reason=reason or "Auftrag abgeschlossen")
 
 
@@ -308,7 +311,8 @@ def _cmd_task(args, store) -> int:
             print(f"{task_id}\t{status}")
         return 0
     if args.task_cmd == "copied":
-        event = task_copied(store, args.task_id, args.actor)
+        event = task_copied(store, args.task_id, args.actor,
+                            getattr(args, "machine", None))
         print(f"OK: {args.task_id} {event['old_state']} -> {event['new_state']} "
               f"({event['event_type']})")
         if getattr(args, "commit", False):
@@ -317,7 +321,8 @@ def _cmd_task(args, store) -> int:
                 return rc
         return 0
     if args.task_cmd == "archive":
-        event = task_archive(store, args.task_id, args.actor, args.reason)
+        event = task_archive(store, args.task_id, args.actor, args.reason,
+                             getattr(args, "machine", None))
         print(f"OK: {args.task_id} {event['old_state']} -> {event['new_state']} "
               f"({event['event_type']})")
         if getattr(args, "commit", False):
@@ -327,7 +332,8 @@ def _cmd_task(args, store) -> int:
         return 0
     if args.task_cmd == "set-status":
         event = store.set_status(args.task_id, args.new_state, actor=args.actor,
-                                 machine=args.machine, reason=args.reason)
+                                 machine=registry.machine_name(args.machine),
+                                 reason=args.reason)
         print(f"OK: {args.task_id} {event['old_state']} -> {event['new_state']} "
               f"({event['event_type']})")
         return 0
@@ -371,7 +377,7 @@ def _cmd_result_import(args, store) -> int:
     result = importer.import_result(
         store, args.task_id, status,
         run_id=args.run_id, draft=draft, base_head=base_head,
-        executor=args.executor, machine=args.machine,
+        executor=args.executor, machine=registry.machine_name(args.machine),
         environment=args.environment, runtime=args.runtime,
         summary=args.summary, started_at=args.started_at,
     )
@@ -933,7 +939,8 @@ def _print_findings(findings, applied) -> None:
 
 def _cmd_run(args, store) -> int:
     if args.run_cmd == "start":
-        run_id = runner.start(store, args.task_id, args.actor, args.machine)
+        run_id = runner.start(store, args.task_id, args.actor,
+                              registry.machine_name(args.machine))
         _print_run(store, args.task_id, run_id, "gestartet")
         if getattr(args, "commit", False):
             rc = _do_commit(args, store, "run_start", args.task_id, args.actor,
@@ -942,7 +949,8 @@ def _cmd_run(args, store) -> int:
                 return rc
         return 0
     if args.run_cmd == "beat":
-        doc = runner.beat(store, args.task_id, actor=args.actor, machine=args.machine)
+        doc = runner.beat(store, args.task_id, actor=args.actor,
+                          machine=registry.machine_name(args.machine))
         print(f"OK: Heartbeat {args.task_id} {doc['run_id']} "
               f"last_seen={doc['last_seen']}")
         return 0
@@ -966,7 +974,8 @@ def _cmd_run(args, store) -> int:
         result, event = runner.finish(
             store, args.task_id, args.status,
             draft=draft, base_head=base_head,
-            actor=args.actor, machine=args.machine, summary=args.summary)
+            actor=args.actor, machine=registry.machine_name(args.machine),
+            summary=args.summary)
         print(f"OK: {args.task_id} {event['old_state']} -> {event['new_state']}; "
               f"Ergebnis {result['run_id']} abgelegt")
         if getattr(args, "commit", False):
@@ -976,7 +985,8 @@ def _cmd_run(args, store) -> int:
                 return rc
         return 0
     if args.run_cmd == "resume":
-        run_id = runner.resume(store, args.task_id, args.actor, args.machine)
+        run_id = runner.resume(store, args.task_id, args.actor,
+                               registry.machine_name(args.machine))
         _print_run(store, args.task_id, run_id, "wiederaufgenommen")
         return 0
     return 2  # vom Parser ausgeschlossen

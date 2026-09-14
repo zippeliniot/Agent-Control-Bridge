@@ -31,6 +31,8 @@ if __package__ in (None, ""):
 
 import yaml
 
+from bridge import registry
+
 
 class ImporterError(Exception):
     """Fehler beim Ermitteln der Provenienz oder beim Einlesen des Entwurfs."""
@@ -151,7 +153,7 @@ def build_result(store, bridge_task_id, status, *, run_id=None, draft=None,
     started = started_at if started_at is not None else draft.get("started_at")
     started = started or ended_at
 
-    machine = machine or os.environ.get("BRIDGE_MACHINE")
+    machine = machine or registry.machine_name()
     environment = environment or os.environ.get("BRIDGE_ENV")
     runtime = runtime or os.environ.get("BRIDGE_RUNTIME")
 
