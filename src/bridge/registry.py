@@ -7,7 +7,7 @@ reale, kopierfertige lokale Pfade anderer Projekt-Repos aufzuloesen
 (diesem Repo) - die Registry findet keine Auftraege.
 
 Fail-closed beim Laden/Validieren und in ``resolve_base`` (eine unbekannte
-Maschine ohne ``CCB_PROJECT_BASE`` liefert lieber eine klare Fehlermeldung als
+Maschine ohne ``ACB_PROJECT_BASE`` liefert lieber eine klare Fehlermeldung als
 einen geratenen Pfad). ``project_local_path`` ist bewusst fail-SOFT: es gibt bei
 jedem Fehler ``None`` zurueck und wirft nie, damit das Board nie wegen einem
 einzelnen nicht aufloesbaren Projekt abbricht.
@@ -97,7 +97,7 @@ def machine_name(explicit=None) -> str:
 
 
 def resolve_base(root, schema_dir=None, *, explicit_machine=None,
-                 env_override_name="CCB_PROJECT_BASE") -> str:
+                 env_override_name="ACB_PROJECT_BASE") -> str:
     """Lokale Basis, unter der die Projekt-Repos liegen.
 
     1. Ist ``env_override_name`` in der Umgebung gesetzt -> dessen Wert.

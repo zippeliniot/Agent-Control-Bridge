@@ -49,7 +49,7 @@ class RegistryTests(unittest.TestCase):
         (self.tmp / "projects").mkdir()
         self._env = mock.patch.dict(os.environ, {}, clear=False)
         self._env.start()
-        os.environ.pop("CCB_PROJECT_BASE", None)
+        os.environ.pop("ACB_PROJECT_BASE", None)
 
     def tearDown(self):
         self._env.stop()
@@ -90,7 +90,7 @@ class RegistryTests(unittest.TestCase):
     # -- resolve_base ----------------------------------------------
 
     def test_resolve_base_env_override(self):
-        os.environ["CCB_PROJECT_BASE"] = "X:\\anywhere"
+        os.environ["ACB_PROJECT_BASE"] = "X:\\anywhere"
         # kein registry.yaml noetig, wenn der Override greift
         self.assertEqual(
             registry.resolve_base(self.tmp, SCHEMA_DIR, explicit_machine="NOPE11"),
@@ -107,7 +107,7 @@ class RegistryTests(unittest.TestCase):
         with self.assertRaises(registry.RegistryError) as ctx:
             registry.resolve_base(self.tmp, SCHEMA_DIR, explicit_machine="NOPE11")
         self.assertIn("NOPE11", str(ctx.exception))
-        self.assertIn("CCB_PROJECT_BASE", str(ctx.exception))
+        self.assertIn("ACB_PROJECT_BASE", str(ctx.exception))
 
     # -- project_local_path (fail-soft) --------------------------
 

@@ -445,12 +445,12 @@ class CliTests(unittest.TestCase):
     def _clean_env(self):
         patcher = mock.patch.dict(os.environ, {}, clear=False)
         patcher.start()
-        os.environ.pop("CCB_PROJECT_BASE", None)
+        os.environ.pop("ACB_PROJECT_BASE", None)
         self.addCleanup(patcher.stop)
 
     def test_commands_sections_with_override(self):
         self._clean_env()
-        os.environ["CCB_PROJECT_BASE"] = "E:\\_DEV"
+        os.environ["ACB_PROJECT_BASE"] = "E:\\_DEV"
         code, out, _ = self.cli("commands")
         self.assertEqual(code, 0)
         self.assertIn("bridge board", out)
@@ -461,7 +461,7 @@ class CliTests(unittest.TestCase):
 
     def test_commands_resolves_path_and_test_command(self):
         self._clean_env()
-        os.environ["CCB_PROJECT_BASE"] = "E:\\base"
+        os.environ["ACB_PROJECT_BASE"] = "E:\\base"
         pdir = self.tmp / "projects" / "demo"
         pdir.mkdir(parents=True)
         (pdir / "project.yaml").write_text(yaml.safe_dump({
@@ -483,7 +483,7 @@ class CliTests(unittest.TestCase):
         code, _, err = self.cli("commands", "--machine", "NOPE11")
         self.assertEqual(code, 1)
         self.assertIn("NOPE11", err)
-        self.assertIn("CCB_PROJECT_BASE", err)
+        self.assertIn("ACB_PROJECT_BASE", err)
         self.assertNotIn("Traceback", err)
 
     # -- Nutzungsfehler --------------------------------------
