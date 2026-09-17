@@ -230,7 +230,7 @@ Projektprofile:
 
 ```
 projects/dorfschaft/project.yaml       (task_prefix: DORF)
-projects/codex-control-bridge/...      (task_prefix: BRIDGE)
+projects/agent-control-bridge/...      (task_prefix: BRIDGE)
 ```
 
 Ein Projektprofil kennt u. a. `project_id`, `repository`, `default_branch`,

@@ -50,7 +50,7 @@ Diese Prinzipien sind für **alle** Arbeitspakete bindend. Details in
 Siehe [`docs/architecture/directory-structure.md`](docs/architecture/directory-structure.md).
 
 ```
-codex-control-bridge/
+agent-control-bridge/
 ├── docs/            # Architektur, Konzepte, Protokolle, Sicherheit, Handover
 ├── schemas/         # Task-/Result-/Project-Schema (Inhalt: BRIDGE-002/003/010)
 ├── projects/        # Projektprofile (Adapter) — examples/ als Vorlage
@@ -260,8 +260,8 @@ offen. Beispielprofil: `projects/examples/dorfschaft.project.yaml`.
 
 ```
 python src/bridge/cli.py --root . project list
-python src/bridge/cli.py --root . project show codex-control-bridge
-python src/bridge/cli.py --root . project validate projects/codex-control-bridge/project.yaml
+python src/bridge/cli.py --root . project show agent-control-bridge
+python src/bridge/cli.py --root . project validate projects/agent-control-bridge/project.yaml
 ```
 
 ---
@@ -287,7 +287,7 @@ Validierung abgewiesen (fail-closed). CLI-Kommando `project show` gibt beide
 Felder aus.
 
 ```
-python src/bridge/cli.py --root . project show codex-control-bridge
+python src/bridge/cli.py --root . project show agent-control-bridge
 ```
 
 ---

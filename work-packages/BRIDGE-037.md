@@ -134,23 +134,23 @@ dem alten Pfad — dieser Auftrag bringt sie auf den tatsächlichen Stand.
 
 ## Akzeptanzkriterien
 
-- [ ] Alle in Schritt 2 gelisteten Dateien enthalten keine
+- [x] Alle in Schritt 2 gelisteten Dateien enthalten keine
       Projektname-Erwähnung von „Codex-Control-Bridge"/„Codex Control
       Bridge"/„CCB" mehr — „Codex" als Agentenname bleibt überall
       unverändert erhalten.
-- [ ] `registry.py`: `env_override_name`-Default ist
+- [x] `registry.py`: `env_override_name`-Default ist
       `"ACB_PROJECT_BASE"`, Docstring aktualisiert.
-- [ ] `test_cli.py` und `test_registry.py`: alle `CCB_PROJECT_BASE`-
+- [x] `test_cli.py` und `test_registry.py`: alle `CCB_PROJECT_BASE`-
       Vorkommen auf `ACB_PROJECT_BASE` umgestellt.
-- [ ] `machines.md` beschreibt die tatsächliche Zwei-Klon-Struktur
+- [x] `machines.md` beschreibt die tatsächliche Zwei-Klon-Struktur
       (`...\claude`, `...\codex`), nicht mehr einen einzelnen Pfad.
-- [ ] `CLAUDE.md`-Pfadreferenzen zeigen auf
+- [x] `CLAUDE.md`-Pfadreferenzen zeigen auf
       `E:\_DEV\Agent-Control-Bridge\claude`.
-- [ ] `CODEX.md`/`CONTROL.md`: „Codex" als Agentenname unangetastet,
+- [x] `CODEX.md`/`CONTROL.md`: „Codex" als Agentenname unangetastet,
       nur die eine Projektname-Stelle in `CODEX.md` geändert.
-- [ ] Bestehende `tasks/*/task.yaml`, `results/*/*/result.yaml`,
+- [x] Bestehende `tasks/*/task.yaml`, `results/*/*/result.yaml`,
       `work-packages/*.md`, `docs/handover/*.md` unverändert (keine
       rückwirkende Korrektur, wie bei Teil A).
-- [ ] `task_prefix: BRIDGE` unverändert.
-- [ ] Volle Testsuite dreimal frisch grün, frischer Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] `task_prefix: BRIDGE` unverändert.
+- [x] Volle Testsuite dreimal frisch grün, frischer Klon verifiziert.
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.

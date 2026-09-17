@@ -2,7 +2,7 @@
 # BRIDGE-016 . ordnet COMPUTERNAME -> lokale lokale Basis zu, unter der alle
 # Projekt-Repos liegen (E:\_DEV\<repository>, auf jeder Maschine gleich benannt).
 #
-# Zweck: NUR für die Befehlsreferenz (ccb commands), die reale, kopierfertige
+# Zweck: NUR für die Befehlsreferenz (acb commands), die reale, kopierfertige
 # lokale Pfade ausgeben soll. Die Aufträge selbst liegen alle in EINEM
 # zentralen Store (diesem Repo) - die Registry wird NICHT gebraucht, um
 # Aufträge zu finden, nur um Pfade anderer Projekt-Repos aufzulösen.

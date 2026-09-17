@@ -429,7 +429,7 @@ task_prefix: DORF
 Für die Bridge selbst:
 
 ```text
-project_id: codex-control-bridge
+project_id: agent-control-bridge
 task_prefix: BRIDGE
 ```
 
@@ -640,7 +640,7 @@ Die erste Implementierung soll nicht unnötig mit einer komplexen Serverarchitek
 Vorgeschlagen:
 
 ```text
-codex-control-bridge/
+agent-control-bridge/
 │
 ├── README.md
 ├── docs/
