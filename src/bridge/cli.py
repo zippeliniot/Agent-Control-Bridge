@@ -125,8 +125,8 @@ def _build_parser() -> argparse.ArgumentParser:
     scmd = sub.add_parser(
         "commands", help="Befehlsreferenz mit aufgeloestem lokalem Pfad (rein lesend)")
     scmd.add_argument("--machine", help="Maschinenname ueberschreiben (Standard: COMPUTERNAME)")
-    scmd.add_argument("--project", default="codex-control-bridge",
-                      help="Projekt-ID fuer den aufgeloesten Pfad (Standard: codex-control-bridge)")
+    scmd.add_argument("--project", default="agent-control-bridge",
+                      help="Projekt-ID fuer den aufgeloesten Pfad (Standard: agent-control-bridge)")
 
     webui = sub.add_parser(
         "webui", help="lokale Lese-Web-UI ueber dem Board (nur 127.0.0.1, rein lesend)")

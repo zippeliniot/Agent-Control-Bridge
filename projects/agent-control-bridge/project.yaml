@@ -1,9 +1,14 @@
-# Projektprofil der Codex Control Bridge selbst.
+# Projektprofil der Agent Control Bridge selbst.
+#
+# BRIDGE-036: Umbenennung Teil A (Codex Control Bridge -> Agent Control Bridge).
+# project_id, repository und github_repo auf den neuen Namen umgestellt;
+# task_prefix bleibt bewusst BRIDGE (Nutzer-Entscheidung, kein Bezeichnungskonflikt
+# wie bei "Codex").
 schema_version: "1.0"
 kind: bridge_project_profile
-project_id: codex-control-bridge
+project_id: agent-control-bridge
 description: Die Bridge selbst (Entwicklungsprojekt).
-repository: Codex-Control-Bridge
+repository: Agent-Control-Bridge/claude
 default_branch: main
 task_prefix: BRIDGE
 read_only: false
@@ -12,7 +17,7 @@ controller: human
 review_roles:
   lead: anthropic
   support: openai
-github_repo: zippeliniot/Codex-Control-Bridge
+github_repo: zippeliniot/Agent-Control-Bridge
 allowed_machines: [HAM11, DES11]
 git_policy:
   allow_push: true
