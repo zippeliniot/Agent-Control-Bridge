@@ -102,25 +102,25 @@ class ProfilesTests(unittest.TestCase):
     # -- reales Repo-Profil -------------------------------------
 
     def test_repo_profile_is_valid(self):
-        doc = profiles.load_profile(REPO_ROOT, "codex-control-bridge")
+        doc = profiles.load_profile(REPO_ROOT, "agent-control-bridge")
         self.assertEqual(doc["task_prefix"], "BRIDGE")
         self.assertIs(doc["read_only"], False)
-        self.assertIn("codex-control-bridge", profiles.list_profiles(REPO_ROOT))
+        self.assertIn("agent-control-bridge", profiles.list_profiles(REPO_ROOT))
 
     # -- executor/controller Accessoren (BRIDGE-013) -------
 
     def test_executor_controller_in_profile(self):
-        doc = profiles.load_profile(REPO_ROOT, "codex-control-bridge")
+        doc = profiles.load_profile(REPO_ROOT, "agent-control-bridge")
         self.assertEqual(profiles.get_executor(doc), "claude-code")
         self.assertEqual(profiles.get_controller(doc), "human")
 
     def test_executor_null_ok(self):
-        doc = profiles.load_profile(REPO_ROOT, "codex-control-bridge")
+        doc = profiles.load_profile(REPO_ROOT, "agent-control-bridge")
         p = dict(doc, executor=None)
         self.assertIsNone(profiles.get_executor(p))
 
     def test_requires_automation_true_if_executor_and_not_readonly(self):
-        doc = profiles.load_profile(REPO_ROOT, "codex-control-bridge")
+        doc = profiles.load_profile(REPO_ROOT, "agent-control-bridge")
         self.assertTrue(profiles.requires_automation(doc))
 
     def test_requires_automation_false_if_readonly(self):

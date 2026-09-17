@@ -121,24 +121,29 @@ korrigiert):
 
 ## Akzeptanzkriterien
 
-- [ ] `projects/agent-control-bridge/project.yaml` existiert (per `git mv`,
+- [x] `projects/agent-control-bridge/project.yaml` existiert (per `git mv`,
       Historie erhalten), `projects/codex-control-bridge/` existiert nicht
       mehr.
-- [ ] `project_id: agent-control-bridge`, `repository:
+- [x] `project_id: agent-control-bridge`, `repository:
       Agent-Control-Bridge/claude`, `github_repo:
       zippeliniot/Agent-Control-Bridge`.
-- [ ] `--project`-Default in `cli.py` ist `agent-control-bridge`.
-- [ ] Alle fünf aktiven `CCB-*.md`-Dateien in `docs/` sind zu `ACB-*.md`
+- [x] `--project`-Default in `cli.py` ist `agent-control-bridge`.
+- [x] Alle fünf aktiven `CCB-*.md`-Dateien in `docs/` sind zu `ACB-*.md`
       umbenannt (per `git mv`).
-- [ ] `docs/handover/CCB-UEBERGABE-v*.md` unverändert (Name **und**
+- [x] `docs/handover/CCB-UEBERGABE-v*.md` unverändert (Name **und**
       Inhalt).
-- [ ] Alle Querverweise innerhalb der fünf umbenannten Dateien zeigen auf
+- [x] Alle Querverweise innerhalb der fünf umbenannten Dateien zeigen auf
       die neuen Dateinamen.
-- [ ] Klon-URL in `ACB-STEUERCHAT-STANDARDSTART.md` zeigt auf
+- [x] Klon-URL in `ACB-STEUERCHAT-STANDARDSTART.md` zeigt auf
       `zippeliniot/Agent-Control-Bridge.git`.
-- [ ] Bestehende `tasks/*/task.yaml`, `results/*/*/result.yaml`,
+- [x] Bestehende `tasks/*/task.yaml`, `results/*/*/result.yaml`,
       `work-packages/*.md` unverändert (keine rückwirkende Korrektur).
-- [ ] `task_prefix: BRIDGE` unverändert.
-- [ ] Betroffener `--project`-Default-Test in `test_cli.py` angepasst.
-- [ ] Volle Testsuite dreimal frisch grün, frischer Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] `task_prefix: BRIDGE` unverändert.
+- [x] Betroffener `--project`-Default-Test angepasst. Abweichung von der
+      Voranalyse: nicht in `test_cli.py` gefunden (dort keine Assertion auf
+      den Default-Wert), sondern in `tests/test_profiles.py` — vier Tests
+      luden das echte Repo-Profil per `profiles.load_profile(REPO_ROOT,
+      "codex-control-bridge")`, angepasst auf `"agent-control-bridge"`.
+- [x] Volle Testsuite dreimal frisch grün (363 Tests, inkl. eingebettetem
+      Fresh-Clone-Integrationstest), frischer Klon verifiziert.
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.
