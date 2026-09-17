@@ -1,4 +1,4 @@
-"""Ablage & Validierung der Codex Control Bridge (BRIDGE-005).
+"""Ablage & Validierung der Agent Control Bridge (BRIDGE-005).
 
 Kapselt das Ablage-Layout aus docs/protocols/storage-layout.md: Aufträge unter
 ``tasks/``, Ergebnisse unter ``results/``, die append-only Auditspur unter

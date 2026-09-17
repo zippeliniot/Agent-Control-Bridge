@@ -309,7 +309,7 @@ _PAGE = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Codex Control Bridge - Board</title>
+<title>Agent Control Bridge - Board</title>
 <style>
   :root { color-scheme: light dark; }
   body { font: 14px/1.5 system-ui, sans-serif; margin: 0; padding: 1.5rem; }
@@ -341,7 +341,7 @@ _PAGE = r"""<!doctype html>
 </style>
 </head>
 <body>
-<h1>Codex Control Bridge &ndash; Board</h1>
+<h1>Agent Control Bridge &ndash; Board</h1>
 <div class="meta" id="meta">Lade &hellip;</div>
 <div class="bar">
   <label for="actor">Akteur (actor):</label>

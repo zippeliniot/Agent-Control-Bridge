@@ -1,4 +1,4 @@
-"""Result-Importer der Codex Control Bridge (BRIDGE-007).
+"""Result-Importer der Agent Control Bridge (BRIDGE-007).
 
 Übernimmt ein Ergebnis aus dem tatsächlichen Executor-Kontext strukturiert und
 legt es als valides ``result.yaml`` ab - statt es von Hand zu schreiben.

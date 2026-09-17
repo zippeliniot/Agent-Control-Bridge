@@ -133,7 +133,7 @@ class ReadOnlyProjectAdapter:
         """Callable ``(root=None, base_head=None)`` - ``root`` wird ignoriert,
         genutzt wird ``self.repo_path``. Direkt als ``git_info_fn`` für
         ``importer.import_result`` verwendbar: das Ergebnis landet im
-        CCB-Store, die Git-Provenienz kommt aus dem fremden (Dorfschaft-)Repo."""
+        ACB-Store, die Git-Provenienz kommt aus dem fremden (Dorfschaft-)Repo."""
         def _git_info_fn(root=None, base_head=None):
             return self.git_info(base_head=base_head)
         return _git_info_fn

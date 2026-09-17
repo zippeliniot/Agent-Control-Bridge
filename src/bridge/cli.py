@@ -34,7 +34,7 @@ _ENGINE_ERRORS = (StoreError, state_machine.TransitionError, state_machine.Model
 # --------------------------------------------------------------------------- #
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="bridge", description="Codex Control Bridge CLI")
+    parser = argparse.ArgumentParser(prog="bridge", description="Agent Control Bridge CLI")
     parser.add_argument("--root", default=".",
                         help="Basis für tasks/results/audit (Standard: aktuelles Verzeichnis)")
     parser.add_argument("--schema-dir", default=None,
