@@ -1,4 +1,4 @@
-# Architekturgrundlage — Codex Control Bridge
+# Architekturgrundlage — Agent Control Bridge
 
 > **Status:** verbindlich ab BRIDGE-001.
 > Diese Datei ist die maßgebliche Architekturgrundlage. Spätere Arbeitspakete
@@ -9,7 +9,7 @@
 
 ## 1. Zweck
 
-Die Codex Control Bridge (CCB) vermittelt strukturierte **Aufträge** und
+Die Agent Control Bridge (ACB) vermittelt strukturierte **Aufträge** und
 **Ergebnisse** zwischen einem **Steuerprozess** und **Codex**:
 
 ```

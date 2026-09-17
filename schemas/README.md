@@ -1,6 +1,6 @@
 # Schemas
 
-Verbindliche Schemas der Codex Control Bridge. Geschrieben als JSON Schema
+Verbindliche Schemas der Agent Control Bridge. Geschrieben als JSON Schema
 (Draft 2020-12) in YAML-Form mit `additionalProperties: false` (fail-closed).
 
 | Datei                 | Definiert in | Status |

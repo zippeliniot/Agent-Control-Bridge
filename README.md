@@ -1,14 +1,14 @@
-# Codex Control Bridge (CCB)
+# Agent Control Bridge (ACB)
 
-**Projekt-ID:** CCB
-**Arbeitsname:** Codex Control Bridge
+**Projekt-ID:** ACB
+**Arbeitsname:** Agent Control Bridge
 **Status:** In Entwicklung — Stufe 0/1
 **Auftrags-ID-Format:** `<PRÄFIX>-<NNNN>` — Präfix max. 8 Großbuchstaben, dann
 genau 4 Ziffern, projektübergreifend: `BRIDGE-0001`, `BRIDGE-0002`, …, auch
 `DORF-0001`. (Die Datei­namen der `work-packages/BRIDGE-xxx.md` bleiben davon
 unberührt 3-stellig.)
 
-Die **Codex Control Bridge** ist eine **projektunabhängige Vermittlungsschicht**
+Die **Agent Control Bridge** ist eine **projektunabhängige Vermittlungsschicht**
 für strukturierte Aufträge und Ergebnisse zwischen einem **Steuerprozess**
 (z. B. ein ChatGPT-Steuerchat, später auch CLI/API/Weboberfläche) und **Codex**
 als ausführender Instanz.
@@ -306,7 +306,7 @@ Projekts (z. B. Dorfschaft), ohne je zu schreiben:
   `profile["read_only"] is True` (sonst `ReadOnlyViolation`); `git_info()`
   liefert dieselben Felder wie `importer.collect_git_info`; `as_git_info_fn()`
   macht daraus einen `git_info_fn` für `importer.import_result` — das Ergebnis
-  landet im CCB-Store, die Git-Provenienz kommt aus dem fremden Repo.
+  landet im ACB-Store, die Git-Provenienz kommt aus dem fremden Repo.
 
 **Nur Mechanismus:** keine Verbindung zum echten Dorfschaft-Repo, keine
 CLI-Verdrahtung, keine WSL-Zugriffe. Tests laufen gegen ein synthetisches
@@ -318,7 +318,7 @@ Wegwerf-Git-Repo im Temp-Verzeichnis.
 
 `scripts/integration_readonly.py` beweist, dass die Bridge ein **echtes** Git-Repo
 read-only begleiten kann, ohne es zu verändern. Zielrepo ist per Default das
-CCB-Repo selbst; alle Bridge-Ausgaben (`tasks/`, `results/`, `audit/`) gehen in
+ACB-Repo selbst; alle Bridge-Ausgaben (`tasks/`, `results/`, `audit/`) gehen in
 einen **separaten** Store-`root` (`--out`, Default: Temp-Verzeichnis).
 
 Ablauf: Vorher-Snapshot (`rev-parse HEAD` + `status --porcelain`) → Git-Stand des

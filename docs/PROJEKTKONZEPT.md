@@ -1,8 +1,8 @@
 # PROJEKTKONZEPT  
-# Codex Control Bridge – Automatisierte Auftrags- und Ergebnisübergabe zwischen Steuerchat und Codex
+# Agent Control Bridge – Automatisierte Auftrags- und Ergebnisübergabe zwischen Steuerchat und Codex
 
-**Projekt-ID:** CCB  
-**Arbeitsname:** Codex Control Bridge  
+**Projekt-ID:** ACB  
+**Arbeitsname:** Agent Control Bridge  
 **Status:** KONZEPT / NOCH NICHT IMPLEMENTIERT  
 **Erstes Zielsystem:** Dorfschaft  
 **Architekturprinzip:** Projektunabhängige Infrastruktur mit projektbezogenen Adaptern  
@@ -36,13 +36,13 @@ Dieser Ablauf funktioniert, verursacht jedoch vermeidbare manuelle Übergaben un
 - Risiko, dass Ergebnisse nur im Codex-Chat vorhanden sind
 - unnötige Wiederholung bereits erledigter Arbeiten
 
-Das Projekt **Codex Control Bridge** soll diese Übergaben standardisieren und schrittweise automatisieren.
+Das Projekt **Agent Control Bridge** soll diese Übergaben standardisieren und schrittweise automatisieren.
 
 ---
 
 # 2. Hauptziel
 
-Die Codex Control Bridge soll eine projektunabhängige Vermittlungsschicht zwischen:
+Die Agent Control Bridge soll eine projektunabhängige Vermittlungsschicht zwischen:
 
 **Steuerprozess → Codex → Ergebnis → Steuerprozess**
 
@@ -1074,7 +1074,7 @@ ChatGPT-Steuerung
 BRIDGE-Task erzeugen
         │
         ▼
-Codex Control Bridge
+Agent Control Bridge
         │
         ▼
 Codex-Agent
@@ -1086,7 +1086,7 @@ Tests / Repository / Worktree
 strukturiertes Resultat
         │
         ▼
-Codex Control Bridge
+Agent Control Bridge
         │
         ▼
 Steuerprozess erkennt Abschluss
@@ -1111,7 +1111,7 @@ erhalten.
 
 Setze ein neues, von Dorfschaft unabhängiges Projekt mit dem Namen
 
-**Codex Control Bridge**
+**Agent Control Bridge**
 
 auf Grundlage dieses Konzeptes auf.
 

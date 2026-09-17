@@ -1,4 +1,4 @@
-# Sicherheitsmodell — Codex Control Bridge
+# Sicherheitsmodell — Agent Control Bridge
 
 > **Status:** verbindlich ab BRIDGE-001.
 

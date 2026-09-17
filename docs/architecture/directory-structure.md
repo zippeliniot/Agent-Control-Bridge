@@ -3,7 +3,7 @@
 Basierend auf Abschnitt 18 des Projektkonzepts. Verbindlich ab BRIDGE-001.
 
 ```
-codex-control-bridge/
+agent-control-bridge/
 │
 ├── README.md
 │
