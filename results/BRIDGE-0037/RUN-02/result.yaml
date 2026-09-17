@@ -1,0 +1,98 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0037
+project_id: agent-control-bridge
+run_id: RUN-02
+status: COMPLETED
+repository: claude
+branch: main
+head: 103b258ffee94e87de3a5d2132a6809ebd16af47
+executor: claude-code
+started_at: '2026-09-17T21:20:07Z'
+ended_at: '2026-09-17T21:20:33Z'
+created_by: claude-code@DES11
+base_head: 22db2e3
+commits:
+- sha: fa4e2dfe2e87e9df4762cfc473dc17ac76b81fad
+  message: 'Work-Package BRIDGE-037: Umbenennung Teil B (Textstellen, CCB_PROJECT_BASE,
+    Pfad-Doku)'
+- sha: 03c43f281c0575567c77425453e46e69363faac6
+  message: 'Ops: BRIDGE-0037 run_start (Steuerchat-Aktion via CLI)'
+- sha: 1f760962b301d673225f5d024f4fe1ef875e4102
+  message: 'BRIDGE-037: CCB_PROJECT_BASE zu ACB_PROJECT_BASE umbenannt'
+- sha: b15f96cc9010cb007a57bfd08d63680608dae50e
+  message: 'BRIDGE-037: Projektname in Schema-Kommentaren auf Agent Control Bridge
+    umgestellt'
+- sha: d4f37ed0f86330cd33f30e46d5540ba241ab91f2
+  message: 'BRIDGE-037: Projektname in Python-Docstrings/Argparse-Text und registry.yaml
+    umgestellt'
+- sha: 485a93896bd5bb7b3445be42aab1e2ffa0bdd676
+  message: 'BRIDGE-037: Projektname in README/PROJEKTKONZEPT/ARCHITECTURE/SECURITY-MODEL
+    umgestellt'
+- sha: 65ab471564b6cfd5e4a90e8285c8f569a0cb1d4f
+  message: 'BRIDGE-037: restliche Prosa-Stellen in den fuenf ACB-*.md-Dateien umgestellt'
+- sha: 54613de2f86ba948a68733d3816b04e05cd9c5a6
+  message: 'BRIDGE-037: Projektnamenstellen in CODEX.md/CLAUDE.md umgestellt, Codex-Agentenname
+    unangetastet'
+- sha: 7dae093d85fe792f0d192c3205f695dd26302f66
+  message: 'BRIDGE-037: machines.md auf tatsaechliche Zwei-Klon-Struktur aktualisiert'
+- sha: 7536476531096454fc344404ac4bf48fbdc69359
+  message: 'Ops: BRIDGE-0037 INTERRUPTED -> WAITING_FOR_RESUME (Systemwechsel HAM11
+    -> DES11)'
+- sha: 847704ecb4c9103e6f2010952896afdf7c880b7f
+  message: 'BRIDGE-037: verbliebene Projektnamenstellen (README/PROJEKTKONZEPT/ARCHITECTURE/registry.yaml/Schema-Kommentare)
+    nachgezogen, AC abgehakt'
+- sha: 103b258ffee94e87de3a5d2132a6809ebd16af47
+  message: 'Ops: BRIDGE-0037 run_resume (RUN-02, Fortsetzung nach Systemwechsel HAM11
+    -> DES11)'
+changed_files:
+- CLAUDE.md
+- CODEX.md
+- README.md
+- audit/audit.jsonl
+- docs/ACB-ORCHESTRATOR-KONZEPT.md
+- docs/ACB-PROJEKT-INTEGRATION.md
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- docs/ACB-STEUERCHAT-REFERENZ.md
+- docs/ACB-STEUERCHAT-STANDARDSTART.md
+- docs/PROJEKTKONZEPT.md
+- docs/SETUP.md
+- docs/architecture/ARCHITECTURE.md
+- docs/architecture/directory-structure.md
+- docs/architecture/machines.md
+- docs/security/SECURITY-MODEL.md
+- registry.yaml
+- results/BRIDGE-0037/RUN-01/heartbeat.json
+- results/BRIDGE-0037/RUN-02/heartbeat.json
+- schemas/README.md
+- schemas/audit-event-map.yaml
+- schemas/audit-event.schema.yaml
+- schemas/git-readonly-allowlist.yaml
+- schemas/heartbeat.schema.yaml
+- schemas/project.schema.yaml
+- schemas/registry.schema.yaml
+- schemas/result.schema.yaml
+- schemas/state-model.yaml
+- schemas/task.schema.yaml
+- schemas/watcher-policy.yaml
+- src/bridge/adapter.py
+- src/bridge/cli.py
+- src/bridge/importer.py
+- src/bridge/registry.py
+- src/bridge/store.py
+- src/bridge/webui.py
+- tasks/BRIDGE-0037/task.yaml
+- tests/test_cli.py
+- tests/test_registry.py
+- work-packages/BRIDGE-037.md
+summary: 'Umbenennung Teil B abgeschlossen (fortgesetzt nach Systemwechsel HAM11 ->
+  DES11): alle verbliebenen Textstellen von Codex-Control-Bridge/CCB auf Agent-Control-Bridge/ACB
+  umgestellt (inkl. bislang uebersehener Fundstellen in README.md, PROJEKTKONZEPT.md,
+  ARCHITECTURE.md, registry.yaml, schemas/task.schema.yaml, schemas/registry.schema.yaml),
+  Codex als Agentenname ueberall unangetastet. CCB_PROJECT_BASE zu ACB_PROJECT_BASE
+  umbenannt (registry.py, test_cli.py, test_registry.py). machines.md auf die tatsaechliche
+  Zwei-Klon-Struktur aktualisiert (Agent-Control-Bridge/claude und /codex getrennt
+  dokumentiert, ACB_PROJECT_BASE fuer Codex/WSL erwaehnt). CLAUDE.md-Pfadreferenzen
+  korrigiert. Volle Testsuite dreimal frisch gruen mit 363 Tests je Lauf. Alle Akzeptanzkriterien
+  in work-packages/BRIDGE-037.md abgehakt.'
+physical_machine: DES11
