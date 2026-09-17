@@ -1,0 +1,53 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0036
+project_id: codex-control-bridge
+title: Umbenennung Teil A - Agent Control Bridge (Projektprofil, CLI-Default, CCB-Dateinamen)
+description: 'Teil A der zweigeteilten Umbenennung von Codex-Control-Bridge auf Agent
+  Control Bridge. Deckt nur strukturell/funktionale Aenderungen ab: projects/codex-control-bridge/
+  zu projects/agent-control-bridge/ (project_id, repository: Agent-Control-Bridge/claude,
+  github_repo), --project-CLI-Default in cli.py, fuenf aktive CCB-*.md-Dateien (STANDARDSTART,
+  ARBEITSWEISE, REFERENZ, ORCHESTRATOR-KONZEPT, PROJEKT-INTEGRATION) zu ACB-*.md umbenannt
+  inkl. Querverweise und Klon-URL. Vorbedingung: GitHub-Repo muss zu diesem Zeitpunkt
+  bereits auf Agent-Control-Bridge umbenannt sein (separater, nicht-CCB-Vorgang).
+  Bewusst NICHT Teil: die ca. 30 Dateien mit reinem Textbezug (README, CLAUDE.md,
+  CODEX.md, Schema-Kommentare, uebrige Tests, Web-UI-Titel) - das ist Teil B, ein
+  spaeterer eigener Auftrag. Ebenfalls bewusst nicht angefasst: die 37 bestehenden
+  task.yaml/result.yaml mit project_id: codex-control-bridge, die 6 docs/handover/CCB-UEBERGABE-v*.md
+  (Name und Inhalt), die 20 work-packages/*.md mit altem Namensbezug - historisches
+  Volumen, laut etablierter Projektpraxis (z.B. BRIDGE-034) nicht rueckwirkend korrigiert.
+  task_prefix bleibt BRIDGE (Nutzer-Entscheidung: Bridge ist weiterhin Teil des neuen
+  Namens, kein Bezeichnungskonflikt wie bei Codex). Details in work-packages/BRIDGE-036.md.'
+task_class: FEATURE
+repository: Codex-Control-Bridge
+branch: main
+git:
+  expected_head: 9c40395
+model: Claude Sonnet 5
+reasoning_level: LOW
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- projects/agent-control-bridge/project.yaml existiert (per git mv, Historie erhalten),
+  projects/codex-control-bridge/ existiert nicht mehr
+- project_id agent-control-bridge, repository Agent-Control-Bridge/claude, github_repo
+  zippeliniot/Agent-Control-Bridge
+- --project-Default in cli.py ist agent-control-bridge
+- Alle fuenf aktiven CCB-*.md-Dateien in docs/ sind zu ACB-*.md umbenannt (per git
+  mv)
+- docs/handover/CCB-UEBERGABE-v*.md unveraendert (Name und Inhalt)
+- Alle Querverweise innerhalb der fuenf umbenannten Dateien zeigen auf die neuen Dateinamen
+- Klon-URL in ACB-STEUERCHAT-STANDARDSTART.md zeigt auf zippeliniot/Agent-Control-Bridge.git
+- Bestehende tasks/*/task.yaml, results/*/*/result.yaml, work-packages/*.md unveraendert
+  (keine rueckwirkende Korrektur)
+- task_prefix BRIDGE unveraendert
+- Betroffener --project-Default-Test in test_cli.py angepasst
+- Volle Testsuite dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-14T00:00:00Z'
+created_by: browser-claude
+priority: MEDIUM
