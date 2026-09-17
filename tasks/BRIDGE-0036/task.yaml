@@ -47,7 +47,7 @@ acceptance_criteria:
 - Betroffener --project-Default-Test in test_cli.py angepasst
 - Volle Testsuite dreimal frisch gruen, frischer Klon verifiziert
 - Jeder Commit sofort gepusht, nicht gesammelt
-status: REVIEW_REQUIRED
+status: ARCHIVED
 created_at: '2026-09-14T00:00:00Z'
 created_by: browser-claude
 priority: MEDIUM
