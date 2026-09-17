@@ -169,7 +169,7 @@ erzwungen wird** (anders als die `task_prefix`-Kollision):
 - **`read_only: false`:** Die Bridge darf für dieses Projekt Aufträge
   im vollen Lebenszyklus ausführen (analog zu sich selbst). Es gibt
   **keinen** eigenen, generischen "Schreib-Adapter" — die normalen
-  Store-/Runner-/CLI-Mechanismen (Teil 3 der `CCB-STEUERCHAT-REFERENZ.md`)
+  Store-/Runner-/CLI-Mechanismen (Teil 3 der `ACB-STEUERCHAT-REFERENZ.md`)
   gelten direkt, mit den Grenzen aus `git_policy` des Profils.
 
 ## Schritt 5 — Profil validieren

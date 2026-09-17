@@ -5,7 +5,7 @@
 > Er ist absichtlich **nicht** auftragsspezifisch — er beschreibt den immer
 > gleichen Ablauf, die immer gleichen Kommunikationsregeln und die
 > Stolperfallen, die in bisherigen Sitzungen tatsächlich aufgetreten sind.
-> Gehört ins Repo unter `docs/CCB-STEUERCHAT-STANDARDSTART.md`, damit er
+> Gehört ins Repo unter `docs/ACB-STEUERCHAT-STANDARDSTART.md`, damit er
 > selbst versioniert und wiederauffindbar ist — nicht nur als Copy-Paste-Text
 > irgendwo lokal.
 
@@ -19,7 +19,7 @@ rekonstruieren.
 ## 1. Frischen Klon anlegen und HEAD feststellen
 
 ```
-rm -rf /home/claude/ccb-session && git clone --quiet https://github.com/zippeliniot/Codex-Control-Bridge.git /home/claude/ccb-session && cd /home/claude/ccb-session && git log --oneline -10
+rm -rf /home/claude/ccb-session && git clone --quiet https://github.com/zippeliniot/Agent-Control-Bridge.git /home/claude/ccb-session && cd /home/claude/ccb-session && git log --oneline -10
 ```
 
 ## 2. Pflichtdokumente vollständig lesen (im frischen Klon, per bash_tool/cat, NICHT per web_fetch — liefert für dieses Repo zuverlässig 404)
@@ -31,8 +31,8 @@ In dieser Reihenfolge:
    sort -V`, nicht nach Erinnerung raten). Das ist die aktuellste Übergabe
    und enthält den Stand der letzten Sitzung, inklusive offener
    Entscheidungen — vollständig lesen, nicht überfliegen.
-2. `docs/CCB-STEUERCHAT-ARBEITSWEISE.md`
-3. `docs/CCB-STEUERCHAT-REFERENZ.md`
+2. `docs/ACB-STEUERCHAT-ARBEITSWEISE.md`
+3. `docs/ACB-STEUERCHAT-REFERENZ.md`
 4. `CLAUDE.md`
 5. `CODEX.md`
 6. `CONTROL.md`
@@ -41,8 +41,8 @@ In dieser Reihenfolge:
    siehe Stolperfalle unten)
 9. `docs/security/SECURITY-MODEL.md`
 10. `docs/PROJEKTKONZEPT.md`
-11. `docs/CCB-PROJEKT-INTEGRATION.md`
-12. `docs/CCB-ORCHESTRATOR-KONZEPT.md`
+11. `docs/ACB-PROJEKT-INTEGRATION.md`
+12. `docs/ACB-ORCHESTRATOR-KONZEPT.md`
 13. Alle `projects/<id>/project.yaml`
 
 ## 3. Schemas lesen — Pflichtfelder/Zustandsübergänge nicht aus dem Gedächtnis rekonstruieren

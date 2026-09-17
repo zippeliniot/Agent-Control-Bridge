@@ -1,6 +1,6 @@
 # CCB — Steuerchat-Referenz: Pflichtlektüre & Bridge-Bedienung
 
-Ergänzt `docs/CCB-STEUERCHAT-ARBEITSWEISE.md` (das *wie* der
+Ergänzt `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` (das *wie* der
 Zusammenarbeit) um zwei Dinge im Detail: **was** jede Primärquelle
 tatsächlich enthält und **wie** die Bridge — CLI und Web-UI — konkret zu
 bedienen ist. Stand: HEAD `0cc2f3f`, gegen den echten Code und die
@@ -84,12 +84,12 @@ Akzeptanzkriterien (29–31). Bei einer neuen fachlichen Frage (nicht nur
 technischer Umsetzung) ist das die erste Anlaufstelle — nicht raten,
 den passenden Abschnitt gezielt nachlesen.
 
-### `docs/CCB-STEUERCHAT-ARBEITSWEISE.md` (generell, nicht zustandsspezifisch)
+### `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` (generell, nicht zustandsspezifisch)
 Beschreibt *wie* der Steuerchat arbeitet: Sitzungsstart-Pflichtablauf,
 Ein-Auftrag-zur-Zeit-Disziplin, Datei-statt-Copy-Paste-Konvention,
 CCB-Kurzreferenz, Verifikationspflichten (inkl. der Tatsache, dass der
 Steuerchat selbst keine Push-Credentials für GitHub hat). Dieses
-Dokument hier (`CCB-STEUERCHAT-REFERENZ.md`) ist die inhaltliche
+Dokument hier (`ACB-STEUERCHAT-REFERENZ.md`) ist die inhaltliche
 Ergänzung dazu — Detailwissen statt Verhaltensregeln.
 
 ### `docs/handover/CCB-UEBERGABE-vX.md` (jeweils aktuellste Version)
