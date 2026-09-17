@@ -46,12 +46,12 @@ def _snapshot(target) -> dict:
     }
 
 
-def _observation_task(task_id: str, target_name: str) -> dict:
+def _observation_task(task_id: str, target_name: str, project_id: str) -> dict:
     return {
         "schema_version": "1.0",
         "kind": "bridge_task",
         "bridge_task_id": task_id,
-        "project_id": "codex-control-bridge",
+        "project_id": project_id,
         "title": f"Read-only-Beobachtung von {target_name}",
         "description": "BRIDGE-012 Integrationstest: Zielrepo wird ausschliesslich gelesen.",
         "task_class": "READONLY_CHECK",
@@ -64,7 +64,9 @@ def _observation_task(task_id: str, target_name: str) -> dict:
     }
 
 
-def run(target: Path, out: Path, schema_dir: Path, task_id: str = DEFAULT_TASK_ID) -> dict:
+def run(target: Path, out: Path, schema_dir: Path, task_id: str = DEFAULT_TASK_ID, *,
+        project_id: str = "codex-control-bridge", task_prefix: str = "BRIDGE",
+        expected_branch: str | None = None, expected_head: str | None = None) -> dict:
     """Führt die Read-only-Beobachtung aus und gibt einen Report (dict) zurück.
     Wirft bei jedem Fehler (fail-closed)."""
     target = Path(target).resolve()
@@ -74,10 +76,16 @@ def run(target: Path, out: Path, schema_dir: Path, task_id: str = DEFAULT_TASK_I
 
     before = _snapshot(target)
 
+    if expected_head is not None and not before["head"].startswith(expected_head):
+        raise RuntimeError(
+            f"Pre-Flight-Head-Check fehlgeschlagen: erwartet {expected_head}, "
+            f"tatsaechlich {before['head']}.")
+
+    default_branch = expected_branch if expected_branch else "main"
     profile = {
         "schema_version": "1.0", "kind": "bridge_project_profile",
-        "project_id": "codex-control-bridge", "repository": target.name,
-        "default_branch": "main", "task_prefix": "BRIDGE", "read_only": True,
+        "project_id": project_id, "repository": target.name,
+        "default_branch": default_branch, "task_prefix": task_prefix, "read_only": True,
     }
     ro = adapter.ReadOnlyProjectAdapter(profile, target, schema_dir=schema_dir)
     git_info = ro.git_info()
@@ -85,7 +93,7 @@ def run(target: Path, out: Path, schema_dir: Path, task_id: str = DEFAULT_TASK_I
     for name in ("tasks", "results", "audit"):
         (out / name).mkdir(parents=True, exist_ok=True)
     store = Store(root=out, schema_dir=schema_dir)
-    store.create_task(_observation_task(task_id, target.name))
+    store.create_task(_observation_task(task_id, target.name, project_id))
     result = importer.import_result(
         store, task_id, "COMPLETED",
         draft={"summary": f"Zielrepo {target.name} read-only beobachtet "
@@ -103,6 +111,8 @@ def run(target: Path, out: Path, schema_dir: Path, task_id: str = DEFAULT_TASK_I
         "result_head_matches_target": result["head"] == after["head"],
         "result_provenance_is_target": result["repository"] == target.name,
     }
+    if expected_head is not None:
+        checks["head_matches_expected"] = before["head"].startswith(expected_head)
     return {
         "target": target, "out": out, "before": before, "after": after,
         "git_info": git_info, "result": result, "result_path": result_path,
@@ -119,12 +129,23 @@ def main(argv=None) -> int:
                         help="separater Store-root (Default: neues Temp-Verzeichnis)")
     parser.add_argument("--schema-dir", default=str(_REPO_ROOT / "schemas"))
     parser.add_argument("--task-id", default=DEFAULT_TASK_ID)
+    parser.add_argument("--project-id", default="codex-control-bridge",
+                        help="project_id des synthetischen Profils/Auftrags (Default: codex-control-bridge)")
+    parser.add_argument("--task-prefix", default="BRIDGE",
+                        help="task_prefix des synthetischen Profils (Default: BRIDGE)")
+    parser.add_argument("--expected-branch", default=None,
+                        help="nur informativ, kein Abbruch bei fehlendem Wert")
+    parser.add_argument("--expected-head", default=None,
+                        help="Pre-Flight-Check: bricht ab, wenn der tatsaechliche HEAD "
+                             "nicht mit diesem Wert beginnt (kurze oder lange SHA)")
     args = parser.parse_args(argv)
 
     out = Path(args.out) if args.out else Path(tempfile.mkdtemp(prefix="ccb-int-out-"))
 
     try:
-        report = run(Path(args.target), out, Path(args.schema_dir), args.task_id)
+        report = run(Path(args.target), out, Path(args.schema_dir), args.task_id,
+                     project_id=args.project_id, task_prefix=args.task_prefix,
+                     expected_branch=args.expected_branch, expected_head=args.expected_head)
     except Exception as exc:  # fail-closed
         print(f"FAIL: {exc}")
         return 1
@@ -134,6 +155,8 @@ def main(argv=None) -> int:
     print(f"HEAD vorher:   {report['before']['head']}")
     print(f"HEAD nachher:  {report['after']['head']}")
     print(f"Branch:        {report['git_info']['branch']}")
+    if args.expected_branch:
+        print(f"Branch (erwartet): {args.expected_branch}")
     print(f"result.yaml:   {report['result_path']}")
     print("Pruefungen:")
     for name, ok in report["checks"].items():

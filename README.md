@@ -336,6 +336,14 @@ Exit `0` = PASS, `!= 0` = FAIL (fail-closed). Der hermetische unittest
 `tests/test_integration_readonly.py` fährt denselben Ablauf gegen ein
 synthetisches Temp-Git-Repo.
 
+Seit BRIDGE-035 projektparametrisierbar: `--project-id`/`--task-prefix` setzen
+`project_id`/`task_prefix` des synthetischen Profils und damit die Provenienz
+im erzeugten `result.yaml` (Default weiterhin `codex-control-bridge`/`BRIDGE`,
+unverändertes Verhalten ohne die Flags). `--expected-head` (kurze oder lange
+SHA, Präfix-Vergleich) prüft vor der Beobachtung fail-closed, ob das Zielrepo
+tatsächlich auf dem erwarteten Commit steht; `--expected-branch` ist rein
+informativ.
+
 ---
 
 ## Referenzprojekt Dorfschaft

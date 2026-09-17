@@ -101,6 +101,52 @@ class IntegrationReadonlyTests(unittest.TestCase):
                            "--schema-dir", str(SCHEMA_DIR)])
         self.assertEqual(code, 0)
 
+    def test_custom_project_id_and_task_prefix_land_in_result(self):
+        out = self.tmp / "store-out"
+        report = intgr.run(self.repo, out, SCHEMA_DIR,
+                            project_id="dorfschaft", task_prefix="DORF")
+        self.assertTrue(report["passed"], report["checks"])
+        doc = yaml.safe_load(report["result_path"].read_text(encoding="utf-8"))
+        task_doc = yaml.safe_load(
+            (out / "tasks" / intgr.DEFAULT_TASK_ID / "task.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(task_doc["project_id"], "dorfschaft")
+        self.assertNotEqual(doc["repository"], "codex-control-bridge")
+
+    def test_expected_head_correct_passes_with_check(self):
+        head = _git_out(self.repo, "rev-parse", "HEAD")
+        out = self.tmp / "store-out"
+        report = intgr.run(self.repo, out, SCHEMA_DIR, expected_head=head)
+        self.assertTrue(report["passed"], report["checks"])
+        self.assertTrue(report["checks"]["head_matches_expected"])
+
+    def test_expected_head_wrong_fails_with_both_heads_in_message(self):
+        wrong_head = "0" * 40
+        out = self.tmp / "store-out"
+        with self.assertRaises(RuntimeError) as ctx:
+            intgr.run(self.repo, out, SCHEMA_DIR, expected_head=wrong_head)
+        message = str(ctx.exception)
+        self.assertIn(wrong_head, message)
+        self.assertIn(_git_out(self.repo, "rev-parse", "HEAD"), message)
+
+    def test_expected_head_short_sha_is_accepted_via_prefix(self):
+        head = _git_out(self.repo, "rev-parse", "HEAD")
+        out = self.tmp / "store-out"
+        report = intgr.run(self.repo, out, SCHEMA_DIR, expected_head=head[:7])
+        self.assertTrue(report["passed"], report["checks"])
+        self.assertTrue(report["checks"]["head_matches_expected"])
+
+    def test_head_matches_expected_absent_when_expected_head_not_set(self):
+        out = self.tmp / "store-out"
+        report = intgr.run(self.repo, out, SCHEMA_DIR)
+        self.assertNotIn("head_matches_expected", report["checks"])
+
+    def test_main_with_wrong_expected_head_exits_one(self):
+        code = intgr.main(["--target", str(self.repo),
+                           "--out", str(self.tmp / "o3"),
+                           "--schema-dir", str(SCHEMA_DIR),
+                           "--expected-head", "0" * 40])
+        self.assertEqual(code, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
