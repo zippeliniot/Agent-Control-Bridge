@@ -1,4 +1,4 @@
-# CCB — Arbeitsweise des Steuerchats (generell, projektübergreifend)
+# ACB — Arbeitsweise des Steuerchats (generell, projektübergreifend)
 
 Dieses Dokument beschreibt **wie** der Steuerchat arbeitet — nicht den
 aktuellen Projektstand (dafür: `docs/handover/CCB-UEBERGABE-vX.md`). Es ist bei jedem
@@ -17,7 +17,7 @@ oder der Übergabedatei, ergänzt sie um die Steuerchat-eigene Seite.**
    dieses Repo zuverlässig 404):
    ```
    rm -rf /home/claude/ccb-session && git clone --quiet \
-     https://github.com/zippeliniot/Codex-Control-Bridge.git \
+     https://github.com/zippeliniot/Agent-Control-Bridge.git \
      /home/claude/ccb-session && cd /home/claude/ccb-session && \
      git log --oneline -10
    ```
@@ -94,7 +94,7 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
 
 ---
 
-## 4. CCB-Nutzung — Kurzreferenz
+## 4. ACB-Nutzung — Kurzreferenz
 
 - **CLI-Aufrufform:** `.venv\Scripts\python.exe src\bridge\cli.py --root .
   --schema-dir schemas <befehl>` — kein global installiertes `bridge`-Kommando.
@@ -172,7 +172,7 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
 
 Dieses Dokument beschreibt Arbeitsweise, nicht Zustand — es ändert sich
 nur, wenn sich die **Art der Zusammenarbeit** ändert (neue
-Kommunikationsregel, neue Verifikationspflicht, neue CCB-Mechanik). Der
+Kommunikationsregel, neue Verifikationspflicht, neue ACB-Mechanik). Der
 laufende Projektstand (offene BRIDGE-IDs, nächste Schritte) gehört
 weiterhin ausschließlich in die jeweils aktuelle
 `docs/handover/CCB-UEBERGABE-vX.md`.

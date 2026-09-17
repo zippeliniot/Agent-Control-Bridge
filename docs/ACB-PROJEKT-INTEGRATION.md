@@ -1,6 +1,6 @@
-# CCB — Arbeitsanweisung: Einbindung eines beliebigen neuen Projekts
+# ACB — Arbeitsanweisung: Einbindung eines beliebigen neuen Projekts
 
-Beschreibt, was konkret zu tun ist, um die Codex Control Bridge für ein
+Beschreibt, was konkret zu tun ist, um die Agent Control Bridge für ein
 **neues, beliebiges** Projekt nutzbar zu machen — nicht nur für sich
 selbst. Vollständig gegen den echten Code geprüft (Schema, Loader,
 Adapter, Registry), Stand HEAD `af27302`. An Stellen, wo der Mechanismus
@@ -15,8 +15,8 @@ Die Bridge selbst enthält **keine** projektspezifische Fachlogik.
 Projektbezogene Regeln leben ausschließlich in einem **Projektprofil**
 unter `projects/<project_id>/project.yaml`. Zwei Projekte sind bisher in
 diesem Sinn vorgesehen:
-- `codex-control-bridge` — die Bridge selbst, **real aktiv**,
-  schreibend (`projects/codex-control-bridge/project.yaml`).
+- `agent-control-bridge` — die Bridge selbst, **real aktiv**,
+  schreibend (`projects/agent-control-bridge/project.yaml`).
 - `dorfschaft` — **nur als Vorlage** unter `projects/examples/`, read-only
   konzipiert, noch nicht als echtes, aktives Profil unter `projects/`
   angelegt.
@@ -45,7 +45,7 @@ ausführen und die bereits vergebenen Prefixe gegenprüfen.
 ## Schritt 2 — Repository lokal erreichbar machen (`registry.yaml`)
 
 Der lokale Pfad eines Projekt-Repos wird **nicht** frei im Profil
-angegeben, sondern aus `registry.yaml` (Repo-Wurzel von CCB) **plus**
+angegeben, sondern aus `registry.yaml` (Repo-Wurzel von ACB) **plus**
 dem Profilfeld `repository` zusammengesetzt: `<Basis-aus-registry.yaml>
 /<repository>`. Aktueller Inhalt von `registry.yaml`:
 ```yaml
@@ -86,27 +86,27 @@ Optionale Felder, mit Entscheidungshilfe:
 | `git_policy.allow_push` / `allow_merge` / `allow_force_push` | grobe Git-Rechte auf Projektebene | `allow_force_push: false` **immer**, projektübergreifende Konvention dieses gesamten Systems |
 | `git_policy.protected_branches` | Branches, die zusätzlich geschützt sind | mindestens `default_branch` eintragen |
 | `test_policy.command` / `required` | wie Tests für dieses Projekt laufen | `required: true`, wenn Aufträge ohne grüne Tests nicht als `COMPLETED` gelten sollen |
-| `handover_policy.branch` / `require_clean` | Übergabe-Gate-Vorgaben (analog `docs/handover/HANDOVER.md` für CCB selbst) | `require_clean: true` empfohlen |
+| `handover_policy.branch` / `require_clean` | Übergabe-Gate-Vorgaben (analog `docs/handover/HANDOVER.md` für ACB selbst) | `require_clean: true` empfohlen |
 | `executor` | `codex` / `claude-code` / `null` | `null`, wenn (noch) nicht automatisiert |
 | `controller` | `anthropic` / `openai` / `human` / `null` | i. d. R. `human`, außer bei API-gesteuerten Steuerprozessen |
 | `review_roles.lead` / `support` | fachliche Führungs-/Prüfrolle, getrennt von `executor`/`controller` | optional, nur setzen, wenn eine feste Cross-Check-Rolle gewünscht ist |
 | `github_repo` | vollqualifizierter `Besitzer/Repo`-Slug | nötig für Steuerprozesse ohne lokalen Checkout (z. B. ChatGPT über GitHub-Connector) |
 | `migration_policy.allow_production` | Produktionsmigrationen erlaubt? | `false`, außer ausdrücklich anders entschieden |
 
-**Referenzbeispiel, schreibend** (`projects/codex-control-bridge/project.yaml`,
+**Referenzbeispiel, schreibend** (`projects/agent-control-bridge/project.yaml`,
 real aktiv):
 ```yaml
 schema_version: "1.0"
 kind: bridge_project_profile
-project_id: codex-control-bridge
+project_id: agent-control-bridge
 description: Die Bridge selbst (Entwicklungsprojekt).
-repository: Codex-Control-Bridge
+repository: Agent-Control-Bridge/claude
 default_branch: main
 task_prefix: BRIDGE
 read_only: false
 executor: claude-code
 controller: human
-github_repo: zippeliniot/Codex-Control-Bridge
+github_repo: zippeliniot/Agent-Control-Bridge
 allowed_machines: [HAM11, DES11]
 git_policy:
   allow_push: true
@@ -164,7 +164,7 @@ erzwungen wird** (anders als die `task_prefix`-Kollision):
   `schemas/git-readonly-allowlist.yaml` (SSOT), alles andere wird
   fail-closed verweigert. Für ein Projekt, das die Bridge nur
   **beobachten**, nie verändern soll (wie ursprünglich für Dorfschaft
-  gedacht — dort zusätzlich durch CLAUDE.md Regel 3 auf CCB-Seite
+  gedacht — dort zusätzlich durch CLAUDE.md Regel 3 auf ACB-Seite
   verstärkt).
 - **`read_only: false`:** Die Bridge darf für dieses Projekt Aufträge
   im vollen Lebenszyklus ausführen (analog zu sich selbst). Es gibt
@@ -186,14 +186,14 @@ bekannten Profile — das ist der Schritt, an dem manuell auf
 
 ## Schritt 6 — Falls schreibend: eigenes `CLAUDE.md`-Äquivalent überlegen
 
-Die harten Regeln, die Claude Code für CCB selbst einhält (`CLAUDE.md`,
+Die harten Regeln, die Claude Code für ACB selbst einhält (`CLAUDE.md`,
 u. a. „nur innerhalb des Repos arbeiten", „Fail-closed bei
-Unsicherheit"), sind **spezifisch für das CCB-Repo geschrieben** — sie
+Unsicherheit"), sind **spezifisch für das ACB-Repo geschrieben** — sie
 gelten nicht automatisch für ein neu eingebundenes Projekt. Für ein
 schreibendes, automatisiertes Projekt (`executor: claude-code` oder
 `codex`) empfiehlt sich ein analoges Regelwerk **im Zielrepo selbst**
 (eigenes `CLAUDE.md` oder Äquivalent dort), nicht nur das
-Projektprofil in CCB — das Profil steuert nur, *ob* die Bridge das
+Projektprofil in ACB — das Profil steuert nur, *ob* die Bridge das
 Projekt anfassen darf, nicht *wie* der Executor sich im Zielrepo
 verhält.
 

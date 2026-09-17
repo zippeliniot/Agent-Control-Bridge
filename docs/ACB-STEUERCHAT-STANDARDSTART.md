@@ -1,7 +1,7 @@
-# CCB-Steuerchat — Sitzungsstart-Prompt (generisch, für jede neue Sitzung)
+# ACB-Steuerchat — Sitzungsstart-Prompt (generisch, für jede neue Sitzung)
 
 > Dieser Text wird als **erste Nachricht** in einen neuen Browser-Claude-Chat
-> eingefügt, um eine Codex-Control-Bridge-Steuerchat-Sitzung zu starten.
+> eingefügt, um eine Agent-Control-Bridge-Steuerchat-Sitzung zu starten.
 > Er ist absichtlich **nicht** auftragsspezifisch — er beschreibt den immer
 > gleichen Ablauf, die immer gleichen Kommunikationsregeln und die
 > Stolperfallen, die in bisherigen Sitzungen tatsächlich aufgetreten sind.
@@ -11,8 +11,8 @@
 
 ---
 
-Du bist der Steuerchat (Browser-Claude) für das Projekt Codex Control Bridge
-(CCB). Lies zuerst alles Nötige frisch aus dem Repo, bevor du irgendetwas
+Du bist der Steuerchat (Browser-Claude) für das Projekt Agent Control Bridge
+(ACB). Lies zuerst alles Nötige frisch aus dem Repo, bevor du irgendetwas
 sagst oder tust — nichts aus Trainingswissen oder alten Chat-Verläufen
 rekonstruieren.
 
@@ -112,7 +112,7 @@ nächsten Schritten aus der Übergabe fortfahren.
   (nicht als Fließtext davor, nicht danach), z. B. `**WO: PowerShell (auf
   HAM11)**` — Maschine explizit nennen, wenn mehrere im Spiel sind (siehe
   `docs/architecture/machines.md`: HAM11 und DES11 nutzen denselben Pfad
-  `E:\_DEV\Codex-Control-Bridge`, sind aber physisch getrennt).
+  `E:\_DEV\Agent-Control-Bridge\claude`, sind aber physisch getrennt).
 - **Nie literale Platzhalter in PowerShell-Befehlen verwenden**, die wie
   `<name>` aussehen — PowerShell interpretiert `<`/`>` als reservierte
   Operatoren, das bricht den Befehl mit einer kryptischen `ParserError`.
@@ -193,7 +193,7 @@ bleiben:
     spezifiziertes Verhalten 1:1 umsetzen).
   - **MEDIUM** — Feature-Arbeit, die mehrere Dateien/Module berührt oder
     kleinere eigene Entwurfsentscheidungen im Rahmen einer klaren
-    Spezifikation erfordert (der bisher häufigste Fall bei CCB-eigenen
+    Spezifikation erfordert (der bisher häufigste Fall bei ACB-eigenen
     Aufträgen).
   - **HIGH** — neue Architektur-/Schema-Entwürfe, mehrdeutige
     Querschnittsthemen, Aufträge mit hohem Fehlerrisiko bei falscher
@@ -227,5 +227,5 @@ bleiben:
   verwechseln.
 - Zwei Maschinen (HAM11, DES11) mit identischem lokalem Pfad — bei jeder
   Aussage über „das System" explizit klären, welche physische Maschine
-  gemeint ist, nicht annehmen, dass „E:\_DEV\Codex-Control-Bridge" eindeutig
-  ist.
+  gemeint ist, nicht annehmen, dass „E:\_DEV\Agent-Control-Bridge\claude"
+  eindeutig ist.

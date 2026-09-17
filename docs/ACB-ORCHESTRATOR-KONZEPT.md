@@ -1,4 +1,4 @@
-# CCB — Konzept: Orchestrator (Reihenfolge-/Ausführungsautomatik)
+# ACB — Konzept: Orchestrator (Reihenfolge-/Ausführungsautomatik)
 
 **Status: Schema-Grundbaustein implementiert (BRIDGE-0027 abgeschlossen).** Die
 eigentliche Auslöselogik folgt in BRIDGE-0031, sobald die Bausteine 0028–0030
@@ -52,7 +52,7 @@ Implementiert in BRIDGE-0027 (dieses Dokument).
 Die Web-UI (`http://127.0.0.1:8420`) soll zur zentralen Mehrmaschinen-/
 Mehrprojekt-Steuerung ausgebaut werden. Zwei konkrete Folgeentscheidungen:
 
-**Push-Retry (BRIDGE-0029):** Der CCB-Store (`audit/audit.jsonl` u. a.) ist
+**Push-Retry (BRIDGE-0029):** Der ACB-Store (`audit/audit.jsonl` u. a.) ist
 projektübergreifend gemeinsam in einem Repo. Bei gleichzeitigen Commits aus
 mehreren Projekten/Maschinen kann `git push` an Non-Fast-Forward scheitern.
 Lösung: automatisches `git pull --rebase` + Retry bei Push-Fehlschlag — nie

@@ -1,4 +1,4 @@
-# CCB — Steuerchat-Referenz: Pflichtlektüre & Bridge-Bedienung
+# ACB — Steuerchat-Referenz: Pflichtlektüre & Bridge-Bedienung
 
 Ergänzt `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` (das *wie* der
 Zusammenarbeit) um zwei Dinge im Detail: **was** jede Primärquelle
@@ -22,7 +22,7 @@ um Aufträge kompatibel zu formulieren. Gliederung:
 - **Harte Regeln (nicht verhandelbar)**, wörtlich sieben Stück:
   Ubuntu/WSL nicht verändern, nicht in WSL-Distros hineingreifen,
   Dorfschaft nicht anfassen (außer read-only, BRIDGE-011/012), nur
-  innerhalb `E:\_DEV\Codex-Control-Bridge` arbeiten, Fail-closed bei
+  innerhalb `E:\_DEV\Agent-Control-Bridge\claude` arbeiten, Fail-closed bei
   Unsicherheit, Least Privilege (kritische Aktionen nie ohne
   ausdrückliche Freigabe), getrennte Nummernräume `BRIDGE-xxx` vs.
   `DORF-xxx`.
@@ -87,7 +87,7 @@ den passenden Abschnitt gezielt nachlesen.
 ### `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` (generell, nicht zustandsspezifisch)
 Beschreibt *wie* der Steuerchat arbeitet: Sitzungsstart-Pflichtablauf,
 Ein-Auftrag-zur-Zeit-Disziplin, Datei-statt-Copy-Paste-Konvention,
-CCB-Kurzreferenz, Verifikationspflichten (inkl. der Tatsache, dass der
+ACB-Kurzreferenz, Verifikationspflichten (inkl. der Tatsache, dass der
 Steuerchat selbst keine Push-Credentials für GitHub hat). Dieses
 Dokument hier (`ACB-STEUERCHAT-REFERENZ.md`) ist die inhaltliche
 Ergänzung dazu — Detailwissen statt Verhaltensregeln.
@@ -367,7 +367,7 @@ mit definierten Rollen — bei einem echten Maschinenwechsel gilt Regel 9
 der Übergabe: **RUN-Nummern sind kein Ort**, und die Bridge trackt nicht
 fensterscharf, welche Maschine an welchem Auftrag arbeitet. Konkret vor
 dem nächsten Auftrag zu klären, nicht anzunehmen:
-- Ist `E:\_DEV\Codex-Control-Bridge` auf DES11 derselbe geklonte Pfad,
+- Ist `E:\_DEV\Agent-Control-Bridge\claude` auf DES11 derselbe geklonte Pfad,
   oder ein separater Klon?
 - Läuft dort ebenfalls ein `.venv` mit denselben Requirements, oder
   muss das neu aufgesetzt werden?
