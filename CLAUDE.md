@@ -1,6 +1,6 @@
 # CLAUDE.md — Arbeitsanweisung für Claude Code
 
-Dieses Repository ist die **Codex Control Bridge (CCB)**, eine
+Dieses Repository ist die **Agent Control Bridge (ACB)**, eine
 projektunabhängige Vermittlungsschicht für Aufträge/Ergebnisse zwischen einem
 Steuerprozess und einer Ausführungsinstanz. Maßgeblich ist
 `docs/architecture/ARCHITECTURE.md`. Fachliche Grundlage: `docs/PROJEKTKONZEPT.md`.
@@ -11,7 +11,7 @@ Für einen ChatGPT-gesteuerten Steuerprozess (statt Claude Code) siehe
 ## Ausführungsmodell
 
 - Claude Code läuft als **native Windows-App** und arbeitet ausschließlich in
-  `E:\_DEV\Codex-Control-Bridge`.
+  `E:\_DEV\Agent-Control-Bridge\claude`.
 - Claude im Browser ist die Steuer-/Review-Ebene. GitHub ist der einzige
   Austauschkanal zwischen den Maschinen und die SSOT.
 
@@ -25,7 +25,7 @@ Für einen ChatGPT-gesteuerten Steuerprozess (statt Claude Code) siehe
 3. **Dorfschaft nicht anfassen.** Weder lesen noch schreiben, außer in
    ausdrücklich als Read-only deklarierten Aufträgen (BRIDGE-011/012).
 4. **Nur innerhalb des Repos arbeiten.** Keine Schreibzugriffe außerhalb
-   `E:\_DEV\Codex-Control-Bridge`.
+   `E:\_DEV\Agent-Control-Bridge\claude`.
 5. **Fail-closed.** Bei jeder Unsicherheit (falscher Branch, unerwarteter HEAD,
    nötige System-/WSL-Änderung, unklare Maschinenidentität) → anhalten und
    nachfragen, nicht improvisieren.

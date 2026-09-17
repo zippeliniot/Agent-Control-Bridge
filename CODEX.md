@@ -4,8 +4,8 @@ Pendant zu `CLAUDE.md`, aber für **Codex als ausführende Instanz** unter
 einem ChatGPT-gesteuerten Controller (siehe `CONTROL.md`, das Pendant
 zur Steuerseite). **Wichtiger Unterschied zu `CLAUDE.md`:** Dieses
 Dokument ist **projektunabhängig** — `CLAUDE.md` ist fest auf das
-CCB-Repo selbst zugeschnitten (dort ist `executor: claude-code`, siehe
-`projects/codex-control-bridge/project.yaml`). Codex ist in diesem Repo
+ACB-Repo selbst zugeschnitten (dort ist `executor: claude-code`, siehe
+`projects/agent-control-bridge/project.yaml`). Codex ist in diesem Repo
 **kein** Executor; `CODEX.md` gilt für **jedes andere Projekt**, dessen
 Profil (`projects/<project_id>/project.yaml`) `executor: codex` setzt.
 
@@ -39,7 +39,7 @@ dieselbe Rollenaufteilung kennen.
    Welches Repo das ist, ergibt sich aus `project_id` im Auftrag →
    `projects/<project_id>/project.yaml` → Feld `repository`. Niemals in
    ein anderes Projekt hineingreifen, auch nicht in die Bridge selbst
-   (`Codex-Control-Bridge`), außer ein Auftrag ist **ausdrücklich**
+   (`Agent-Control-Bridge`), außer ein Auftrag ist **ausdrücklich**
    dafür angelegt.
 2. **`read_only: true` im Projektprofil ist bindend und wird technisch
    erzwungen** (`src/bridge/adapter.py`, `ReadOnlyAdapter`) — bei
