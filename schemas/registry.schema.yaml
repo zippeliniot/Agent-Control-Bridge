@@ -1,4 +1,4 @@
-# Codex Control Bridge - Maschinen-Registry-Schema
+# Agent Control Bridge - Maschinen-Registry-Schema
 # BRIDGE-016 . ordnet COMPUTERNAME -> lokale lokale Basis zu, unter der alle
 # Projekt-Repos liegen (E:\_DEV\<repository>, auf jeder Maschine gleich benannt).
 #
@@ -11,8 +11,8 @@
 # der Code (src/bridge/registry.py), nicht dieses Schema.
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://github.com/zippeliniot/Codex-Control-Bridge/schemas/registry.schema.yaml"
-title: "Codex Control Bridge Machine Registry"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/registry.schema.yaml"
+title: "Agent Control Bridge Machine Registry"
 description: "COMPUTERNAME -> absoluter lokaler Basispfad."
 type: object
 additionalProperties: false

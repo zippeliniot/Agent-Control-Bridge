@@ -1,4 +1,4 @@
-# Codex Control Bridge - Allowlist erlaubter git-Lese-Kommandos (SSOT)
+# Agent Control Bridge - Allowlist erlaubter git-Lese-Kommandos (SSOT)
 # BRIDGE-011 . Härtet read-only-Projektzugriff (z. B. Dorfschaft).
 #
 # Der Read-only-Adapter darf NUR diese Subkommandos gegen ein fremdes Repo

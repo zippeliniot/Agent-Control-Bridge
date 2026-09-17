@@ -1,4 +1,4 @@
-# Codex Control Bridge - Task-Schema
+# Agent Control Bridge - Task-Schema
 # BRIDGE-002 . Konzept-Abschnitt 5
 #
 # Formaler, maschinenprüfbarer Vertrag für einen Auftrag ("bridge_task").
@@ -13,8 +13,8 @@
 #   - Validierung / Ablage / CLI -> BRIDGE-005 / BRIDGE-006
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://github.com/zippeliniot/Codex-Control-Bridge/schemas/task.schema.yaml"
-title: "Codex Control Bridge Task"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/task.schema.yaml"
+title: "Agent Control Bridge Task"
 description: "Unveränderlicher Auftragsvertrag zwischen Steuerprozess und Ausführungsinstanz."
 type: object
 additionalProperties: false

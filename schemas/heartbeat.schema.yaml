@@ -1,4 +1,4 @@
-# Codex Control Bridge - Heartbeat-Schema
+# Agent Control Bridge - Heartbeat-Schema
 # BRIDGE-008 . Lebenszeichen eines laufenden Auftrags-Laufs.
 #
 # Eine lebendige Ausführungsinstanz aktualisiert diese Datei regelmäßig.
@@ -6,8 +6,8 @@
 # JSON Schema (Draft 2020-12) in YAML-Form, additionalProperties: false.
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://github.com/zippeliniot/Codex-Control-Bridge/schemas/heartbeat.schema.yaml"
-title: "Codex Control Bridge Heartbeat"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/heartbeat.schema.yaml"
+title: "Agent Control Bridge Heartbeat"
 description: "Lebenszeichen eines laufenden Auftrags-Laufs."
 type: object
 additionalProperties: false

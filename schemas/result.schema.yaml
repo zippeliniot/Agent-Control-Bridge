@@ -1,4 +1,4 @@
-# Codex Control Bridge - Result-Schema
+# Agent Control Bridge - Result-Schema
 # BRIDGE-003 . Konzept-Abschnitt 6
 #
 # Formaler, maschinenprüfbarer Vertrag für ein Ergebnis ("bridge_result").
@@ -15,8 +15,8 @@
 #   - Validierung / Ablage / Audit -> BRIDGE-004 / BRIDGE-005
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://github.com/zippeliniot/Codex-Control-Bridge/schemas/result.schema.yaml"
-title: "Codex Control Bridge Result"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/result.schema.yaml"
+title: "Agent Control Bridge Result"
 description: "Ergebnisvertrag eines Auftragslaufs zwischen Ausführungsinstanz und Steuerprozess."
 type: object
 additionalProperties: false

@@ -1,4 +1,4 @@
-# Codex Control Bridge - Projektprofil-Schema
+# Agent Control Bridge - Projektprofil-Schema
 # BRIDGE-010 . Konzept-Abschnitt 11/12
 #
 # Projektspezifische Regeln leben im Profil, NICHT im Core.
@@ -6,8 +6,8 @@
 # JSON Schema (Draft 2020-12) in YAML-Form, additionalProperties: false (fail-closed).
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://github.com/zippeliniot/Codex-Control-Bridge/schemas/project.schema.yaml"
-title: "Codex Control Bridge Project Profile"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/project.schema.yaml"
+title: "Agent Control Bridge Project Profile"
 description: "Projektspezifische Regeln (Adapter) außerhalb des projektunabhängigen Core."
 type: object
 additionalProperties: false

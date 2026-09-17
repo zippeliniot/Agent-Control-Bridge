@@ -1,4 +1,4 @@
-# Codex Control Bridge - Watcher-Policy (SSOT)
+# Agent Control Bridge - Watcher-Policy (SSOT)
 # BRIDGE-008 . Steuert, welche automatischen Zustandswechsel der Watcher setzen darf.
 #
 # Der Watcher liest diese Datei; Verhalten wird NICHT im Code hartkodiert.

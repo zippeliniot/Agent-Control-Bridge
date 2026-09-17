@@ -1,12 +1,12 @@
-# Codex Control Bridge - Audit-Ereignis-Schema
+# Agent Control Bridge - Audit-Ereignis-Schema
 # BRIDGE-004 . Konzept-Abschnitt 10
 #
 # Ein einzelnes, nachvollziehbares Ereignis der Auditspur.
 # JSON Schema (Draft 2020-12) in YAML-Form, additionalProperties: false (fail-closed).
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://github.com/zippeliniot/Codex-Control-Bridge/schemas/audit-event.schema.yaml"
-title: "Codex Control Bridge Audit Event"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/audit-event.schema.yaml"
+title: "Agent Control Bridge Audit Event"
 description: "Einzelnes Ereignis der Auditspur über Zustandsänderungen und Aktionen."
 type: object
 additionalProperties: false
