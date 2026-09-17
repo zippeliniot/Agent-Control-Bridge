@@ -1,0 +1,55 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0037
+project_id: agent-control-bridge
+title: Umbenennung Teil B - Textstellen, CCB_PROJECT_BASE zu ACB_PROJECT_BASE, Pfad-Dokumentation
+description: 'Teil B der zweigeteilten Umbenennung (Teil A: BRIDGE-036, abgeschlossen).
+  Deckt den Rest ab: reine Textstellen in ca. 25 Dateien (README, PROJEKTKONZEPT,
+  ARCHITECTURE, SECURITY-MODEL, Schema-Kommentare, Docstrings in store.py/importer.py/cli.py/adapter.py,
+  webui.py-Seitentitel, registry.yaml-Kommentar, CODEX.md/CLAUDE.md-Projektnamenstellen)
+  von Codex-Control-Bridge/CCB auf Agent-Control-Bridge/ACB. WICHTIGE UNTERSCHEIDUNG:
+  Codex als Name des OpenAI-Coding-Agenten bleibt ueberall unveraendert (CODEX.md,
+  CONTROL.md, executor: codex, codex-executor) - betroffen ist ausschliesslich der
+  Projektname. Funktionaler Teil: CCB_PROJECT_BASE (Umgebungsvariable in registry.py
+  resolve_base()) wird zu ACB_PROJECT_BASE umbenannt (Nutzer-Entscheidung, konsistent),
+  test_cli.py und test_registry.py entsprechend angepasst - noch nie produktiv gesetzt,
+  kein Migrationspfad noetig. Inhaltliche Aktualisierung (nicht nur Textersatz) bei
+  machines.md (tatsaechliche Zwei-Klon-Struktur E:\_DEV\Agent-Control-Bridge\claude
+  und \codex dokumentieren, ACB_PROJECT_BASE fuer Codex/WSL erwaehnen) und CLAUDE.md
+  (Pfadreferenzen auf den neuen Claude-Klon-Pfad korrigieren - Claude Code liest diese
+  Datei bei jedem Start, reale funktionale Korrektur). Bewusst NICHT angefasst (wie
+  bei Teil A): bestehende task.yaml/result.yaml/work-packages/handover-Dokumente (historisch).
+  task_prefix bleibt BRIDGE. Details in work-packages/BRIDGE-037.md.'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 22db2e3
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- Alle in Schritt 2 gelisteten Dateien enthalten keine Projektname-Erwaehnung von
+  Codex-Control-Bridge/Codex Control Bridge/CCB mehr - Codex als Agentenname bleibt
+  ueberall unveraendert erhalten
+- registry.py - env_override_name-Default ist ACB_PROJECT_BASE, Docstring aktualisiert
+- test_cli.py und test_registry.py - alle CCB_PROJECT_BASE-Vorkommen auf ACB_PROJECT_BASE
+  umgestellt
+- machines.md beschreibt die tatsaechliche Zwei-Klon-Struktur (...claude, ...codex),
+  nicht mehr einen einzelnen Pfad
+- CLAUDE.md-Pfadreferenzen zeigen auf E:\_DEV\Agent-Control-Bridge\claude
+- CODEX.md/CONTROL.md - Codex als Agentenname unangetastet, nur die eine Projektname-Stelle
+  in CODEX.md geaendert
+- Bestehende tasks/*/task.yaml, results/*/*/result.yaml, work-packages/*.md, docs/handover/*.md
+  unveraendert (keine rueckwirkende Korrektur)
+- task_prefix BRIDGE unveraendert
+- Volle Testsuite dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-17T00:00:00Z'
+created_by: browser-claude
+priority: MEDIUM
