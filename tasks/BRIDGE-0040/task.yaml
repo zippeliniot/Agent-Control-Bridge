@@ -1,0 +1,39 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0040
+project_id: agent-control-bridge
+title: Parallel-Schreib-Test Teil B (Codex, Windows-nativ) — gegen BRIDGE-0039 (Claude
+  Code)
+description: 'Teil B des Zweischreiber-Tests (siehe BRIDGE-0039 fuer Teil A). Codex
+  laeuft fuer diesen Test ausdruecklich NATIV UNTER WINDOWS, nicht in der Ubuntu/WSL-Umgebung
+  wie sonst in CODEX.md/machines.md beschrieben - bewusste, einmalige Abweichung nur
+  fuer diesen Test, keine dauerhafte Architekturaenderung. Arbeitet im bestehenden
+  codex/-Klon (E:\_DEV\Agent-Control-Bridge\codex), jetzt per nativer Windows-Shell
+  statt WSL-Mount erreicht. Keine fachliche Aenderung am Code. AUSNAHME von CODEX.md
+  "Sofort pushen, nicht sammeln": fuer diesen Testauftrag ausdruecklich NICHT sofort
+  pushen, siehe Pflichtblock im Arbeitspaket work-packages/BRIDGE-0040.md - Push erfolgt
+  erst auf ausdrueckliches Signal des Steuerchats, zeitgleich mit BRIDGE-0039.'
+task_class: TEST
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 3518b82
+model: null
+reasoning_level: LOW
+executor: codex
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+depends_on: []
+acceptance_criteria:
+- run start ausgefuehrt, Status CLAIMED->RUNNING, Heartbeat gesetzt
+- run finish --commit --summary ausgefuehrt (lokal committet, NICHT gepusht) - Ergebnisvertrag
+  erfuellt, Status COMPLETED
+- Kein Push ohne ausdrueckliches Signal des Steuerchats (Ausnahme von CODEX.md, nur
+  fuer diesen Testauftrag)
+- Pflicht-Footer (Auftrag/Lauf/Status) ausgegeben und an Steuerchat zurueckgemeldet,
+  danach warten
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-18T00:00:00Z'
+created_by: browser-claude
