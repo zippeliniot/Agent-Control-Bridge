@@ -32,6 +32,6 @@ acceptance_criteria:
   fuer diesen Testauftrag)
 - Pflicht-Footer (Auftrag/Lauf/Status) ausgegeben und an Steuerchat zurueckgemeldet,
   danach warten
-status: REVIEW_REQUIRED
+status: ARCHIVED
 created_at: '2026-09-18T00:00:00Z'
 created_by: browser-claude
