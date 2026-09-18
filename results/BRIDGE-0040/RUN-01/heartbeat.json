@@ -1,0 +1,8 @@
+{
+  "actor": "codex-executor",
+  "bridge_task_id": "BRIDGE-0040",
+  "kind": "bridge_heartbeat",
+  "last_seen": "2026-09-18T16:24:07Z",
+  "machine": "DES11",
+  "run_id": "RUN-01"
+}
