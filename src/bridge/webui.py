@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -217,7 +218,8 @@ def _require(body: dict, key: str) -> str:
     return value.strip()
 
 
-def _apply_action(store, kind: str, task_id: str, body: dict) -> dict:
+def _apply_action(store, kind: str, task_id: str, body: dict,
+                  git_lock: threading.Lock | None = None) -> dict:
     """Fuehrt eine der drei Aktionen aus. Prueft serverseitig die
     Bestaetigungspflicht (der Browser-Dialog allein reicht nicht) und ruft
     dann exakt die Funktion, die auch das CLI nutzt.
@@ -227,7 +229,20 @@ def _apply_action(store, kind: str, task_id: str, body: dict) -> dict:
     immer im Antwort-JSON unter ``git`` enthalten. Store-Erfolg und
     Git-Fehler koennen gleichzeitig auftreten — die Antwort verschleiert
     nichts.
+
+    BRIDGE-038: ``git_lock`` (falls uebergeben) wird fuer die gesamte
+    Aktion gehalten - verhindert eine Kollision mit dem periodischen
+    Hintergrund-``git pull`` desselben Prozesses. ``None`` (z. B. in
+    aelteren/direkten Testaufrufen) bedeutet: keine Synchronisation, wie
+    vor diesem Auftrag.
     """
+    if git_lock is not None:
+        with git_lock:
+            return _apply_action_locked(store, kind, task_id, body)
+    return _apply_action_locked(store, kind, task_id, body)
+
+
+def _apply_action_locked(store, kind: str, task_id: str, body: dict) -> dict:
     if body.get("confirm") is not True:
         raise _BadRequest("Bestaetigung fehlt (confirm: true erforderlich).")
     actor = _require(body, "actor")
@@ -855,7 +870,8 @@ class _Handler(BaseHTTPRequestHandler):
             return
         try:
             body = self._read_json_body()
-            result = _apply_action(self.server.store, kind, task_id, body)
+            result = _apply_action(self.server.store, kind, task_id, body,
+                                   git_lock=self.server.git_lock)
         except _BadRequest as exc:
             self._json(400, {"error": str(exc)})
             return
@@ -879,14 +895,22 @@ class _Handler(BaseHTTPRequestHandler):
 # Server
 # --------------------------------------------------------------------------- #
 
-def serve(store, *, port, actor, host=HOST):
+def serve(store, *, port, actor, host=HOST, git_lock: threading.Lock | None = None):
     """Bindet einen ``ThreadingHTTPServer`` an ``host``/``port`` und gibt ihn
     zurueck (noch ohne ``serve_forever``). ``host`` ist nur fuer Tests
     parametrisiert - der CLI-Aufruf bindet **immer** an ``127.0.0.1`` (kein
     ``--host``-Flag). ``actor`` ist die Vorbelegung fuer das actor-Feld der
     Aktions-Buttons (im Frontend editierbar).
+
+    ``git_lock`` (BRIDGE-038): gemeinsames ``threading.Lock`` zwischen den
+    schreibenden Aktions-Endpunkten und dem periodischen Hintergrund-Pull
+    (siehe ``cli._cmd_webui``). Wird keiner uebergeben, legt ``serve()``
+    selbst einen neuen an (``httpd.git_lock``) - so bleibt der Server auch
+    ohne Pull-Thread synchronisationsfaehig fuer mehrere gleichzeitige
+    Aktions-Requests.
     """
     httpd = ThreadingHTTPServer((host, port), _Handler)
     httpd.store = store
     httpd.actor = actor
+    httpd.git_lock = git_lock if git_lock is not None else threading.Lock()
     return httpd

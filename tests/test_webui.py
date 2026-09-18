@@ -692,6 +692,54 @@ class WebUiActionTests(WebUiBase):
         self.assertEqual(task_webui["priority"], "LOW")
 
 
+class WebUiGitLockTests(WebUiBase):
+    """BRIDGE-038: gemeinsames threading.Lock zwischen dem Auto-Pull-
+    Hintergrund-Thread (cli.py) und den schreibenden Aktions-Endpunkten.
+
+    Getestet ueber ``httpd.git_lock`` direkt (kein echter Pull-Thread
+    noetig, kein echtes Sleep-Timing) - hier von aussen gehalten, wie es
+    ein laufender Auto-Pull-Durchlauf tun wuerde. Nur ein kurzes,
+    deterministisches Blockier-Fenster (join(timeout=...)), keine
+    Wartezeit-basierte Ablaufsteuerung.
+    """
+
+    def test_action_endpoint_blocks_while_git_lock_held(self):
+        self.make_task("BRIDGE-0901")
+        self.start()
+        self.httpd.git_lock.acquire()
+
+        result_holder = {}
+
+        def worker():
+            code, data = self.post_json(
+                "/api/task/BRIDGE-0901/priority",
+                {"actor": "test", "confirm": True, "priority": "HIGH"})
+            result_holder["code"] = code
+            result_holder["data"] = data
+
+        t = threading.Thread(target=worker)
+        t.start()
+        t.join(timeout=0.3)
+        self.assertTrue(t.is_alive(),
+                        "Aktions-Endpunkt lief trotz gehaltenem git_lock durch")
+
+        self.httpd.git_lock.release()
+        t.join(timeout=5)
+        self.assertFalse(t.is_alive(), "Aktion blieb nach Lock-Freigabe haengen")
+        self.assertEqual(result_holder["code"], 200)
+        self.assertTrue(result_holder["data"]["ok"])
+        self.assertEqual(self.store.load_task("BRIDGE-0901")["priority"], "HIGH")
+
+    def test_apply_action_without_lock_arg_still_works(self):
+        """Regressionscheck: git_lock=None (aelterer Aufrufstil) funktioniert weiterhin."""
+        self.make_task("BRIDGE-0901")
+        result = webui._apply_action(
+            self.store, "priority", "BRIDGE-0901",
+            {"actor": "test", "confirm": True, "priority": "LOW"})
+        self.assertTrue(result["ok"])
+        self.assertEqual(self.store.load_task("BRIDGE-0901")["priority"], "LOW")
+
+
 _NODE = shutil.which("node")
 
 
@@ -903,6 +951,7 @@ class WebUiCliTests(WebUiBase):
 
         class _Fake:
             server_address = ("127.0.0.1", 8420)
+            git_lock = threading.Lock()
 
             def serve_forever(self):
                 raise KeyboardInterrupt
@@ -913,7 +962,8 @@ class WebUiCliTests(WebUiBase):
         fake = _Fake()
         wu.serve = lambda *a, **kw: fake
         try:
-            code, out, err = self.cli("webui", "serve", "--actor", "x")
+            # --pull-interval 0: kein echter Hintergrund-Thread in diesem Test noetig.
+            code, out, err = self.cli("webui", "serve", "--actor", "x", "--pull-interval", "0")
         finally:
             wu.serve = orig
         self.assertEqual(code, 0)

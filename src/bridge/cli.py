@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -129,14 +130,20 @@ def _build_parser() -> argparse.ArgumentParser:
                       help="Projekt-ID fuer den aufgeloesten Pfad (Standard: agent-control-bridge)")
 
     webui = sub.add_parser(
-        "webui", help="lokale Lese-Web-UI ueber dem Board (nur 127.0.0.1, rein lesend)")
+        "webui", help="lokale Web-UI ueber dem Board (nur 127.0.0.1)")
     websub = webui.add_subparsers(dest="webui_cmd", required=True)
     wserve = websub.add_parser(
-        "serve", help="Web-UI starten (bindet hart an 127.0.0.1, kein --host)")
+        "serve", help="Web-UI starten (bindet hart an 127.0.0.1, kein --host; "
+                     "nicht rein lesend - Aktions-Buttons committen+pushen, "
+                     "Hintergrund-Thread holt periodisch git pull)")
     wserve.add_argument("--actor", required=True,
                         help="Akteur fuer spaetere Aktions-Buttons (RUN-02); jetzt nur hinterlegt")
     wserve.add_argument("--port", type=int, default=8420,
                         help="Port (Standard: 8420; belegt -> klare Fehlermeldung, kein Ausweichen)")
+    wserve.add_argument("--pull-interval", type=int, default=30,
+                        help="Sekunden zwischen automatischen 'git pull --ff-only'-Versuchen "
+                             "im Hintergrund (Standard: 30; 0 deaktiviert den Pull-Thread "
+                             "vollstaendig, BRIDGE-038)")
 
     watch = sub.add_parser(
         "watch", help="Watcher: Ergebnisse/Heartbeats erkennen und weiterführen")
@@ -1027,6 +1034,67 @@ def _cmd_project(args, store) -> int:
     return 2  # vom Parser ausgeschlossen
 
 
+# --------------------------------------------------------------------------- #
+# Auto-Pull-Hintergrund-Thread der Web-UI (BRIDGE-038)
+# --------------------------------------------------------------------------- #
+# Periodischer 'git pull --ff-only' im selben Prozess wie der HTTP-Server -
+# siehe Kontext in work-packages/BRIDGE-038.md zum Kollisionsrisiko mit den
+# schreibenden Aktions-Endpunkten (webui._apply_action). Das gemeinsame
+# 'git_lock' (angelegt in webui.serve(), an httpd.git_lock haengend) wird von
+# beiden Seiten vor jeder Git-Operation gehalten.
+
+def _pull_once(repo_root, git_lock: threading.Lock) -> dict:
+    """Ein einzelner Durchlauf: Lock halten, git_pull() aufrufen, Lock
+    freigeben. Eigenstaendig aufrufbar/testbar ohne die Intervall-Schleife."""
+    with git_lock:
+        return gitops.git_pull(repo_root)
+
+
+def _format_pull_log(result: dict) -> str:
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if result.get("error"):
+        return f"[{ts}] Auto-Pull fehlgeschlagen: {result['error']}"
+    if result.get("updated"):
+        return f"[{ts}] Auto-Pull: neue Commits geholt."
+    return f"[{ts}] Auto-Pull: bereits aktuell."
+
+
+def _pull_loop(repo_root, interval_seconds, stop_event: threading.Event,
+               git_lock: threading.Lock) -> None:
+    """Laeuft im Hintergrund-Thread, bis ``stop_event`` gesetzt wird.
+
+    Fail-soft, zwingend: ein fehlgeschlagener Pull-Versuch (Netzwerk,
+    Konflikt, was auch immer) darf diesen Thread nie beenden - jede
+    Exception aus ``_pull_once`` wird abgefangen und geloggt, der naechste
+    Versuch folgt beim naechsten Intervall.
+    """
+    while not stop_event.is_set():
+        try:
+            result = _pull_once(repo_root, git_lock)
+        except Exception as exc:  # noqa: BLE001 - Thread darf nie sterben
+            result = {"pulled": False, "updated": False, "error": str(exc)}
+        print(_format_pull_log(result), file=sys.stderr)
+        stop_event.wait(interval_seconds)
+
+
+def _maybe_start_pull_thread(repo_root, interval_seconds, git_lock: threading.Lock):
+    """Startet den Auto-Pull-Hintergrund-Thread, wenn ``interval_seconds`` > 0.
+
+    Gibt ``(stop_event, thread)`` zurueck - ``thread`` ist ``None`` bei
+    ``interval_seconds <= 0`` (kein Thread gestartet, --pull-interval 0
+    deaktiviert den Mechanismus vollstaendig, kein Geisterthread).
+    """
+    stop_event = threading.Event()
+    if interval_seconds <= 0:
+        return stop_event, None
+    thread = threading.Thread(
+        target=_pull_loop, args=(repo_root, interval_seconds, stop_event, git_lock),
+        daemon=True,
+    )
+    thread.start()
+    return stop_event, thread
+
+
 def _cmd_webui(args, store) -> int:
     # Lazy-Import: webui.py importiert Board-Helfer aus cli.py - der Import hier
     # unten vermeidet einen Import-Zyklus beim Laden von cli.py.
@@ -1040,11 +1108,20 @@ def _cmd_webui(args, store) -> int:
         return 1
     host, port = httpd.server_address[0], httpd.server_address[1]
     print(f"Web-UI: http://{host}:{port}/ (nur lokal erreichbar, Strg+C zum Beenden)")
+
+    stop_event, pull_thread = _maybe_start_pull_thread(
+        store.root, args.pull_interval, httpd.git_lock)
+    if pull_thread is not None:
+        print(f"Auto-Pull: alle {args.pull_interval}s (git pull --ff-only)")
+    else:
+        print("Auto-Pull: deaktiviert (--pull-interval 0)")
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         print()  # sauberer Abschluss, kein Traceback (wie _board_loop)
     finally:
+        stop_event.set()
         httpd.server_close()
     return 0
 

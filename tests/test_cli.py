@@ -5,6 +5,7 @@ import os
 import shutil
 import sys
 import tempfile
+import threading
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
 from pathlib import Path
@@ -1286,6 +1287,113 @@ class BaseHeadRegressionTests(unittest.TestCase):
         self.assertIn("base-head", err)
         self.assertIn("fail-closed", err)
         self.assertNotIn("Traceback", err)
+
+
+class WebUiAutoPullTests(unittest.TestCase):
+    """Hintergrund-Auto-Pull der Web-UI (BRIDGE-038): _pull_once/_pull_loop/
+    _maybe_start_pull_thread. Bewusst ohne echte Wartezeiten/Sleep-basiertes
+    Timing - gitops.git_pull() wird gemockt, Intervalle sind minimal
+    (0.01s) und Threads werden ueber stop_event.set() + join(timeout=...)
+    deterministisch beendet, nicht ueber Sleep-Abwarten."""
+
+    def test_pull_once_returns_git_pull_result_and_holds_lock(self):
+        lock = threading.Lock()
+        seen_locked = {}
+
+        def fake_git_pull(repo_root):
+            seen_locked["locked"] = lock.locked()
+            return {"pulled": True, "updated": True, "stdout": "", "stderr": "",
+                    "error": None}
+
+        with mock.patch.object(cli_mod.gitops, "git_pull", side_effect=fake_git_pull):
+            result = cli_mod._pull_once("/irrelevant", lock)
+
+        self.assertTrue(seen_locked["locked"], "git_pull lief nicht unter gehaltenem Lock")
+        self.assertFalse(lock.locked(), "Lock wurde nach _pull_once nicht wieder freigegeben")
+        self.assertEqual(result["updated"], True)
+
+    def test_format_pull_log_variants(self):
+        self.assertIn("neue Commits geholt",
+                      cli_mod._format_pull_log({"error": None, "updated": True}))
+        self.assertIn("bereits aktuell",
+                      cli_mod._format_pull_log({"error": None, "updated": False}))
+        msg = cli_mod._format_pull_log({"error": "Netzwerkfehler", "updated": False})
+        self.assertIn("fehlgeschlagen", msg)
+        self.assertIn("Netzwerkfehler", msg)
+
+    def test_pull_loop_stops_cleanly_via_stop_event(self):
+        stop_event = threading.Event()
+        lock = threading.Lock()
+        calls = []
+
+        def fake_git_pull(repo_root):
+            calls.append(1)
+            return {"pulled": True, "updated": False, "stdout": "", "stderr": "",
+                    "error": None}
+
+        with mock.patch.object(cli_mod.gitops, "git_pull", side_effect=fake_git_pull):
+            thread = threading.Thread(
+                target=cli_mod._pull_loop,
+                args=("/irrelevant", 0.01, stop_event, lock))
+            thread.start()
+            # Mindestens ein Durchlauf soll stattgefunden haben, bevor gestoppt wird.
+            for _ in range(200):
+                if calls:
+                    break
+                stop_event.wait(0.005)
+            stop_event.set()
+            thread.join(timeout=5)
+
+        self.assertFalse(thread.is_alive(), "Pull-Thread stoppte nicht sauber nach stop_event.set()")
+        self.assertGreaterEqual(len(calls), 1)
+
+    def test_pull_loop_survives_git_pull_exception(self):
+        """Fail-soft: eine Exception aus git_pull() darf den Thread nicht beenden."""
+        stop_event = threading.Event()
+        lock = threading.Lock()
+        calls = []
+
+        def fake_git_pull(repo_root):
+            calls.append(1)
+            raise RuntimeError("simulierter Absturz")
+
+        with mock.patch.object(cli_mod.gitops, "git_pull", side_effect=fake_git_pull):
+            thread = threading.Thread(
+                target=cli_mod._pull_loop,
+                args=("/irrelevant", 0.01, stop_event, lock))
+            thread.start()
+            for _ in range(200):
+                if len(calls) >= 2:
+                    break
+                stop_event.wait(0.005)
+            stop_event.set()
+            thread.join(timeout=5)
+
+        self.assertFalse(thread.is_alive())
+        self.assertGreaterEqual(len(calls), 2,
+            "Thread lief nach einer Exception nicht weiter (fail-soft verletzt)")
+
+    def test_pull_interval_zero_starts_no_thread(self):
+        lock = threading.Lock()
+        before = set(threading.enumerate())
+        stop_event, thread = cli_mod._maybe_start_pull_thread("/irrelevant", 0, lock)
+        after = set(threading.enumerate())
+        self.assertIsNone(thread)
+        self.assertEqual(before, after, "--pull-interval 0 hat trotzdem einen Thread gestartet")
+
+    def test_pull_interval_positive_starts_thread(self):
+        lock = threading.Lock()
+        with mock.patch.object(cli_mod.gitops, "git_pull",
+                               return_value={"pulled": True, "updated": False,
+                                           "stdout": "", "stderr": "", "error": None}):
+            stop_event, thread = cli_mod._maybe_start_pull_thread("/irrelevant", 0.01, lock)
+            try:
+                self.assertIsNotNone(thread)
+                self.assertTrue(thread.is_alive())
+            finally:
+                stop_event.set()
+                thread.join(timeout=5)
+        self.assertFalse(thread.is_alive())
 
 
 if __name__ == "__main__":

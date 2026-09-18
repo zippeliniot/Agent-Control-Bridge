@@ -568,5 +568,84 @@ class GitCommitRetryTests(unittest.TestCase):
         self.assertEqual(push_calls[0], 2)
 
 
+# --------------------------------------------------------------------------- #
+# git_pull (BRIDGE-038)
+# --------------------------------------------------------------------------- #
+
+class GitPullTests(unittest.TestCase):
+    """git_pull() (BRIDGE-038): einfacher Fast-Forward-Pull fuer den
+    periodischen Auto-Pull der Web-UI. Kein Retry/Rebase wie git_commit() -
+    fail-soft bei jedem Fehler (Konflikt, kein Remote erreichbar, ...).
+
+    Infrastruktur analog GitCommitRetryTests:
+    - self.tmp   = 'Ursprungs'-Klon, pusht neue Commits nach self.bare.
+    - self.bare  = bare-Repo als gemeinsamer 'origin'.
+    - self.other = zweiter Klon, hier laeuft git_pull().
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-pull-"))
+        self.bare = Path(tempfile.mkdtemp(prefix="ccb-pull-bare-"))
+        _setup_git_repo(self.tmp)
+        _git("clone", "--bare", str(self.tmp), str(self.bare), cwd=self.tmp)
+        _git("remote", "add", "origin", str(self.bare), cwd=self.tmp)
+        _git("push", "--set-upstream", "origin", "main", cwd=self.tmp)
+        self.other = Path(tempfile.mkdtemp(prefix="ccb-pull-other-"))
+        _git("clone", str(self.bare), str(self.other), cwd=self.tmp)
+        _git("config", "user.email", "test@example.com", cwd=self.other)
+        _git("config", "user.name", "Test", cwd=self.other)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+        shutil.rmtree(self.bare, ignore_errors=True)
+        shutil.rmtree(self.other, ignore_errors=True)
+
+    def test_already_up_to_date(self):
+        result = gitops.git_pull(self.other)
+        self.assertTrue(result["pulled"])
+        self.assertFalse(result["updated"])
+        self.assertIsNone(result["error"])
+
+    def test_new_commits_fetched(self):
+        (self.tmp / "new.txt").write_text("x\n", encoding="utf-8")
+        _git("add", "new.txt", cwd=self.tmp)
+        _git("commit", "-m", "second", cwd=self.tmp)
+        _git("push", cwd=self.tmp)
+
+        result = gitops.git_pull(self.other)
+        self.assertTrue(result["pulled"])
+        self.assertTrue(result["updated"])
+        self.assertIsNone(result["error"])
+        self.assertEqual(_git("rev-parse", "HEAD", cwd=self.other),
+                         _git("rev-parse", "HEAD", cwd=self.tmp))
+
+    def test_divergent_fails_fail_soft_no_auto_merge(self):
+        # 'other' bekommt einen lokalen, nicht gepushten Commit ...
+        (self.other / "local.txt").write_text("local\n", encoding="utf-8")
+        _git("add", "local.txt", cwd=self.other)
+        _git("commit", "-m", "lokal, nicht gepusht", cwd=self.other)
+        # ... waehrend 'tmp' etwas anderes pusht -> divergente Historien,
+        # kein Fast-Forward mehr moeglich.
+        (self.tmp / "remote.txt").write_text("remote\n", encoding="utf-8")
+        _git("add", "remote.txt", cwd=self.tmp)
+        _git("commit", "-m", "remote, parallel", cwd=self.tmp)
+        _git("push", cwd=self.tmp)
+
+        head_before = _git("rev-parse", "HEAD", cwd=self.other)
+        result = gitops.git_pull(self.other)
+
+        self.assertFalse(result["pulled"])
+        self.assertFalse(result["updated"])
+        self.assertIsNotNone(result["error"])
+        # Fail-soft: kein automatischer Merge/Rebase, Repo bleibt unveraendert.
+        self.assertEqual(_git("rev-parse", "HEAD", cwd=self.other), head_before)
+
+    def test_unreachable_remote_fails_fail_soft_no_crash(self):
+        _git("remote", "set-url", "origin", "/nonexistent/nowhere", cwd=self.other)
+        result = gitops.git_pull(self.other)  # darf nicht werfen
+        self.assertFalse(result["pulled"])
+        self.assertIsNotNone(result["error"])
+
+
 if __name__ == "__main__":
     unittest.main()

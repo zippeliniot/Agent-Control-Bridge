@@ -14,6 +14,8 @@ Oeffentliches API:
 - ``matches_whitelist(path, whitelist) -> bool``
 - ``git_commit(repo_root, kind, task_id, actor, run_id=None, push=True,
                source='Web-UI') -> dict``
+- ``git_pull(repo_root) -> dict`` (BRIDGE-038, periodischer Auto-Pull der
+  Web-UI: einfacher Fast-Forward-Pull, fail-soft, kein Retry/Rebase.)
 
 Push-Retry (BRIDGE-029):
 - Schlaegt ``git push`` mit einem Non-Fast-Forward-Fehler fehl (Muster in
@@ -270,3 +272,55 @@ def git_commit(repo_root, kind: str, task_id: str, actor: str,
 
     return {"committed": True, "commit": commit_sha, "pushed": True,
             "error": None, "retried": True}
+
+
+def git_pull(repo_root) -> dict:
+    """Einfacher, idempotenter Fast-Forward-Pull fuer den Lesefall (BRIDGE-038).
+
+    Anders als ``git_commit()``: **kein** Retry/Rebase-Verhalten. Ein
+    ``git pull --ff-only`` divergiert nie eigenmaechtig in einen Merge/Rebase -
+    schlaegt der Fast-Forward fehl (z. B. lokale Divergenz), wird das
+    fail-soft als Fehler zurueckgegeben, nichts am Repo veraendert.
+
+    Fail-soft, zwingend: wirft nie - jeder Fehler (Netzwerk, Timeout,
+    Prozessfehler, Nicht-Fast-Forward) landet in ``error``, niemals als
+    Exception. Aufrufer (Hintergrund-Thread) muss nicht zusaetzlich absichern.
+
+    Gibt immer ein dict zurueck:
+        ``{"pulled": bool, "updated": bool, "stdout": str, "stderr": str,
+          "error": str | None}``
+        ``pulled``  - True, wenn der Pull-Befehl selbst erfolgreich lief.
+        ``updated`` - True, wenn sich HEAD dabei tatsaechlich geaendert hat
+                      (neue Commits geholt); False bei "bereits aktuell".
+    """
+    root = Path(repo_root)
+
+    def _run(args, timeout=_GIT_TIMEOUT):
+        return subprocess.run(
+            args, cwd=root, capture_output=True, text=True,
+            timeout=timeout, encoding="utf-8",
+        )
+
+    try:
+        r_before = _run(["git", "rev-parse", "HEAD"])
+        if r_before.returncode != 0:
+            return {"pulled": False, "updated": False, "stdout": "", "stderr": "",
+                    "error": f"git rev-parse fehlgeschlagen: {r_before.stderr.strip()}"}
+        before_head = r_before.stdout.strip()
+
+        r = _run(["git", "pull", "--ff-only"], timeout=_GIT_PUSH_TIMEOUT)
+    except Exception as exc:  # fail-soft: Timeout, OSError o.ae. duerfen nie durchschlagen
+        return {"pulled": False, "updated": False, "stdout": "", "stderr": "",
+                "error": f"git pull fehlgeschlagen (Exception): {exc}"}
+
+    stdout, stderr = r.stdout or "", r.stderr or ""
+    if r.returncode != 0:
+        err_text = (stderr or stdout).strip()
+        return {"pulled": False, "updated": False, "stdout": stdout, "stderr": stderr,
+                "error": f"git pull fehlgeschlagen: {err_text}"}
+
+    r_after = _run(["git", "rev-parse", "HEAD"])
+    after_head = r_after.stdout.strip() if r_after.returncode == 0 else before_head
+
+    return {"pulled": True, "updated": before_head != after_head,
+            "stdout": stdout, "stderr": stderr, "error": None}
