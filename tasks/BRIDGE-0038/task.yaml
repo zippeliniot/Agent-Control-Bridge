@@ -1,0 +1,54 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0038
+project_id: agent-control-bridge
+title: Periodisches Auto-git-pull fuer den Web-UI-Server
+description: 'Der board-Klon (dritter, neutraler Checkout) soll Auftraege aus allen
+  Projekten zeigen, unabhaengig davon ob sie ueber den claude- oder codex-Klon gepusht
+  wurden. Die Anzeige-Logik ist bereits generisch (liest tasks/*/task.yaml projektuebergreifend),
+  es fehlt nur die Aktualitaet - der Web-UI-Prozess sieht nur den lokalen Stand seines
+  eigenen Checkouts. Wichtiger, im Code verifizierter Befund: die Web-UI ist entgegen
+  ihrem eigenen Hilfetext ("rein lesend") bereits schreibfaehig (Aktions-Endpunkte
+  copied/archive/priority committen ueber gitops.git_commit()). Ein periodischer Hintergrund-git-pull
+  im selben Prozess kann daher mit einem gerade laufenden Aktions-Commit desselben
+  ThreadingHTTPServer kollidieren (mehrere Threads gleichzeitig). Fix: neue git_pull()-Funktion
+  in gitops.py (einfacher, idempotenter Fast-Forward-Pull, fail-soft, kein Retry/Rebase
+  wie git_commit()). Hintergrund-Thread in cli.py/_cmd_webui, konfigurierbar ueber
+  --pull-interval (Standard 30s, 0 deaktiviert, sauberes Herunterfahren ueber stop_event).
+  Gemeinsames threading.Lock zwischen Pull-Thread und den bestehenden schreibenden
+  Aktions-Endpunkten verhindert Kollisionen. Hilfetext von webui serve korrigiert
+  (nicht mehr rein lesend). Tests ohne echte Wartezeiten (kurze Intervalle, direkte
+  Funktionsaufrufe statt Sleep-basiertem Timing). Details in work-packages/BRIDGE-038.md.'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: c540cbe
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- git_pull(repo_root) in gitops.py - Fast-Forward-Pull, fail-soft, strukturiertes
+  Ergebnis, kein automatisches Rebase/Merge bei Konflikt
+- Hintergrund-Thread startet mit dem Server, stoppt sauber beim Serverende (stop_event),
+  kein Geisterthread
+- --pull-interval (Standard 30s) konfigurierbar, 0 deaktiviert den Thread vollstaendig
+- Gemeinsames threading.Lock zwischen Pull-Thread und den bestehenden Aktions-Endpunkten
+  (copied/archive/priority) - keine gleichzeitige Git-Operation aus beiden Quellen
+  moeglich
+- Fehlgeschlagener Pull bringt den Server nicht zum Absturz, wird geloggt, naechster
+  Versuch beim folgenden Intervall
+- Konsolen-Startmeldung nennt den aktiven Pull-Intervall (oder deaktiviert)
+- Hilfetext von webui serve korrigiert (nicht mehr rein lesend)
+- Neue Tests - git_pull() isoliert (Erfolg + Konfliktfall), Lock-Synchronisation,
+  --pull-interval 0 startet keinen Thread - keiner davon mit echten Wartezeiten/Sleep-Timing
+- Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
+- Jeder Commit sofort gepusht, nicht gesammelt
+status: RUNNING
+created_at: '2026-09-17T00:00:00Z'
+created_by: browser-claude
+priority: MEDIUM
