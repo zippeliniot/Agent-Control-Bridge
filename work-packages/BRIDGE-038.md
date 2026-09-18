@@ -156,24 +156,24 @@ prozessübergreifender Nebenläufigkeit).
 
 ## Akzeptanzkriterien
 
-- [ ] `git_pull(repo_root)` in `gitops.py`: Fast-Forward-Pull, fail-soft,
+- [x] `git_pull(repo_root)` in `gitops.py`: Fast-Forward-Pull, fail-soft,
       strukturiertes Ergebnis, kein automatisches Rebase/Merge bei
       Konflikt.
-- [ ] Hintergrund-Thread startet mit dem Server, stoppt sauber beim
+- [x] Hintergrund-Thread startet mit dem Server, stoppt sauber beim
       Serverende (`stop_event`), kein Geisterthread.
-- [ ] `--pull-interval` (Standard 30s) konfigurierbar, `0` deaktiviert den
+- [x] `--pull-interval` (Standard 30s) konfigurierbar, `0` deaktiviert den
       Thread vollständig.
-- [ ] Gemeinsames `threading.Lock` zwischen Pull-Thread und den
+- [x] Gemeinsames `threading.Lock` zwischen Pull-Thread und den
       bestehenden Aktions-Endpunkten (`copied`/`archive`/`priority`) —
       keine gleichzeitige Git-Operation aus beiden Quellen möglich.
-- [ ] Fehlgeschlagener Pull bringt den Server nicht zum Absturz, wird
+- [x] Fehlgeschlagener Pull bringt den Server nicht zum Absturz, wird
       geloggt, nächster Versuch beim folgenden Intervall.
-- [ ] Konsolen-Startmeldung nennt den aktiven Pull-Intervall (oder
+- [x] Konsolen-Startmeldung nennt den aktiven Pull-Intervall (oder
       „deaktiviert").
-- [ ] Hilfetext von `webui serve` korrigiert (nicht mehr „rein lesend").
-- [ ] Neue Tests: `git_pull()` isoliert (Erfolg + Konfliktfall),
+- [x] Hilfetext von `webui serve` korrigiert (nicht mehr „rein lesend").
+- [x] Neue Tests: `git_pull()` isoliert (Erfolg + Konfliktfall),
       Lock-Synchronisation, `--pull-interval 0` startet keinen Thread —
       keiner davon mit echten Wartezeiten/Sleep-Timing.
-- [ ] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
+- [x] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
       Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.
