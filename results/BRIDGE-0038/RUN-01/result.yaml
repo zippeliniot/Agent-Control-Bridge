@@ -1,0 +1,46 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0038
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: claude
+branch: main
+head: b1eacb92afd6b27e01a5d5b946fa53f62d0e4925
+executor: claude-code
+started_at: '2026-09-18T07:09:22Z'
+ended_at: '2026-09-18T07:18:54Z'
+created_by: claude-code@DES11
+base_head: c540cbe
+commits:
+- sha: 4eedd9d089418ab4155736d314cd6d6f9e82c6b0
+  message: 'Work-Package BRIDGE-038: periodisches Auto-git-pull fuer Web-UI-Server'
+- sha: 5e7243d754fdc2e35234c563fdc5770ef5fda02f
+  message: 'Ops: BRIDGE-0035 review + archive (Steuerchat-Aktion via Web-UI)'
+- sha: 75496e57e90c56f6e782dd4ea75947a0f405ace5
+  message: 'Ops: BRIDGE-0038 create + run_start (Steuerchat-Aktion via CLI)'
+- sha: cc3b7f7246cb83e5c37e94d301470068b5d4ab4b
+  message: 'BRIDGE-038: periodisches Auto-git-pull fuer Web-UI (git_pull() in gitops.py,
+    Hintergrund-Thread + threading.Lock in cli.py/webui.py, --pull-interval-Flag,
+    Konsolen-Startmeldung, Hilfetext korrigiert, Tests ohne echte Wartezeiten)'
+- sha: b1eacb92afd6b27e01a5d5b946fa53f62d0e4925
+  message: 'BRIDGE-038: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0038/RUN-01/heartbeat.json
+- src/bridge/cli.py
+- src/bridge/gitops.py
+- src/bridge/webui.py
+- tasks/BRIDGE-0035/task.yaml
+- tasks/BRIDGE-0038/task.yaml
+- tests/test_cli.py
+- tests/test_gitops.py
+- tests/test_webui.py
+- work-packages/BRIDGE-038.md
+summary: 'Periodisches Auto-git-pull fuer den Web-UI-Server: neue git_pull()-Funktion
+  in gitops.py (fail-soft, kein Retry/Rebase). Hintergrund-Thread in cli.py/_cmd_webui,
+  konfigurierbar ueber --pull-interval (Standard 30s, 0 deaktiviert). Gemeinsames
+  threading.Lock zwischen Pull-Thread und den bestehenden schreibenden Aktions-Endpunkten
+  verhindert Kollisionen. Hilfetext korrigiert (nicht mehr ''rein lesend''). Tests
+  ohne echte Wartezeiten.'
+physical_machine: DES11
