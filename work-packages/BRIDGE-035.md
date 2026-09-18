@@ -134,22 +134,22 @@ Integrationstest-Skripts, nicht des generischen Adapters.
 
 ## Akzeptanzkriterien
 
-- [ ] Neue optionale Argumente `--project-id`, `--task-prefix`,
+- [x] Neue optionale Argumente `--project-id`, `--task-prefix`,
       `--expected-branch`, `--expected-head`, alle mit Default = bisheriges
       Verhalten.
-- [ ] `_observation_task()` und das synthetische Adapter-Profil nutzen die
+- [x] `_observation_task()` und das synthetische Adapter-Profil nutzen die
       übergebenen Werte statt hartkodierter `codex-control-bridge`/
       `BRIDGE`/`main`.
-- [ ] `--expected-head` gesetzt und abweichend → `RuntimeError`, Skript
+- [x] `--expected-head` gesetzt und abweichend → `RuntimeError`, Skript
       beendet mit Exit 1, Fehlermeldung nennt beide Head-Werte.
-- [ ] `--expected-head` als Kurz-SHA wird per Präfix-Vergleich akzeptiert.
-- [ ] `checks["head_matches_expected"]` nur vorhanden, wenn
+- [x] `--expected-head` als Kurz-SHA wird per Präfix-Vergleich akzeptiert.
+- [x] `checks["head_matches_expected"]` nur vorhanden, wenn
       `--expected-head` gesetzt war.
-- [ ] Bestehende vier Tests in `test_integration_readonly.py` bleiben ohne
+- [x] Bestehende vier Tests in `test_integration_readonly.py` bleiben ohne
       inhaltliche Anpassung grün (reiner Regressionscheck).
-- [ ] Mindestens vier neue Tests (siehe Umsetzungsschritt 5), grün.
-- [ ] `docs/CCB-PROJEKT-INTEGRATION.md`/`README.md` kurz aktualisiert.
-- [ ] Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag.
-- [ ] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
+- [x] Mindestens vier neue Tests (siehe Umsetzungsschritt 5), grün.
+- [x] `docs/ACB-PROJEKT-INTEGRATION.md`/`README.md` kurz aktualisiert.
+- [x] Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag.
+- [x] Volle Testsuite (bestehend + neu) dreimal frisch grün, frischer
       Klon verifiziert.
-- [ ] Jeder Commit sofort gepusht, nicht gesammelt.
+- [x] Jeder Commit sofort gepusht, nicht gesammelt.
