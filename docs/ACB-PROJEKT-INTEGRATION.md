@@ -3,9 +3,11 @@
 Beschreibt, was konkret zu tun ist, um die Agent Control Bridge für ein
 **neues, beliebiges** Projekt nutzbar zu machen — nicht nur für sich
 selbst. Vollständig gegen den echten Code geprüft (Schema, Loader,
-Adapter, Registry), Stand HEAD `af27302`. An Stellen, wo der Mechanismus
-laut Code selbst **noch nicht vollständig verdrahtet** ist, steht das
-hier explizit — keine Schönfärberei.
+Adapter, Registry), zuletzt aktualisiert gegen HEAD `1a3c74b`
+(18.09.2026 — `task_prefix`-Kollisionsabschnitt korrigiert, siehe
+Übergabe v11). An Stellen, wo der Mechanismus laut Code selbst **noch
+nicht vollständig verdrahtet** ist, steht das hier explizit — keine
+Schönfärberei.
 
 ---
 
@@ -32,15 +34,19 @@ diesem Sinn vorgesehen:
   `ENFAN`, `DORFPORTAL`. Muss zum Format `<PREFIX>-<4 Ziffern>` der
   `bridge_task_id` passen.
 
-**Wichtige, unbequeme Wahrheit, nicht verschweigen:** Der Code selbst
-(`src/bridge/profiles.py`, wörtlicher Kommentar) sagt, dass die
+**Korrigiert (Stand 18.09.2026, gegen HEAD `1a3c74b` geprüft):** Die
 Kollisionsprüfung zwischen `task_prefix`-Werten verschiedener Profile
-**"bewusst später" (BRIDGE-011) folgen sollte** — ein Blick in
-`store.py` zeigt: **diese Verdrahtung existiert aktuell nicht.** Es gibt
-keine automatische Prüfung, die verhindert, dass zwei Projekte denselben
-Prefix nutzen. Das muss der Steuerchat/Mensch manuell sicherstellen —
-vor dem Anlegen eines neuen Profils immer `bridge project list`
-ausführen und die bereits vergebenen Prefixe gegenprüfen.
+ist seit **BRIDGE-034** verdrahtet — `src/bridge/store.py` hat
+`_check_task_prefix_collision()`, aktiv aufgerufen aus `create_task()`.
+Legt ein neues Profil denselben `task_prefix` wie ein bereits
+vorhandenes an, lehnt `bridge task create` fail-closed ab. Kein
+manueller Gegencheck mehr nötig — `bridge project list` bleibt trotzdem
+sinnvoll, um vor dem **Anlegen des Profils selbst** (nicht erst beim
+ersten Auftrag) eine Kollision zu vermeiden.
+*(Hinweis: `src/bridge/profiles.py` trägt noch einen wörtlichen
+Kommentar, der diese Verdrahtung als „folgt bewusst später (BRIDGE-011)"
+beschreibt — der Code-Kommentar selbst ist veraltet, siehe Übergabe v11
+Abschnitt 3.)*
 
 ## Schritt 2 — Repository lokal erreichbar machen (`registry.yaml`)
 
@@ -155,7 +161,10 @@ migration_policy:
 ## Schritt 4 — Entscheidung: `read_only: true` oder `false`
 
 Das ist die wichtigste Weichenstellung, weil sie **tatsächlich im Code
-erzwungen wird** (anders als die `task_prefix`-Kollision):
+erzwungen wird** (ebenso wie inzwischen die `task_prefix`-Kollision,
+siehe Schritt 1 — aber `read_only` hat die schärfere Wirkung: sie
+schaltet den gesamten Adapter auf reine Leserechte um, nicht nur eine
+Anlage-Ablehnung):
 
 - **`read_only: true`:** `src/bridge/adapter.py` → `ReadOnlyAdapter`
   lehnt bei Initialisierung hart ab, wenn `profile.get("read_only")
@@ -181,8 +190,9 @@ erzwungen wird** (anders als die `task_prefix`-Kollision):
 .venv\Scripts\python.exe src\bridge\cli.py --root . --schema-dir schemas project show <project_id>
 ```
 `project list` zeigt `project_id`, `read_only`, `task_prefix` aller
-bekannten Profile — das ist der Schritt, an dem manuell auf
-`task_prefix`-Kollisionen geprüft wird (siehe Schritt 1).
+bekannten Profile — hilfreich zur Übersicht, auch wenn die
+`task_prefix`-Kollision seit BRIDGE-034 zusätzlich automatisch
+fail-closed geprüft wird (siehe Schritt 1).
 
 ## Schritt 6 — Falls schreibend: eigenes `CLAUDE.md`-Äquivalent überlegen
 
@@ -206,7 +216,7 @@ verhält.
 | `read_only: true` → nur Lese-Allowlist | **Ja**, hart | `adapter.py` `ReadOnlyAdapter` |
 | Schema-Konformität des Profils (`additionalProperties: false`) | **Ja**, fail-closed | `profiles.py`/`project.schema.yaml` |
 | `project_id` = Verzeichnisname | **Ja** | `profiles.py` (`ProfileError` sonst) |
-| `task_prefix`-Eindeutigkeit über mehrere Projekte | **Nein** — Kommentar in `profiles.py` bestätigt es explizit | manuell via `project list` prüfen |
+| `task_prefix`-Eindeutigkeit über mehrere Projekte | **Ja**, seit BRIDGE-034, fail-closed bei `task create` | `store.py` `_check_task_prefix_collision()` |
 | `allowed_machines`-Durchsetzung zur Laufzeit | **Nein** — kein Treffer in `store.py`/`runner.py` | reines Dokumentationsfeld |
 | `git_policy`/`migration_policy` als Laufzeitsperre | **Nein** — kein Treffer in `store.py`/`runner.py` | reines Dokumentationsfeld |
 

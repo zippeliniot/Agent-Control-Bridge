@@ -1,8 +1,16 @@
 # ACB — Konzept: Orchestrator (Reihenfolge-/Ausführungsautomatik)
 
-**Status: Schema-Grundbaustein implementiert (BRIDGE-0027 abgeschlossen).** Die
-eigentliche Auslöselogik folgt in BRIDGE-0031, sobald die Bausteine 0028–0030
-fertig sind. Kein Code für den Orchestrator-Auslöser in diesem Dokument.
+**Status (korrigiert 18.09.2026, gegen HEAD `1a3c74b` geprüft):**
+`orchestrator_policy` (BRIDGE-0027), `priority` (BRIDGE-0028) und der
+Git-Push-Retry (BRIDGE-0029) sind **fertig und archiviert**. **Die
+eigentliche Orchestrator-Auslöselogik ist dagegen nicht umgesetzt** —
+die ursprünglich dafür vorgesehene ID **BRIDGE-0031 wurde stattdessen
+für einen anderen Auftrag verwendet** („Maschinenauflösung
+vereinheitlichen: COMPUTERNAME-Autodefault an allen Schreibstellen",
+BUGFIX, aus dem Kontext von Übergabe v9). Die hier beschriebene
+Auslöselogik (Roadmap unten, „Vorgeschlagener grober Aufbau") existiert
+weiterhin nur als Konzept, unter keiner BRIDGE-ID gebaut. Kein Code für
+den Orchestrator-Auslöser in diesem Dokument.
 
 ## Ausgangslage (aus der Steuerchat-Sitzung, 12.09.2026)
 
@@ -79,25 +87,26 @@ kein Hintergrunddienst. Bewusst gewählt (nicht `watch loop`).
 | Auftrag | Inhalt | Zustand |
 |---------|--------|---------|
 | **BRIDGE-0027** | `orchestrator_policy`-Feld in `project.schema.yaml` + diese Entscheidungen dokumentiert | **abgeschlossen** |
-| **BRIDGE-0028** | Prioritätsfeld (`priority` in `task.schema.yaml`) + `bridge task set-priority` + Web-UI-Zuweisung + Sortierung nach Priorität in Board/Overview | geplant |
-| **BRIDGE-0029** | Git-Push-Retry (`pull --rebase` + Retry) in `gitops.py` | geplant |
+| **BRIDGE-0028** | Prioritätsfeld (`priority` in `task.schema.yaml`) + `bridge task set-priority` + Web-UI-Zuweisung + Sortierung nach Priorität in Board/Overview | **abgeschlossen** |
+| **BRIDGE-0029** | Git-Push-Retry (`pull --rebase`/`fetch`+`rebase` + Retry) in `gitops.py` | **abgeschlossen** |
 | **BRIDGE-0030** | Review-Unternummern-Pattern (`-R<n>`-Suffix) + technische Durchsetzung `review_roles.support` als Leserrolle | **abgeschlossen (BRIDGE-0032, ursprünglich als BRIDGE-0030 geplant)** |
-| **BRIDGE-0031** | Eigentliche Orchestrator-Auslöselogik, aufbauend auf `orchestrator_policy` + `priority` (erst nach 0027–0030 fertig) | geplant |
+| ~~BRIDGE-0031~~ | ~~Eigentliche Orchestrator-Auslöselogik~~ — **ID anderweitig verwendet** (Maschinenauflösung-Bugfix, siehe Status oben) | **nicht umgesetzt, keine neue ID vergeben** |
 
-## Vorgeschlagener grober Aufbau (zur Implementierung, BRIDGE-0031)
+## Vorgeschlagener grober Aufbau (zur Implementierung — noch keine BRIDGE-ID vergeben)
 
-1. `task.schema.yaml`: neues optionales Feld `priority` (Enum LOW/MEDIUM/HIGH,
-   Default `MEDIUM`), rückwärtskompatibel — **BRIDGE-0028**.
-2. `project.yaml`-Erweiterung: `orchestrator_policy` — bereits implementiert
-   (BRIDGE-0027), pro Projekt konfigurierbar.
+1. `task.schema.yaml`: optionales Feld `priority` (Enum LOW/MEDIUM/HIGH,
+   Default `MEDIUM`), rückwärtskompatibel — **erledigt, BRIDGE-0028**.
+2. `project.yaml`-Erweiterung: `orchestrator_policy` — **erledigt,
+   BRIDGE-0027**, pro Projekt konfigurierbar.
 3. Neue Funktion (aufbauend auf `bridge overview` aus BRIDGE-0026): aus
    allen „bereiten" Aufträgen (Abhängigkeiten erfüllt) den nächsten nach
-   Priorität auswählen — **BRIDGE-0031**.
+   Priorität auswählen — **offen, neue BRIDGE-ID nötig** (BRIDGE-0031 ist
+   vergeben, siehe Status oben).
 4. Je nach Berechtigungsprofil (`orchestrator_policy.auto_trigger_permissions`):
    Button „Vorschlag anzeigen" vs. automatischer Trigger-Aufruf der Bridge-CLI
    aus der Web-UI heraus (technisch: `subprocess`-Mechanismus analog
    `gitops.py`, aber für `bridge run start` — neue Whitelist-Logik,
-   bestehende nicht wiederverwenden) — **BRIDGE-0031**.
+   bestehende nicht wiederverwenden) — **offen, neue BRIDGE-ID nötig**.
 
 ## Nicht Teil dieses Konzepts (bewusst abgegrenzt)
 
