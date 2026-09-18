@@ -45,6 +45,6 @@ acceptance_criteria:
 - Kein Zugriff auf das echte Dorfschaft-Repository in diesem Auftrag
 - Volle Testsuite (bestehend + neu) dreimal frisch gruen, frischer Klon verifiziert
 - Jeder Commit sofort gepusht, nicht gesammelt
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-09-17T21:50:50Z'
 created_by: claude-code

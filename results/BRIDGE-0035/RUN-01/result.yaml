@@ -1,0 +1,46 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0035
+project_id: codex-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: claude
+branch: main
+head: fbd5b372d33b9c7d1c25a61e686cccea68944e88
+executor: claude-code
+started_at: '2026-09-17T21:51:35Z'
+ended_at: '2026-09-18T05:29:51Z'
+created_by: claude-code@DES11
+base_head: e328975
+commits:
+- sha: 6ae78fe467c978fe185bff36a841ed32b36d5e3a
+  message: 'Ops: BRIDGE-0035 create + run_start (Steuerchat-Aktion via CLI)'
+- sha: 050f9d7ccae581f51a8d81650c4ddc0e1307036a
+  message: 'BRIDGE-035: integration_readonly.py projektparametrisierbar (--project-id/--task-prefix/--expected-branch/--expected-head)
+    + Pre-Flight-Head-Check, sechs neue Tests, README aktualisiert'
+- sha: fbd5b372d33b9c7d1c25a61e686cccea68944e88
+  message: 'BRIDGE-035: Akzeptanzkriterien abgehakt'
+changed_files:
+- README.md
+- audit/audit.jsonl
+- results/BRIDGE-0035/RUN-01/heartbeat.json
+- scripts/integration_readonly.py
+- tasks/BRIDGE-0035/task.yaml
+- tests/test_integration_readonly.py
+- work-packages/BRIDGE-035.md
+summary: 'scripts/integration_readonly.py projektparametrisierbar gemacht: neue optionale
+  Argumente --project-id/--task-prefix/--expected-branch/--expected-head, vollstaendig
+  rueckwaertskompatibel (Default reproduziert exakt das bisherige Selbstcheck-Verhalten).
+  Bisher hartkodiertes synthetisches Profil (project_id/task_prefix/default_branch
+  immer codex-control-bridge/BRIDGE/main unabhaengig vom Ziel) korrigiert - verhindert
+  irrefuehrende Provenienz bei einer spaeteren Beobachtung eines fremden Repos. Neuer
+  Pre-Flight-Check: --expected-head wird direkt nach dem Vorher-Snapshot gegen den
+  tatsaechlichen HEAD geprueft, fail-closed bei Abweichung (Praefix-Vergleich, kurze
+  und lange SHA akzeptiert), checks[head_matches_expected] nur gesetzt wenn angefordert.
+  Sechs neue Tests in test_integration_readonly.py (project_id/task_prefix-Durchreichung,
+  korrekter/falscher/Kurz-SHA-expected-head, Abwesenheit des Keys ohne Flag, CLI-Exit-1-Fall),
+  die bestehenden vier Tests unveraendert gruen. README.md-Abschnitt zum Read-only-Integrationstest
+  kurz um die neuen Flags ergaenzt. Kein Zugriff auf das echte Dorfschaft-Repository
+  - ausschliesslich gegen synthetische Temp-Git-Repos getestet. Volle Testsuite dreimal
+  frisch gruen mit 369 Tests je Lauf (363 Basis + 6 neu).'
+physical_machine: DES11
