@@ -1,0 +1,33 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0040
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: codex
+branch: main
+head: b7fd7be2a2cef147ffa452627b0ca7bc9c1bec57
+executor: claude-code
+started_at: '2026-09-18T16:24:07Z'
+ended_at: '2026-09-18T21:41:23Z'
+created_by: claude-code@DES11
+base_head: 3518b82
+commits:
+- sha: f3f6181d7f9a639d00dad9d12dff1562e1354cc6
+  message: 'Work-Packages BRIDGE-0039/0040: Parallel-Schreib-Test Claude Code vs.
+    Codex'
+- sha: dc28e1a56a14103595f9bcd1cbe3225ab79a8784
+  message: 'Ops: BRIDGE-0031 Prioritaet HIGH->MEDIUM (Web-UI, nachtraeglich gesichert)'
+- sha: 6f05ad08d5d3cd509a41f403dad62530ed502f04
+  message: 'Ops: BRIDGE-0040 task_create (Steuerchat-Aktion via CLI)'
+- sha: b7fd7be2a2cef147ffa452627b0ca7bc9c1bec57
+  message: 'Ops: BRIDGE-0040 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0040/RUN-01/heartbeat.json
+- tasks/BRIDGE-0031/task.yaml
+- tasks/BRIDGE-0040/task.yaml
+- work-packages/BRIDGE-0039.md
+- work-packages/BRIDGE-0040.md
+summary: 'Parallel-Schreib-Test Teil B: reiner Lebenszyklus-Lauf, keine Code-Aenderung.'
+physical_machine: DES11
