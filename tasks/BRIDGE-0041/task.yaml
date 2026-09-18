@@ -1,0 +1,48 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0041
+project_id: agent-control-bridge
+title: 'Bugfix: executor/created_by in result.yaml faelschlich hartkodiert auf claude-code'
+description: 'In BRIDGE-0040 (erster realer Codex-Lauf) zeigt result.yaml executor:
+  claude-code und created_by: claude-code@DES11, obwohl der Lauf real von Codex ausgefuehrt
+  wurde. Ursache verifiziert: src/bridge/importer.py::build_result() hat executor="claude-code"
+  als hartkodierten Default-Parameter; src/bridge/runner.py::finish() liest das vorhandene
+  task.yaml-Feld "executor" nicht aus und reicht es nicht durch. created_by wird zusaetzlich
+  aus diesem falschen executor-Wert abgeleitet statt aus dem bereits korrekt vorhandenen
+  actor-Parameter (der actor ist im Audit-Trail bereits korrekt, z.B. "codex-executor"
+  - nur result.yaml ist betroffen). Betrifft jeden Nicht-Claude-Code-Lauf.'
+task_class: BUGFIX
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: fffb297
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on: []
+acceptance_criteria:
+- runner.py::finish() laedt das Task-Dokument bereits (current = store.load_task(...))
+  - daraus das Feld 'executor' lesen und an importer.import_result()/ build_result()
+  durchreichen, statt den Default aus build_result() zu verwenden
+- 'importer.py::build_result(): executor-Parameter primaer aus dem Task-Dokument,
+  Fallback auf ''claude-code'' nur wenn das Feld dort fehlt (Rueckwaertskompatibilitaet
+  fuer alte Tasks ohne executor-Feld)'
+- created_by wird aus dem tatsaechlichen actor-Parameter (nicht aus executor) + machine
+  gebildet, z.B. f'{actor}@{machine}' - actor ist bereits korrekt vorhanden, wird
+  nur an der falschen Stelle nicht verwendet
+- 'Neuer Test: Lauf mit task.yaml executor: codex liefert result.yaml executor: codex
+  und created_by beginnend mit dem tatsaechlichen actor, nicht mit ''claude-code'''
+- 'Neuer Test: Lauf mit task.yaml executor: claude-code (Normalfall) bleibt unveraendert
+  korrekt'
+- Bestehende Testsuite komplett gruen (aktuell 381 Tests), frisch in isoliertem venv
+  verifiziert, tatsaechlich nachgezaehlt
+- Keine Aenderung an anderen result.yaml-Feldern (repository, head, changed_files,
+  etc.)
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
