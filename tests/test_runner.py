@@ -171,6 +171,31 @@ class FinishTests(Base):
         self.assertEqual(self.store.load_task("BRIDGE-0900")["status"], "FAILED")
         self.assertNotIn("TASK_WAITING_FOR_COPY", self.audit_types())
 
+    # -- BRIDGE-0041: executor/created_by aus dem Task-Dokument -------
+
+    def test_finish_codex_task_result_shows_codex_executor(self):
+        tmp = Path(tempfile.mkdtemp(prefix="ccb-runner-codex-"))
+        self.addCleanup(shutil.rmtree, tmp, True)
+        for name in ("tasks", "results", "audit"):
+            (tmp / name).mkdir()
+        store = Store(root=tmp, schema_dir=SCHEMA_DIR)
+        store.create_task(valid_task(executor="codex"))
+        runner.start(store, "BRIDGE-0900", "codex-executor", now=T0)
+        result, _ = runner.finish(
+            store, "BRIDGE-0900", "COMPLETED",
+            actor="codex-executor", git_info_fn=git_stub, summary="fertig")
+        self.assertEqual(result["executor"], "codex")
+        self.assertTrue(result["created_by"].startswith("codex-executor@"))
+
+    def test_finish_claude_code_task_unchanged(self):
+        # Normalfall: kein Task-Override -> Default bleibt "claude-code".
+        runner.start(self.store, "BRIDGE-0900", "a", now=T0)
+        result, _ = runner.finish(
+            self.store, "BRIDGE-0900", "COMPLETED",
+            actor="a", git_info_fn=git_stub, summary="fertig")
+        self.assertEqual(result["executor"], "claude-code")
+        self.assertTrue(result["created_by"].startswith("a@"))
+
 
 class ResumeTests(Base):
     def _interrupt(self):

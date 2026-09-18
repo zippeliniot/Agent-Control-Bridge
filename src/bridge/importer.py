@@ -129,11 +129,12 @@ def load_draft(path) -> dict:
 # --------------------------------------------------------------------------- #
 
 def build_result(store, bridge_task_id, status, *, run_id=None, draft=None,
-                 base_head=None, executor="claude-code", machine=None,
+                 base_head=None, executor=None, machine=None,
                  environment=None, runtime=None, model=None,
                  reasoning_level=None, started_at=None, created_by=None,
-                 summary=None, acceptance_results=None, interruption_reason=None,
-                 resumable=None, resume_hint=None, git_info_fn=None) -> dict:
+                 actor=None, summary=None, acceptance_results=None,
+                 interruption_reason=None, resumable=None, resume_hint=None,
+                 git_info_fn=None) -> dict:
     """Setzt das Ergebnis-dict zusammen (ohne zu schreiben oder zu validieren)."""
     draft = draft or {}
     if not isinstance(draft, dict):
@@ -143,6 +144,11 @@ def build_result(store, bridge_task_id, status, *, run_id=None, draft=None,
     project_id = task.get("project_id")
     if not project_id:
         raise ImporterError(f"Auftrag {bridge_task_id} ohne project_id.")
+
+    # Executor primär aus dem Task-Dokument (tatsaechliche Ausfuehrungsinstanz);
+    # explizites Argument gewinnt, "claude-code" nur als letzter Fallback, wenn
+    # weder Argument noch Task-Feld etwas hergeben (BRIDGE-0041).
+    executor = executor or task.get("executor") or "claude-code"
 
     rid = run_id or store.next_run_id(bridge_task_id)
 
@@ -170,7 +176,10 @@ def build_result(store, bridge_task_id, status, *, run_id=None, draft=None,
         "executor": executor,
         "started_at": started,
         "ended_at": ended_at,
-        "created_by": created_by or f"{executor}@{machine or 'unknown'}",
+        "created_by": created_by or (
+            f"{actor}@{machine or 'unknown'}" if actor
+            else f"{executor}@{machine or 'unknown'}"
+        ),
     }
 
     if git.get("base_head") is not None:

@@ -135,7 +135,8 @@ def finish(store, task_id, status, *, draft=None, base_head=None, actor,
 
     Bei nicht erlaubtem Übergang RUNNING->status wird NICHTS geschrieben.
     """
-    current = store.load_task(task_id).get("status")
+    task_doc = store.load_task(task_id)
+    current = task_doc.get("status")
     if current != "RUNNING":
         raise RunnerError(f"finish nur aus RUNNING zulässig (Auftrag ist {current}).")
     if not state_machine.is_allowed("RUNNING", status):
@@ -146,6 +147,10 @@ def finish(store, task_id, status, *, draft=None, base_head=None, actor,
 
     draft = draft or {}
     prov = dict(prov)
+    # Tatsaechliche Ausfuehrungsinstanz aus dem Task-Dokument, nicht dem
+    # importer-Default ueberlassen (BRIDGE-0041) - explizites Argument gewinnt.
+    if not prov.get("executor") and task_doc.get("executor"):
+        prov["executor"] = task_doc["executor"]
     if not prov.get("started_at") and not draft.get("started_at"):
         hb = heartbeat.read_heartbeat(store.root, task_id, run_id)
         if hb:
@@ -156,7 +161,7 @@ def finish(store, task_id, status, *, draft=None, base_head=None, actor,
     result = importer.import_result(
         store, task_id, status,
         run_id=run_id, draft=draft, base_head=base_head,
-        machine=machine, git_info_fn=git_info_fn, **prov,
+        machine=machine, actor=actor, git_info_fn=git_info_fn, **prov,
     )
     event = store.set_status(task_id, status, actor, machine,
                              reason=f"runner: finish -> {status}")
