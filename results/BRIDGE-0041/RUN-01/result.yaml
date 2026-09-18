@@ -1,0 +1,63 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0041
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: claude
+branch: main
+head: a68b0c1ee256fc297557ccf0b510100258de6724
+executor: claude-code
+started_at: '2026-09-18T22:18:11Z'
+ended_at: '2026-09-18T22:20:20Z'
+created_by: claude-code@DES11
+base_head: fffb297
+commits:
+- sha: d9cfb24929804b9ef2baa1abadcba557610facb5
+  message: 'Ops: BRIDGE-0039 copied (Steuerchat-Aktion via Web-UI)'
+- sha: 3aba1deb4c1a6bf94c671321564d6c9c2fceeab7
+  message: 'Ops: BRIDGE-0040 copied (Steuerchat-Aktion via Web-UI)'
+- sha: 1df444c21eab3eff2b9cffcb4063bb82848965cb
+  message: 'Ops: BRIDGE-0039 archive (Steuerchat-Aktion via Web-UI)'
+- sha: 5c999a87a599ec976415c2134a627be6b8b12eeb
+  message: 'Ops: BRIDGE-0040 archive (Steuerchat-Aktion via Web-UI)'
+- sha: d5d9da58ca6d9b74a4f58d326a4b4d10d53a3dc7
+  message: 'Work-Package BRIDGE-0041: Bugfix executor/created_by in result.yaml'
+- sha: 4a67b2da609be7a1f2d7117dbcdae76397d7d417
+  message: 'Ops: BRIDGE-0041 task_create (Steuerchat-Aktion via CLI)'
+- sha: a68b0c1ee256fc297557ccf0b510100258de6724
+  message: 'BRIDGE-0041: executor/created_by in result.yaml aus Task-Dokument statt
+    hartkodiertem Default'
+changed_files:
+- audit/audit.jsonl
+- src/bridge/importer.py
+- src/bridge/runner.py
+- tasks/BRIDGE-0039/task.yaml
+- tasks/BRIDGE-0040/task.yaml
+- tasks/BRIDGE-0041/task.yaml
+- tests/test_runner.py
+- work-packages/BRIDGE-0041.md
+summary: 'executor/created_by-Bug in result.yaml behoben: runner.py::finish() liest
+  jetzt das executor-Feld aus dem bereits geladenen Task-Dokument und reicht es an
+  importer.import_result() durch; importer.py::build_result() uebernimmt executor
+  primaer aus dem Task-Dokument (Fallback "claude-code" nur wenn im Task-Dokument
+  nicht gesetzt). created_by wird aus dem tatsaechlichen actor-Parameter statt aus
+  executor gebildet. Zwei neue Regressionstests (Codex-Task, Claude-Code-Normalfall)
+  ergaenzt. Testsuite komplett gruen: 383 Tests (vorher 381 Ausgangsbasis, +2 neue).'
+acceptance_results:
+- criterion: executor in result.yaml stammt aus dem Task-Dokument, nicht aus einem
+    hartkodierten Default
+  met: true
+- criterion: created_by stammt aus dem tatsaechlichen actor + machine
+  met: true
+- criterion: 'Neuer Test: Codex-Lauf liefert korrekten executor/created_by'
+  met: true
+- criterion: 'Neuer Test: Claude-Code-Lauf weiterhin korrekt (Regressionsschutz)'
+  met: true
+- criterion: Testsuite komplett gruen, frisch in isoliertem venv, tatsaechlich nachgezaehlt
+    (aktuell 381 Tests als Ausgangsbasis)
+  met: true
+  note: 383 Tests, alle gruen (381 Ausgangsbasis + 2 neue)
+- criterion: Keine Aenderung an anderen result.yaml-Feldern
+  met: true
+physical_machine: DES11

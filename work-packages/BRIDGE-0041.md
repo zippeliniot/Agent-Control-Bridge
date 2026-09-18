@@ -55,11 +55,11 @@ der Lauf real von Codex ausgeführt wurde. Ursache:
 
 ## Akzeptanzkriterien
 
-- [ ] `executor` in `result.yaml` stammt aus dem Task-Dokument, nicht aus
+- [x] `executor` in `result.yaml` stammt aus dem Task-Dokument, nicht aus
       einem hartkodierten Default
-- [ ] `created_by` stammt aus dem tatsächlichen `actor` + `machine`
-- [ ] Neuer Test: Codex-Lauf liefert korrekten `executor`/`created_by`
-- [ ] Neuer Test: Claude-Code-Lauf weiterhin korrekt (Regressionsschutz)
-- [ ] Testsuite komplett grün, frisch in isoliertem venv, tatsächlich
-      nachgezählt (aktuell 381 Tests als Ausgangsbasis)
-- [ ] Keine Änderung an anderen `result.yaml`-Feldern
+- [x] `created_by` stammt aus dem tatsächlichen `actor` + `machine`
+- [x] Neuer Test: Codex-Lauf liefert korrekten `executor`/`created_by`
+- [x] Neuer Test: Claude-Code-Lauf weiterhin korrekt (Regressionsschutz)
+- [x] Testsuite komplett grün, frisch in isoliertem venv, tatsächlich
+      nachgezählt (aktuell 381 Tests als Ausgangsbasis, jetzt 383)
+- [x] Keine Änderung an anderen `result.yaml`-Feldern
