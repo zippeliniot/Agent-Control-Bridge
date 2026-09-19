@@ -23,6 +23,6 @@ acceptance_criteria:
 - 'Teil B: tests + findings + Fehlercode im result.yaml (Test)'
 - 'Teil C: fremder base_head und Scope-Verstoss werden beim Import abgelehnt (Test)'
 - Bestehende Draft-Tests weiter gruen, volle Suite gruen
-status: REVIEW_REQUIRED
+status: ARCHIVED
 created_at: '2026-09-19T00:00:00Z'
 created_by: browser-claude
