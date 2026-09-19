@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0042
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: c98a75d8534bacda0217df73876d707440f8b64f
+executor: claude-code
+started_at: '2026-09-19T13:47:07Z'
+ended_at: '2026-09-19T13:47:45Z'
+created_by: claude-code@DES11
+base_head: ec56c46c7e60f2f5ca19e604dbd9c1cbca549ff0
+commits:
+- sha: ca8d659aeda7bc94b715cda79e9412bbfaa982f5
+  message: 'Ops: BRIDGE-0042 task_create (Steuerchat-Aktion via CLI)'
+- sha: 019b94739a6587d5ad1f477a38d8e7ce0d49b7e9
+  message: 'Ops: BRIDGE-0042 run_start (Steuerchat-Aktion via CLI)'
+- sha: c98a75d8534bacda0217df73876d707440f8b64f
+  message: 'BRIDGE-0042: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0042/RUN-01/heartbeat.json
+- tasks/BRIDGE-0042/task.yaml
+- work-packages/BRIDGE-042.md
+summary: 'Baseline PASS: HEAD ec56c46 ist Nachfolger von cbeb7ff, IDs BRIDGE-0043..0066
+  in tasks/ frei (hoechster Ordner vorher 0041), Konzept V2 und 25 Pakete (042..066)
+  vorhanden, 6 Gates G0-G5 bestaetigt. Kollisionsschutz V2: keine eigene Datei im
+  Repo, nur Erwaehnung im Konzept V2 (wie erwartet; BRIDGE-0043 legt Mindestspezifikation
+  fest). Keine Projektdatei geaendert.'
+physical_machine: DES11
