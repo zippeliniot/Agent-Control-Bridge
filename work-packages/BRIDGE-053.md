@@ -44,3 +44,14 @@
 - [ ] Import erzeugt result.yaml + Audit (Test)
 - [ ] Zweiter Import = No-op (Test)
 - [ ] Writer-Guard greift ausserhalb board (Test)
+
+### Teil C (Nachtrag aus BRIDGE-0049) - task brief nachbessern
+**Ziel:** `bridge task brief` korrigieren.
+**Scope:** src/bridge/cli.py, tests/test_cli.py.
+1. Work-Package-Pfad aus dem Praefix der Task-ID bilden (nicht fest BRIDGE-), Suffix -R<n> beibehalten; Logik aus gitops._workpackage_filename wiederverwenden, nicht duplizieren. Existiert die Datei nicht: `-`.
+2. Jede Ausgabezeile auf max. 120 Zeichen kuerzen (Ende `...`).
+3. Tests: DORF-Auftrag -> kein BRIDGE-Pfad; lange Kriterien werden gekuerzt.
+**Tests:** `python -m unittest tests.test_cli`.
+- [ ] WP-Pfad praefixrichtig oder `-`
+- [ ] Zeilen max. 120 Zeichen
+- [ ] Tests gruen
