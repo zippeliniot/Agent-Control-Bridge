@@ -1,6 +1,6 @@
 # Entscheidung: Push-Modell und Kollisionsschutz-Grundlage
 
-Status: ENTWURF (Freigabe durch April)
+Status: FREIGEGEBEN
 Auftrag: BRIDGE-0043 | Gate: G1 | Grundlage: `docs/concepts/ACB-UMSETZUNGSKONZEPT-V2.md` §3 R7, §5 G2, §6 Punkte 2,3
 
 ## Problem
@@ -44,10 +44,10 @@ Bis ein eigenes Konzept vorliegt, gilt diese Mindestspezifikation als verbindlic
 - **M1 Single Writer:** Pro Store (`tasks/`, `results/`, `audit/`) schreibt genau eine Instanz -
   das Board. Executoren liefern Drafts, sie mutieren den Store nicht.
 - **M2 Writer-Lock:** Jeder Store-Write laeuft unter einem Lock (Lock-Datei mit PID, Host,
-  Zeitstempel, TTL). Lock nicht erhaltbar = Abbruch mit Fehlercode, kein Warteschleifen-Retry.
+  Zeitstempel, TTL). Lock nicht erhaltbar = Abbruch mit Fehlercode, nach kurzem Timeout (max. 10 s), kein Endlos-Retry.
 - **M3 Atomarer Write:** Schreiben in temporaere Datei im Zielverzeichnis, dann `os.replace`.
   Audit nur als Append unter demselben Lock. Keine Teilzustaende auf Platte.
-- **M4 Abgelaufener Lock:** Nach TTL-Ablauf darf ein neuer Writer uebernehmen; das Ereignis
+- **M4 Abgelaufener Lock:** Nach TTL-Ablauf ird der Lock gemeldet, NICHT automatisch gebrochen; Uebernahme nur explizit durch den Bediener, das Ereignis
   wird im Audit vermerkt. Stille Uebernahme ist unzulaessig.
 - **M5 CAS-Ausblick (Stufe B, Gate G3):** `task_version` je Auftrag; Schreiben nur bei
   passender Version, sonst Konflikt. Claim/Lease ergaenzt das fuer Parallelbetrieb.
