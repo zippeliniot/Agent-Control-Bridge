@@ -33,8 +33,8 @@ Nur lesen. Schreiben nur ueber Bridge-CLI (Store).
 Keine.
 
 ## Akzeptanzkriterien
-- [ ] HEAD ist Nachfolger von cbeb7ff
-- [ ] IDs 0043-0066 frei
-- [ ] Konzept V2 + 25 Pakete vorhanden
-- [ ] Befund zu Kollisionsschutz V2 gemeldet
-- [ ] 6 Gates bestaetigt
+- [x] HEAD ist Nachfolger von cbeb7ff
+- [x] IDs 0043-0066 frei
+- [x] Konzept V2 + 25 Pakete vorhanden
+- [x] Befund zu Kollisionsschutz V2 gemeldet
+- [x] 6 Gates bestaetigt
