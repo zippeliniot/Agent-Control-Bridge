@@ -1,0 +1,37 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0055
+project_id: agent-control-bridge
+run_id: RUN-01
+status: REVIEW_REQUIRED
+repository: dev
+branch: main
+head: e86aab1aacc8a84c101687ba4a5220f0562e1bbc
+executor: claude-code
+started_at: '2026-09-19T20:23:40Z'
+ended_at: '2026-09-19T20:38:42Z'
+created_by: claude-code@DES11
+base_head: e96a65172bd17f5a1304cb0080836446621bce26
+commits:
+- sha: e4f67de21d0d0a3a8df1e930493b2c4c29b8356c
+  message: 'Ops: BRIDGE-0055 task_create (Steuerchat-Aktion via CLI)'
+- sha: b54aeaaec045d121d81eb971b55de0f24bf1aa66
+  message: 'Ops: BRIDGE-0055 run_start (Steuerchat-Aktion via CLI)'
+- sha: f237677fe912e30c1ba664a7109538f7afaded30
+  message: 'BRIDGE-0055 Teil A: Stufe-A-Abnahmetest'
+- sha: e86aab1aacc8a84c101687ba4a5220f0562e1bbc
+  message: 'BRIDGE-0055 Teil B: Draft-Modus in CLAUDE.md/CODEX.md, Sofort-Push auf
+    direct begrenzt'
+changed_files:
+- CLAUDE.md
+- CODEX.md
+- audit/audit.jsonl
+- results/BRIDGE-0055/RUN-01/heartbeat.json
+- tasks/BRIDGE-0055/task.yaml
+- tests/test_stage_a.py
+- work-packages/BRIDGE-055.md
+summary: 'Teil A: tests/test_stage_a.py (create->draft write->dry-run->import) gruen,
+  437/437 Tests OK. Teil B: Draft-Modus-Abschnitt in CLAUDE.md/CODEX.md, Sofort-Push
+  auf push_mode: direct begrenzt. Befund: CONTROL.md:50 nennt Sofort-Push unbegrenzt
+  (ausserhalb Scope, nicht geaendert) - drittes Kriterium offen.'
+physical_machine: DES11
