@@ -1,0 +1,29 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0043
+project_id: agent-control-bridge
+title: Entscheidung Push-Modell und Kollisionsschutz-Grundlage (Punkte 2,3)
+description: 'Genau eine Entscheidungsvorlage schreiben. Keine Implementierung. Details:
+  work-packages/BRIDGE-043.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: fb3f56ab5a6bc382e8a302a441f0d9a31453dbf4
+model: Claude Opus 5
+reasoning_level: HIGH
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0042
+acceptance_criteria:
+- Datei mit Optionen A/B/C und Empfehlung
+- Uebergangsregel bis G2 dokumentiert
+- Kollisionsschutz-V2-Behandlung dokumentiert
+- Status steht auf ENTWURF (Freigabe durch April)
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
