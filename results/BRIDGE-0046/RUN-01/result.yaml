@@ -1,0 +1,43 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0046
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: de152deb843c2551ff99aaf2eebfae32d5474deb
+executor: claude-code
+started_at: '2026-09-19T15:29:13Z'
+ended_at: '2026-09-19T15:34:47Z'
+created_by: claude-code@DES11
+base_head: eabfd7cde2000a6be6114e93a668d7af9059fd4b
+commits:
+- sha: 0206ef7f428f3c77741b66ab8beebbfaa3cff54b
+  message: 'Ops: BRIDGE-0046 task_create (Steuerchat-Aktion via CLI)'
+- sha: a103a3f1d295e78002d371e676edc190111009ad
+  message: 'Ops: BRIDGE-0046 run_start (Steuerchat-Aktion via CLI)'
+- sha: de152deb843c2551ff99aaf2eebfae32d5474deb
+  message: 'BRIDGE-0046 Teil A: Housekeeping (Haken mit Nachweis, HANDOVER-Vermerk,
+    Pfade dev, M4-Tippfehler)'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-REFERENZ.md
+- docs/ACB-STEUERCHAT-STANDARDSTART.md
+- docs/concepts/ENTSCHEIDUNG-PUSH-MODELL.md
+- docs/handover/HANDOVER.md
+- results/BRIDGE-0046/RUN-01/heartbeat.json
+- tasks/BRIDGE-0046/task.yaml
+- work-packages/BRIDGE-0039.md
+- work-packages/BRIDGE-0040.md
+- work-packages/BRIDGE-027.md
+- work-packages/BRIDGE-028.md
+- work-packages/BRIDGE-029.md
+- work-packages/BRIDGE-046.md
+summary: 'Haken in WP 027/028/029/0039/0040 nur mit Nachweis (Code, Tests 75 OK, Commits)
+  gesetzt. Offen ohne Nachweis: 027 ''frischer Klon''+''Sofort-Push''; 028 Web-UI-Endpunkt,
+  Overview/Board-Sortierung, Prioritaets-Spalte, Tests/Klon, Push; 029 Tests/Klon,
+  Push; 0039/0040 Rest (kein acceptance_results). HANDOVER-Vermerk v4/v5, Pfade auf
+  dev, M4-Tippfehler + Nummernvermerk erledigt; WP 0039-0041 sind 4-stellig, --commit-Whitelist
+  erwartet 3-stellig (nur gemeldet).'
+physical_machine: DES11
