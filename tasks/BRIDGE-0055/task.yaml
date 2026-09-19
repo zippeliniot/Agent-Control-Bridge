@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0055
+project_id: agent-control-bridge
+title: B4 Stufe-A-Abnahme + Executor-Regeln
+description: 'Teile 0055, 0056. Details: work-packages/BRIDGE-055.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: e96a65172bd17f5a1304cb0080836446621bce26
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0053
+acceptance_criteria:
+- 'Teil 0055: Abnahmetest gruen'
+- 'Teil 0055: Kein Push im Executor-Pfad belegt'
+- 'Teil 0055: Dry-run ohne Schreibzugriff belegt'
+- 'Teil 0055: Import-Ergebnis vollstaendig belegt'
+- 'Teil 0056: Abschnitt Draft-Modus in CLAUDE.md und CODEX.md'
+- 'Teil 0056: Push-Regel eindeutig begrenzt'
+- 'Teil 0056: Keine Widersprueche in CLAUDE/CODEX/CONTROL'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
