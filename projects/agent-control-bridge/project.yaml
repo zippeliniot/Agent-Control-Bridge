@@ -8,7 +8,7 @@ schema_version: "1.0"
 kind: bridge_project_profile
 project_id: agent-control-bridge
 description: Die Bridge selbst (Entwicklungsprojekt).
-repository: Agent-Control-Bridge/claude
+repository: Agent-Control-Bridge/dev
 default_branch: main
 task_prefix: BRIDGE
 read_only: false

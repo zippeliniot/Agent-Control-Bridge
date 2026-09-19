@@ -27,6 +27,8 @@ Bis zur Umstellung auf HAM11: dort gilt weiterhin die alte Zuordnung
 (`claude\` = ACB-Entwicklung **und** Web-UI, `codex\` unverändert) — bei
 jeder Aussage über „den Klon" explizit prüfen, welche Maschine gemeint ist.
 
+Hinweis: `bridge commands` auf HAM11 zeigt bis zur Rotation keinen gültigen `dev`-Pfad (fail-soft).
+
 Codex nutzt unter WSL die Umgebungsvariable `ACB_PROJECT_BASE`, die auf den
 eigenen `codex`-Klon zeigt — keine Änderung an `registry.yaml` nötig, die
 Registry bleibt für die Befehlsreferenz (`bridge commands`) zuständig.

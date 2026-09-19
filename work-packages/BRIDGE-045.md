@@ -32,8 +32,8 @@ projects/agent-control-bridge/project.yaml, CLAUDE.md, docs/architecture/machine
 `python -m unittest tests.test_profiles tests.test_registry`, dann volle Suite EINMAL.
 
 ## Akzeptanzkriterien
-- [ ] project.yaml zeigt auf ...\dev
-- [ ] CLAUDE.md Pfade = dev
-- [ ] Kein Widerspruch zu machines.md
-- [ ] HAM11-Hinweis vorhanden
-- [ ] Tests gruen
+- [x] project.yaml zeigt auf ...\dev
+- [x] CLAUDE.md Pfade = dev
+- [x] Kein Widerspruch zu machines.md
+- [x] HAM11-Hinweis vorhanden
+- [x] Tests gruen

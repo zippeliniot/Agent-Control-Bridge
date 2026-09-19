@@ -10,8 +10,9 @@ Für einen ChatGPT-gesteuerten Steuerprozess (statt Claude Code) siehe
 
 ## Ausführungsmodell
 
-- Claude Code läuft als **native Windows-App** und arbeitet ausschließlich in
-  `E:\_DEV\Agent-Control-Bridge\claude`.
+- Claude Code läuft als **native Windows-App** und arbeitet für ACB-Quellcode
+  ausschließlich in `E:\_DEV\Agent-Control-Bridge\dev` (`claude\` = nur
+  Produktarbeit, keine ACB-Entwicklung).
 - Claude im Browser ist die Steuer-/Review-Ebene. GitHub ist der einzige
   Austauschkanal zwischen den Maschinen und die SSOT.
 
@@ -25,7 +26,7 @@ Für einen ChatGPT-gesteuerten Steuerprozess (statt Claude Code) siehe
 3. **Dorfschaft nicht anfassen.** Weder lesen noch schreiben, außer in
    ausdrücklich als Read-only deklarierten Aufträgen (BRIDGE-011/012).
 4. **Nur innerhalb des Repos arbeiten.** Keine Schreibzugriffe außerhalb
-   `E:\_DEV\Agent-Control-Bridge\claude`.
+   `E:\_DEV\Agent-Control-Bridge\dev`.
 5. **Fail-closed.** Bei jeder Unsicherheit (falscher Branch, unerwarteter HEAD,
    nötige System-/WSL-Änderung, unklare Maschinenidentität) → anhalten und
    nachfragen, nicht improvisieren.
