@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0047
+project_id: agent-control-bridge
+title: 'B1 Schema-Basis: push_mode, Task-Felder, Fehlercodes'
+description: 'Teile 0047, 0048, 0050. Details: work-packages/BRIDGE-047.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: d98eaf9fbc3abefe148ac2d6b7b90de7facf9c69
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0046
+acceptance_criteria:
+- 'Teil 0047: Entscheidung war FREIGEGEBEN'
+- 'Teil 0047: push_mode im Schema, Default direct'
+- 'Teil 0047: get_push_mode vorhanden'
+- 'Teil 0047: Ungueltiger Wert wird abgelehnt (Test)'
+- 'Teil 0047: Alle Profile unveraendert gueltig'
+- 'Teil 0048: 4 Felder additiv im Schema'
+- 'Teil 0048: Unbekannter stop_condition-Wert abgelehnt (Test)'
+- 'Teil 0048: Alte task.yaml weiter gueltig (Test)'
+- 'Teil 0050: error-codes.yaml + Loader vorhanden'
+- 'Teil 0050: SSOT-Gleichheitstest gruen'
+- 'Teil 0050: state-model.yaml unveraendert'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
