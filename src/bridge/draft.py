@@ -202,6 +202,20 @@ def plan_import(store, task_id, run_id=None) -> dict:
         raise DraftError(
             f"Ergebnis {task_id} {run_id} existiert bereits und weicht vom Draft ab.")
 
+    # Das Board vertraut dem Executor nicht blind: Draft selbst nachpruefen.
+    expected = str((task.get("git") or {}).get("expected_head") or "").lower()
+    base = str(doc["base_head"] or "").lower()
+    if not expected or not base or not (
+            expected.startswith(base) or base.startswith(expected)):
+        raise DraftError(
+            f"Draft base_head {doc['base_head']!r} passt nicht zu git.expected_head "
+            f"{expected!r} (fail-closed).", code="HEAD_MISMATCH")
+    violations = scope_violations(task, doc["changed_files"])
+    if violations and doc["status"] != "BLOCKED":
+        raise DraftError(
+            f"Draft {doc['status']} enthaelt Aenderungen ausserhalb allowed_paths: "
+            + ", ".join(violations), code="SCOPE_VIOLATION")
+
     status = task.get("status")
     steps = []
     if status in runner._START_FROM:

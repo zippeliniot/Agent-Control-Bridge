@@ -38,6 +38,6 @@
 2. `plan_import`: `scope_violations(task, draft.changed_files)` nicht leer UND Draft-Status nicht BLOCKED -> DraftError Code SCOPE_VIOLATION.
 3. Tests: fremder base_head abgelehnt; Draft mit Dateien ausserhalb allowed_paths und Status COMPLETED abgelehnt; regulaerer Draft weiter importierbar.
 **Tests gesamt:** `python -m unittest tests.test_draft`, dann volle Suite EINMAL.
-- [ ] fremder base_head abgelehnt (Test)
-- [ ] Scope-Verstoss mit Status COMPLETED abgelehnt (Test)
-- [ ] regulaerer Draft importierbar (Test)
+- [x] fremder base_head abgelehnt (Test)
+- [x] Scope-Verstoss mit Status COMPLETED abgelehnt (Test)
+- [x] regulaerer Draft importierbar (Test)

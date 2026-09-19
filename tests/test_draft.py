@@ -270,6 +270,33 @@ class ImportTests(Base):
         self.assertTrue(result["summary"].startswith("[SCOPE_VIOLATION] "))
         self.assertIn("Abbruch", result["summary"])
 
+    def test_foreign_base_head_rejected(self):
+        self.created_task(base_head="f" * 40)
+        before = _snapshot(self.tmp)
+        rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 1)
+        self.assertIn("HEAD_MISMATCH", err)
+        self.assertEqual(_snapshot(self.tmp), before)
+
+    def test_short_base_head_prefix_accepted(self):
+        self.created_task(base_head=self.base_head[:7])
+        rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 0, err)
+
+    def test_scope_violation_with_completed_rejected(self):
+        self.created_task(task_over={"allowed_paths": ["src/"]},
+                          changed_files=["docs/out.md"])
+        before = _snapshot(self.tmp)
+        rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 1)
+        self.assertIn("SCOPE_VIOLATION", err)
+        self.assertEqual(_snapshot(self.tmp), before)
+
+    def test_regular_draft_importable_with_scope(self):
+        self.created_task(task_over={"allowed_paths": ["src/"]})
+        rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 0, err)
+
     def test_second_import_is_noop(self):
         self.created_task()
         self.assertEqual(self.cli("draft", "import", TASK_ID)[0], 0)
