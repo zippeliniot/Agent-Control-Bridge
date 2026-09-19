@@ -1,0 +1,37 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0045
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 6c288b92555c2eb1590bffb780a6c1ebb70bb274
+executor: claude-code
+started_at: '2026-09-19T14:59:23Z'
+ended_at: '2026-09-19T15:11:28Z'
+created_by: claude-code@DES11
+base_head: f35c2b048c289bf985b48830d4fb0af9b8ee7618
+commits:
+- sha: 82feccc4a03678d11500b0b0afcf32a6794ad125
+  message: 'Ops: BRIDGE-0045 task_create (Steuerchat-Aktion via CLI)'
+- sha: d6b6401222b9c93f1b2be6cee2f7b46cbbe33507
+  message: 'Ops: BRIDGE-0045 run_start (Steuerchat-Aktion via CLI)'
+- sha: 6c288b92555c2eb1590bffb780a6c1ebb70bb274
+  message: 'BRIDGE-0045: Topologie claude -> dev (project.yaml, CLAUDE.md, machines.md,
+    Integrationsdoku)'
+changed_files:
+- CLAUDE.md
+- audit/audit.jsonl
+- docs/ACB-PROJEKT-INTEGRATION.md
+- docs/architecture/machines.md
+- projects/agent-control-bridge/project.yaml
+- results/BRIDGE-0045/RUN-01/heartbeat.json
+- tasks/BRIDGE-0045/task.yaml
+- work-packages/BRIDGE-045.md
+summary: 'Profil und Doku auf Vier-Klon-Topologie umgestellt: project.yaml und ACB-PROJEKT-INTEGRATION.md
+  (repository -> Agent-Control-Bridge/dev), CLAUDE.md (Arbeitsverzeichnis und Harte
+  Regel 4 -> dev), machines.md um HAM11-fail-soft-Hinweis ergaenzt. test_profiles.py
+  brauchte keine Aenderung (keine betroffenen Asserts). Gezielte Tests (50) und volle
+  Suite (383) gruen.'
+physical_machine: DES11
