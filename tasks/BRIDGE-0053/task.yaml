@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0053
+project_id: agent-control-bridge
+title: B3 Draft write und import
+description: 'Teile 0053, 0054. Details: work-packages/BRIDGE-053.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 1fcfc2b2a0fb6e643814faf72d68cc3b03f14166
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0049
+acceptance_criteria:
+- 'Teil 0053: draft write erzeugt validen Draft'
+- 'Teil 0053: Scope-Verstoss -> BLOCKED + Code (Test)'
+- 'Teil 0053: Kein Push, keine Schreibzugriffe auf tasks/results/audit (Test)'
+- 'Teil 0053: --commit committet nur die Draft-Datei (Test)'
+- 'Teil 0054: --dry-run schreibt nichts (Test)'
+- 'Teil 0054: Import erzeugt result.yaml + Audit (Test)'
+- 'Teil 0054: Zweiter Import = No-op (Test)'
+- 'Teil 0054: Writer-Guard greift ausserhalb board (Test)'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
