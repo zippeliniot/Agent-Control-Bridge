@@ -218,6 +218,14 @@ def _build_parser() -> argparse.ArgumentParser:
     dwrite.add_argument("--commit", action="store_true",
                         help="nur die Draft-Datei lokal committen (kein Push, Exit 3 bei Fehler)")
 
+    dimp = dsub.add_parser("import", help="Draft -> result.yaml + Status + Audit (Board-Klon)")
+    dimp.add_argument("task_id")
+    dimp.add_argument("--run", help="Lauf-ID (Default: neuester Draft)")
+    dimp.add_argument("--dry-run", action="store_true",
+                      help="geplante Schritte ausgeben, nichts schreiben")
+    dimp.add_argument("--actor", default="board")
+    dimp.add_argument("--machine")
+
     project = sub.add_parser("project", help="Projektprofile (Adapter)")
     psub = project.add_subparsers(dest="project_cmd", required=True)
     psub.add_parser("list", help="bekannte Projekte (project_id + read_only + task_prefix)")
@@ -1064,6 +1072,29 @@ def _cmd_draft(args, store) -> int:
                             run_id=doc["run_id"])
             if rc != 0:
                 return rc
+        return 0
+    if args.draft_cmd == "import":
+        try:
+            plan = draft_mod.import_draft(
+                store, args.task_id, args.run, actor=args.actor,
+                machine=registry.machine_name(args.machine), dry_run=args.dry_run)
+        except draft_mod.DraftError as exc:
+            prefix = f"{exc.code}: " if exc.code else ""
+            print(f"Fehler: {prefix}{exc}", file=sys.stderr)
+            return 1
+        if plan["noop"]:
+            print(f"OK: {plan['steps'][0]}")
+            return 0
+        if plan["dry_run"]:
+            print(f"DRY-RUN {args.task_id} {plan['run_id']} (nichts geschrieben):")
+            for step in plan["steps"]:
+                print(f"  - {step}")
+            if not plan["guard_ok"]:
+                print(f"  ! Writer-Guard: Klon '{store.root.name}' != "
+                      f"'{draft_mod.BOARD_DIR_NAME}' -> echter Import waere SCOPE_VIOLATION")
+            return 0
+        print(f"OK: Draft {args.task_id} {plan['run_id']} importiert "
+              f"(status={plan['draft']['status']})")
         return 0
     return 2  # vom Parser ausgeschlossen
 

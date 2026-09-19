@@ -40,10 +40,10 @@
 4. Writer-Guard: Klonordner muss `board` heissen, ausser `ACB_ALLOW_ANY_CLONE=1` (nur Tests) -> sonst SCOPE_VIOLATION.
 5. Erster echter Import nur nach Freigabe durch April.
 **Tests:** `python -m unittest tests.test_draft`, dann volle Suite EINMAL.
-- [ ] --dry-run schreibt nichts (Test)
-- [ ] Import erzeugt result.yaml + Audit (Test)
-- [ ] Zweiter Import = No-op (Test)
-- [ ] Writer-Guard greift ausserhalb board (Test)
+- [x] --dry-run schreibt nichts (Test)
+- [x] Import erzeugt result.yaml + Audit (Test)
+- [x] Zweiter Import = No-op (Test)
+- [x] Writer-Guard greift ausserhalb board (Test)
 
 ### Teil C (Nachtrag aus BRIDGE-0049) - task brief nachbessern
 **Ziel:** `bridge task brief` korrigieren.

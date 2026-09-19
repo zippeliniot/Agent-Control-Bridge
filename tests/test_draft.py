@@ -2,11 +2,14 @@
 
 import hashlib
 import io
+import os
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+import yaml
+from unittest import mock
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
@@ -160,6 +163,102 @@ class WriteTests(Base):
         self.assertEqual(gitops.expected_git_files("draft_write", TASK_ID, "RUN-01"),
                          [f"drafts/{TASK_ID}/RUN-01/draft.yaml"])
         self.assertEqual(gitops.expected_git_files("draft_write", TASK_ID), [])
+
+
+class ImportTests(Base):
+    def setUp(self):
+        super().setUp()
+        patcher = mock.patch.dict(os.environ, {"ACB_ALLOW_ANY_CLONE": "1"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def created_task(self):
+        """Auftrag im Status CREATED (kein Lauf) + Draft RUN-01."""
+        self.store.create_task({
+            "schema_version": "1.0", "kind": "bridge_task",
+            "bridge_task_id": TASK_ID, "project_id": "codex-control-bridge",
+            "title": "Testauftrag", "description": "Nur fuer Tests.",
+            "task_class": "FEATURE", "repository": "x", "branch": "main",
+            "permissions": ["READ_ONLY"], "status": "CREATED",
+            "created_at": "2026-01-01T00:00:00Z", "created_by": "steuerprozess",
+            "git": {"expected_head": self.base_head},
+        })
+        self.store.write_draft({
+            "kind": "bridge_draft", "draft_version": "draft-a-1",
+            "bridge_task_id": TASK_ID, "run_id": "RUN-01", "status": "COMPLETED",
+            "summary": "fertig", "base_head": self.base_head,
+            "head_after": self.base_head, "branch": "main", "repository": "x",
+            "changed_files": ["src/a.py"],
+            "tests": {"passed": 1, "failed": 0, "blocked": 0},
+            "findings": [], "next_action": "",
+        })
+
+    def test_dry_run_writes_nothing(self):
+        self.created_task()
+        before = _snapshot(self.tmp, ("tasks", "results", "audit", "drafts"))
+        rc, out, err = self.cli("draft", "import", TASK_ID, "--dry-run")
+        self.assertEqual(rc, 0, err)
+        self.assertIn("DRY-RUN", out)
+        self.assertIn("runner.start", out)
+        self.assertIn("runner.finish", out)
+        self.assertEqual(_snapshot(self.tmp, ("tasks", "results", "audit", "drafts")),
+                         before)
+
+    def test_import_creates_result_and_audit(self):
+        self.created_task()
+        rc, out, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 0, err)
+        result = yaml.safe_load(
+            (self.tmp / "results" / TASK_ID / "RUN-01" / "result.yaml")
+            .read_text(encoding="utf-8"))
+        self.assertEqual(result["status"], "COMPLETED")
+        self.assertEqual(result["summary"], "fertig")
+        self.assertEqual(result["head"], self.base_head)
+        self.assertEqual(self.store.load_task(TASK_ID)["status"],
+                         "WAITING_FOR_COPY_TO_CONTROL")
+        audit = (self.tmp / "audit" / "audit.jsonl").read_text(encoding="utf-8")
+        self.assertIn("TASK_STARTED", audit)
+        self.assertIn("RESULT", audit.upper())
+
+    def test_second_import_is_noop(self):
+        self.created_task()
+        self.assertEqual(self.cli("draft", "import", TASK_ID)[0], 0)
+        before = _snapshot(self.tmp)
+        rc, out, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 0, err)
+        self.assertIn("bereits importiert", out)
+        self.assertEqual(_snapshot(self.tmp), before)
+
+    def test_writer_guard_outside_board(self):
+        self.created_task()
+        with mock.patch.dict(os.environ, {"ACB_ALLOW_ANY_CLONE": ""}):
+            before = _snapshot(self.tmp)
+            rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 1)
+        self.assertIn("SCOPE_VIOLATION", err)
+        self.assertEqual(_snapshot(self.tmp), before)
+
+    def test_writer_guard_allows_board_dir(self):
+        board = self.tmp / "board"
+        board.mkdir()
+        store = Store(root=board, schema_dir=SCHEMA_DIR)
+        with mock.patch.dict(os.environ, {"ACB_ALLOW_ANY_CLONE": ""}):
+            self.assertTrue(draft.writer_guard_ok(store))
+
+    def test_invalid_draft_rejected(self):
+        self.created_task()
+        path = self.tmp / "drafts" / TASK_ID / "RUN-01" / "draft.yaml"
+        path.write_text("kind: bridge_draft\n", encoding="utf-8")
+        rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 1)
+        self.assertFalse((self.tmp / "results" / TASK_ID).exists())
+
+    def test_wrong_state_rejected(self):
+        self.created_task()
+        self.store.set_status(TASK_ID, "READY", "a")
+        self.store.set_status(TASK_ID, "ARCHIVED", "a")
+        rc, _, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 1)
 
 
 if __name__ == "__main__":

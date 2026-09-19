@@ -16,6 +16,7 @@ Sicherheits-Leitplanken:
 from __future__ import annotations
 
 import fnmatch
+import os
 import re
 import sys
 from pathlib import Path
@@ -24,7 +25,9 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bridge import importer, runner
+import yaml
+
+from bridge import importer, runner, state_machine
 from bridge.store import StoreError
 
 DRAFT_VERSION = "draft-a-1"
@@ -132,3 +135,107 @@ def write_draft(store, task_id, status, summary, tests=None, *,
             "text": "Aenderungen ausserhalb allowed_paths: " + ", ".join(violations),
         }]
     return store.write_draft(draft)
+
+
+# --------------------------------------------------------------------------- #
+# Import (Board-Seite, BRIDGE-0053 Teil B)
+# --------------------------------------------------------------------------- #
+
+BOARD_DIR_NAME = "board"
+ALLOW_ANY_CLONE_ENV = "ACB_ALLOW_ANY_CLONE"
+
+_RUN_DIR_RE = re.compile(r"^RUN-[0-9]{2,}$")
+
+
+def writer_guard_ok(store) -> bool:
+    """Nur der Klon ``board`` darf importieren (``ACB_ALLOW_ANY_CLONE=1``: nur Tests)."""
+    return (store.root.name == BOARD_DIR_NAME
+            or os.environ.get(ALLOW_ANY_CLONE_ENV) == "1")
+
+
+def _latest_draft_run(store, task_id):
+    base = store.drafts_dir / task_id
+    runs = sorted((e.name for e in base.iterdir()
+                   if e.is_dir() and _RUN_DIR_RE.match(e.name)),
+                  key=lambda r: int(r.split("-")[1])) if base.exists() else []
+    if not runs:
+        raise DraftError(f"Kein Draft fuer {task_id} vorhanden.")
+    return runs[-1]
+
+
+def _draft_git_info(doc):
+    """Git-Nachweis aus dem Draft (kein Git-Zugriff im Import)."""
+    def fn(root, base_head=None):
+        return {"repository": doc["repository"], "branch": doc["branch"],
+                "head": doc["head_after"], "base_head": doc["base_head"],
+                "commits": [], "changed_files": list(doc["changed_files"])}
+    return fn
+
+
+def plan_import(store, task_id, run_id=None) -> dict:
+    """Rein lesende Vorpruefung. Gibt ``{draft, run_id, noop, steps}`` zurueck;
+    wirft ``DraftError`` bei jedem Verstoss (Draft ungueltig, Zustandsuebergang
+    nicht erlaubt, Lauf-Konflikt)."""
+    task = store.load_task(task_id)
+    run_id = run_id or _latest_draft_run(store, task_id)
+    doc = store.load_draft(task_id, run_id)
+    store.validate(doc)
+    if doc["bridge_task_id"] != task_id or doc["run_id"] != run_id:
+        raise DraftError(
+            f"Draft-Inhalt passt nicht zu {task_id}/{run_id} (fail-closed).")
+
+    result_path = store.results_dir / task_id / run_id / "result.yaml"
+    if result_path.exists():
+        existing = yaml.safe_load(result_path.read_text(encoding="utf-8")) or {}
+        if (existing.get("status") == doc["status"]
+                and existing.get("head") == doc["head_after"]):
+            return {"draft": doc, "run_id": run_id, "noop": True,
+                    "steps": [f"Draft {task_id} {run_id} bereits importiert - nichts zu tun"]}
+        raise DraftError(
+            f"Ergebnis {task_id} {run_id} existiert bereits und weicht vom Draft ab.")
+
+    status = task.get("status")
+    steps = []
+    if status in runner._START_FROM:
+        if store.next_run_id(task_id) != run_id:
+            raise DraftError(
+                f"Draft-Lauf {run_id} passt nicht zum naechsten Lauf "
+                f"{store.next_run_id(task_id)} (fail-closed).")
+        steps.append(f"runner.start {task_id}: {status} -> RUNNING ({run_id})")
+    elif status == "RUNNING":
+        if runner.current_run_id(store, task_id) != run_id:
+            raise DraftError(
+                f"Laufender Lauf ist {runner.current_run_id(store, task_id)}, "
+                f"Draft ist {run_id} (fail-closed).")
+    else:
+        raise DraftError(f"Import nicht moeglich: Auftrag ist {status}.")
+    if not state_machine.is_allowed("RUNNING", doc["status"]):
+        raise DraftError(
+            f"Uebergang RUNNING -> {doc['status']} nicht erlaubt (fail-closed).")
+    steps.append(f"runner.finish {task_id}: RUNNING -> {doc['status']}; "
+                 f"schreibt results/{task_id}/{run_id}/result.yaml + Audit")
+    return {"draft": doc, "run_id": run_id, "noop": False, "steps": steps}
+
+
+def import_draft(store, task_id, run_id=None, *, actor, machine=None,
+                 dry_run=False) -> dict:
+    """Draft -> result.yaml + Statuswechsel + Audit (runner.start/finish).
+
+    ``dry_run`` schreibt nichts. Idempotent: ein bereits importierter Draft
+    ist ein No-op."""
+    plan = plan_import(store, task_id, run_id)
+    plan["dry_run"] = dry_run
+    plan["guard_ok"] = writer_guard_ok(store)
+    if plan["noop"] or dry_run:
+        return plan
+    if not plan["guard_ok"]:
+        raise DraftError(
+            f"Import nur im Klon '{BOARD_DIR_NAME}' erlaubt (Klon: {store.root.name}).",
+            code="SCOPE_VIOLATION")
+    doc = plan["draft"]
+    if store.load_task(task_id)["status"] in runner._START_FROM:
+        runner.start(store, task_id, actor, machine)
+    runner.finish(store, task_id, doc["status"], draft={}, base_head=doc["base_head"],
+                  actor=actor, machine=machine, summary=doc["summary"],
+                  git_info_fn=_draft_git_info(doc))
+    return plan
