@@ -26,10 +26,10 @@
 3. `--commit`: nur drafts/<id>/<run>/draft.yaml, push=False.
 4. Schreibt NIE in tasks/, results/, audit/ (Test).
 **Tests:** `python -m unittest tests.test_draft`, dann volle Suite EINMAL.
-- [ ] draft write erzeugt validen Draft
-- [ ] Scope-Verstoss -> BLOCKED + Code (Test)
-- [ ] Kein Push, keine Schreibzugriffe auf tasks/results/audit (Test)
-- [ ] --commit committet nur die Draft-Datei (Test)
+- [x] draft write erzeugt validen Draft
+- [x] Scope-Verstoss -> BLOCKED + Code (Test)
+- [x] Kein Push, keine Schreibzugriffe auf tasks/results/audit (Test)
+- [x] --commit committet nur die Draft-Datei (Test)
 
 ### Teil B (alt 0054) - CLI: draft import (Board-Seite) mit --dry-run
 **Ziel:** `bridge draft import <id> [--run RUN-yy] [--dry-run]`: Draft -> result.yaml + Statuswechsel + Audit ueber vorhandene Runner/Importer-Logik.

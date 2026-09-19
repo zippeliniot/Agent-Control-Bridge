@@ -90,8 +90,12 @@ def expected_git_files(kind: str, task_id: str,
 
     CLI-Arten:
         ``task_create``, ``run_start``, ``run_finish``,
-        ``task_copied``, ``task_archive``
+        ``task_copied``, ``task_archive``, ``draft_write``
     """
+    if kind == "draft_write":
+        # BRIDGE-0053: Executor-Draft - ausschliesslich die Draft-Datei.
+        return [f"drafts/{task_id}/{run_id}/draft.yaml"] if run_id else []
+
     base = [f"tasks/{task_id}/task.yaml", "audit/audit.jsonl"]
 
     if kind in ("finish", "run_finish"):

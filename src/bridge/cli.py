@@ -23,7 +23,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bridge import gitops, heartbeat, importer, profiles, registry, runner, state_machine, watcher
+from bridge import draft as draft_mod, gitops, heartbeat, importer, profiles, registry, runner, state_machine, watcher
 from bridge.store import Store, StoreError
 
 _ENGINE_ERRORS = (StoreError, state_machine.TransitionError, state_machine.ModelError,
@@ -206,6 +206,17 @@ def _build_parser() -> argparse.ArgumentParser:
     rres.add_argument("task_id")
     rres.add_argument("--actor", required=True)
     rres.add_argument("--machine")
+
+    dparser = sub.add_parser("draft", help="Executor-Drafts (schreiben; kein Push)")
+    dsub = dparser.add_subparsers(dest="draft_cmd", required=True)
+    dwrite = dsub.add_parser("write", help="Draft nach drafts/<id>/<run>/ schreiben")
+    dwrite.add_argument("task_id")
+    dwrite.add_argument("--status", required=True)
+    dwrite.add_argument("--summary", required=True)
+    dwrite.add_argument("--tests", help="Testergebnis P/F/B, z. B. 12/0/0 (Default 0/0/0)")
+    dwrite.add_argument("--actor", default="executor")
+    dwrite.add_argument("--commit", action="store_true",
+                        help="nur die Draft-Datei lokal committen (kein Push, Exit 3 bei Fehler)")
 
     project = sub.add_parser("project", help="Projektprofile (Adapter)")
     psub = project.add_subparsers(dest="project_cmd", required=True)
@@ -1036,6 +1047,27 @@ def _cmd_run(args, store) -> int:
     return 2  # vom Parser ausgeschlossen
 
 
+def _cmd_draft(args, store) -> int:
+    if args.draft_cmd == "write":
+        try:
+            doc = draft_mod.write_draft(store, args.task_id, args.status,
+                                        args.summary, args.tests)
+        except draft_mod.DraftError as exc:
+            prefix = f"{exc.code}: " if exc.code else ""
+            print(f"Fehler: {prefix}{exc}", file=sys.stderr)
+            return 1
+        code = f" ({doc['error_code']})" if doc.get("error_code") else ""
+        print(f"OK: Draft {doc['bridge_task_id']} {doc['run_id']} "
+              f"status={doc['status']}{code} geschrieben")
+        if getattr(args, "commit", False):
+            rc = _do_commit(args, store, "draft_write", args.task_id, args.actor,
+                            run_id=doc["run_id"])
+            if rc != 0:
+                return rc
+        return 0
+    return 2  # vom Parser ausgeschlossen
+
+
 def _print_run(store, task_id, run_id, verb) -> None:
     task = store.load_task(task_id)
     print(f"OK: {task_id} {verb} (RUN={run_id}, status={task.get('status')})")
@@ -1176,6 +1208,7 @@ _DISPATCH = {
     "webui": _cmd_webui,
     "watch": _cmd_watch,
     "run": _cmd_run,
+    "draft": _cmd_draft,
     "project": _cmd_project,
 }
 
