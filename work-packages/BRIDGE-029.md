@@ -149,26 +149,26 @@ Commit bleibt lokal, kein drittes/viertes Mal versuchen.
 
 ## Akzeptanzkriterien
 
-- [ ] `git_commit()` erkennt Non-Fast-Forward-Push-Fehler anhand von
+- [x] `git_commit()` erkennt Non-Fast-Forward-Push-Fehler anhand von
       `stderr`/`stdout`-Mustern (`rejected`, `non-fast-forward`,
       `fetch first`), andere Fehlertypen lösen **keinen** Retry aus.
-- [ ] Bei erkanntem Non-Fast-Forward: `git fetch` + `git rebase
+- [x] Bei erkanntem Non-Fast-Forward: `git fetch` + `git rebase
       origin/<branch>`, danach genau **ein** weiterer Push-Versuch.
-- [ ] Rebase-Konflikt: `git rebase --abort`, fail-closed, Commit bleibt
+- [x] Rebase-Konflikt: `git rebase --abort`, fail-closed, Commit bleibt
       lokal, Repo danach in sauberem (nicht hängendem) Zustand.
-- [ ] Kein Force-Push an keiner Stelle (bestehender `NoForcePushTests`
+- [x] Kein Force-Push an keiner Stelle (bestehender `NoForcePushTests`
       bleibt grün).
-- [ ] Maximal ein Retry-Versuch — scheitert der zweite Push ebenfalls,
+- [x] Maximal ein Retry-Versuch — scheitert der zweite Push ebenfalls,
       kein dritter Versuch.
-- [ ] Neues Rückgabefeld `retried` (bool), rückwärtskompatibel, bestehende
+- [x] Neues Rückgabefeld `retried` (bool), rückwärtskompatibel, bestehende
       Felder unverändert.
-- [ ] Test mit echtem divergiertem bare-Repo: Retry erfolgreich, beide
+- [x] Test mit echtem divergiertem bare-Repo: Retry erfolgreich, beide
       Commits (fremd + eigen) im Remote-Verlauf.
-- [ ] Test mit echtem Rebase-Konflikt: fail-closed, sauberer Zustand
+- [x] Test mit echtem Rebase-Konflikt: fail-closed, sauberer Zustand
       danach.
-- [ ] Bestehender Non-Retry-Fehlerfall (`test_push_failure_commit_stays_local`)
+- [x] Bestehender Non-Retry-Fehlerfall (`test_push_failure_commit_stays_local`)
       weiterhin unverändert grün.
-- [ ] `SECURITY-MODEL.md` Abschnitt 5c und `CCB-STEUERCHAT-REFERENZ.md`
+- [x] `SECURITY-MODEL.md` Abschnitt 5c und `CCB-STEUERCHAT-REFERENZ.md`
       Teil 4 aktualisiert.
 - [ ] Bestehende Tests weiterhin grün, neue Tests grün, frischer Klon
       verifiziert.

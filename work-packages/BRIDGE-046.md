@@ -27,9 +27,9 @@
 6. ENTSCHEIDUNG-PUSH-MODELL.md: in M4 `ird` -> `wird`. Am Ende 1 Zeile: `Nummern: Teilpakete 0048,0050 -> 0047; 0051,0052 -> 0049; 0054 -> 0053; 0056 -> 0055; 0058 -> 0060; 0062 -> 0061; 0064 -> 0063 (siehe Konzept §2).` Rest der Datei NICHT aendern (Status bleibt FREIGEGEBEN).
 7. Pfadverweise `...\Agent-Control-Bridge\claude` als ACB-Entwicklungsklon -> `...\dev`: docs/ACB-STEUERCHAT-REFERENZ.md Z.25, docs/ACB-STEUERCHAT-STANDARDSTART.md Z.115 und Z.230 (per `git grep -n` pruefen). Historische Hinweise (REFERENZ Z.370) und machines.md NICHT aendern.
 **Tests:** Keine (nur Doku).
-- [ ] Haken nur mit Nachweis gesetzt
-- [ ] Nicht belegte Haken in --summary gelistet
-- [ ] HANDOVER.md-Vermerk zu v4/v5
-- [ ] Hinweis zu 4-stelligen WP-Namen gemeldet
-- [ ] Pfadverweise in REFERENZ und STANDARDSTART auf dev angeglichen
-- [ ] Tippfehler M4 behoben, Nummern-Vermerk vorhanden, Status weiter FREIGEGEBEN
+- [x] Haken nur mit Nachweis gesetzt
+- [x] Nicht belegte Haken in --summary gelistet
+- [x] HANDOVER.md-Vermerk zu v4/v5
+- [x] Hinweis zu 4-stelligen WP-Namen gemeldet
+- [x] Pfadverweise in REFERENZ und STANDARDSTART auf dev angeglichen
+- [x] Tippfehler M4 behoben, Nummern-Vermerk vorhanden, Status weiter FREIGEGEBEN

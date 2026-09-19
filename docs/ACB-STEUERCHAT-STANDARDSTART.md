@@ -112,7 +112,7 @@ nächsten Schritten aus der Übergabe fortfahren.
   (nicht als Fließtext davor, nicht danach), z. B. `**WO: PowerShell (auf
   HAM11)**` — Maschine explizit nennen, wenn mehrere im Spiel sind (siehe
   `docs/architecture/machines.md`: HAM11 und DES11 nutzen denselben Pfad
-  `E:\_DEV\Agent-Control-Bridge\claude`, sind aber physisch getrennt).
+  `E:\_DEV\Agent-Control-Bridge\dev`, sind aber physisch getrennt).
 - **Nie literale Platzhalter in PowerShell-Befehlen verwenden**, die wie
   `<name>` aussehen — PowerShell interpretiert `<`/`>` als reservierte
   Operatoren, das bricht den Befehl mit einer kryptischen `ParserError`.
@@ -227,5 +227,5 @@ bleiben:
   verwechseln.
 - Zwei Maschinen (HAM11, DES11) mit identischem lokalem Pfad — bei jeder
   Aussage über „das System" explizit klären, welche physische Maschine
-  gemeint ist, nicht annehmen, dass „E:\_DEV\Agent-Control-Bridge\claude"
+  gemeint ist, nicht annehmen, dass „E:\_DEV\Agent-Control-Bridge\dev"
   eindeutig ist.

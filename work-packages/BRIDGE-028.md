@@ -160,14 +160,14 @@ die eigentliche Orchestrator-Auslöselogik (BRIDGE-0031).
 
 ## Akzeptanzkriterien
 
-- [ ] `priority`-Feld in `schemas/task.schema.yaml`: Enum `LOW`/`MEDIUM`/
+- [x] `priority`-Feld in `schemas/task.schema.yaml`: Enum `LOW`/`MEDIUM`/
       `HIGH`, Default `MEDIUM`, bestehende `task.yaml`-Dokumente ohne das
       Feld bleiben valide.
-- [ ] `PRIORITY_CHANGED` in `schemas/audit-event.schema.yaml`
+- [x] `PRIORITY_CHANGED` in `schemas/audit-event.schema.yaml`
       `event_type`-Enum ergänzt, kein Eingriff in `old_state`/`new_state`.
-- [ ] Neue `Store`-Methode für Prioritätswechsel, unabhängig von
+- [x] Neue `Store`-Methode für Prioritätswechsel, unabhängig von
       `state_machine`/`set_status`, fail-closed bei ungültigem Wert.
-- [ ] `bridge task set-priority <id> <LOW|MEDIUM|HIGH> --actor <n>`
+- [x] `bridge task set-priority <id> <LOW|MEDIUM|HIGH> --actor <n>`
       funktioniert, schreibt Audit-Eintrag.
 - [ ] Web-UI: neuer Endpunkt für manuelle Prioritäts-Zuweisung, gleiches
       Sicherheitsmuster (`confirm`+`actor`+Same-Origin) wie bestehende
@@ -179,8 +179,8 @@ die eigentliche Orchestrator-Auslöselogik (BRIDGE-0031).
       (Annahme aus Kontext Punkt 4, ggf. vor Abschluss mit dir bestätigen).
 - [ ] Prioritäts-Spalte in CLI-Textausgabe (`overview`, `board`) und
       Web-UI-Tabellen sichtbar.
-- [ ] `CCB-STEUERCHAT-REFERENZ.md` aktualisiert (Schema, CLI, Web-UI).
-- [ ] Kein Eingriff in `schemas/state-model.yaml`.
+- [x] `CCB-STEUERCHAT-REFERENZ.md` aktualisiert (Schema, CLI, Web-UI).
+- [x] Kein Eingriff in `schemas/state-model.yaml`.
 - [ ] Bestehende Tests weiterhin grün, neue Tests grün, frischer Klon
       verifiziert.
 - [ ] Jeder Commit sofort gepusht, nicht gesammelt (verschärfte Regel).

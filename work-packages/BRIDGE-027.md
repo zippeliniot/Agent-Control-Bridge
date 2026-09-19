@@ -142,20 +142,20 @@ Fähigkeiten, kein neuer Zustand in `schemas/state-model.yaml`, keine
 
 ## Akzeptanzkriterien
 
-- [ ] `orchestrator_policy` in `schemas/project.schema.yaml`, strukturell
+- [x] `orchestrator_policy` in `schemas/project.schema.yaml`, strukturell
       wie `review_roles` (Objekt, `additionalProperties: false`,
       `default: null`).
-- [ ] `auto_trigger_permissions` mit Enum aus bestehenden Permission-Werten,
+- [x] `auto_trigger_permissions` mit Enum aus bestehenden Permission-Werten,
       `FORCE_PUSH` **nicht** im Enum.
-- [ ] Default `[READ_ONLY, WORKTREE_WRITE, TEST_EXECUTION]`, wenn
+- [x] Default `[READ_ONLY, WORKTREE_WRITE, TEST_EXECUTION]`, wenn
       `orchestrator_policy` gesetzt, aber `auto_trigger_permissions` fehlt.
-- [ ] Alle sieben bestehenden `project.yaml` weiterhin gültig, unverändert.
-- [ ] Negativer Testfall: `FORCE_PUSH` in `auto_trigger_permissions` wird
+- [x] Alle sieben bestehenden `project.yaml` weiterhin gültig, unverändert.
+- [x] Negativer Testfall: `FORCE_PUSH` in `auto_trigger_permissions` wird
       vom Schema abgelehnt.
-- [ ] `docs/CCB-ORCHESTRATOR-KONZEPT.md` enthält die drei Entscheidungen +
+- [x] `docs/CCB-ORCHESTRATOR-KONZEPT.md` enthält die drei Entscheidungen +
       Roadmap BRIDGE-0027–0031.
-- [ ] Kein Eingriff in `schemas/state-model.yaml` oder `task.schema.yaml`.
-- [ ] Keine neuen CLI-Befehle, keine Auslöselogik in diesem Auftrag.
+- [x] Kein Eingriff in `schemas/state-model.yaml` oder `task.schema.yaml`.
+- [x] Keine neuen CLI-Befehle, keine Auslöselogik in diesem Auftrag.
 - [ ] Bestehende Tests weiterhin grün, neue Tests grün, frischer Klon
       verifiziert.
 - [ ] Jeder Commit sofort gepusht, nicht gesammelt.

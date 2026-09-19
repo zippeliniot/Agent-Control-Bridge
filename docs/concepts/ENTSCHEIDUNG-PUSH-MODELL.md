@@ -47,7 +47,7 @@ Bis ein eigenes Konzept vorliegt, gilt diese Mindestspezifikation als verbindlic
   Zeitstempel, TTL). Lock nicht erhaltbar = Abbruch mit Fehlercode, nach kurzem Timeout (max. 10 s), kein Endlos-Retry.
 - **M3 Atomarer Write:** Schreiben in temporaere Datei im Zielverzeichnis, dann `os.replace`.
   Audit nur als Append unter demselben Lock. Keine Teilzustaende auf Platte.
-- **M4 Abgelaufener Lock:** Nach TTL-Ablauf ird der Lock gemeldet, NICHT automatisch gebrochen; Uebernahme nur explizit durch den Bediener, das Ereignis
+- **M4 Abgelaufener Lock:** Nach TTL-Ablauf wird der Lock gemeldet, NICHT automatisch gebrochen; Uebernahme nur explizit durch den Bediener, das Ereignis
   wird im Audit vermerkt. Stille Uebernahme ist unzulaessig.
 - **M5 CAS-Ausblick (Stufe B, Gate G3):** `task_version` je Auftrag; Schreiben nur bei
   passender Version, sonst Konflikt. Claim/Lease ergaenzt das fuer Parallelbetrieb.
@@ -55,3 +55,5 @@ Bis ein eigenes Konzept vorliegt, gilt diese Mindestspezifikation als verbindlic
 
 ## Offen
 Freigabe durch April: Status dieser Datei auf `FREIGEGEBEN` setzen. Ohne Freigabe bleibt G1 geschlossen.
+
+Nummern: Teilpakete 0048,0050 -> 0047; 0051,0052 -> 0049; 0054 -> 0053; 0056 -> 0055; 0058 -> 0060; 0062 -> 0061; 0064 -> 0063 (siehe Konzept §2).

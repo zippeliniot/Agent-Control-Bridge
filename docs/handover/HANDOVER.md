@@ -54,3 +54,5 @@ Nicht nur Code, sondern auch die **fachliche Arbeitsgrundlage**, damit die
 - `docs/security/`, `docs/handover/`
 - alle `work-packages/BRIDGE-*.md`
 - ab BRIDGE-002/003: `schemas/`
+
+CCB-UEBERGABE-v4/v5 nicht im Repo (Stand 2026-09-19), nicht rekonstruiert.

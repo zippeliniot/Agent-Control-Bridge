@@ -71,7 +71,7 @@ an den Steuerchat zurückmelden — das ist die eigentliche Testauswertung.
 
 ## Akzeptanzkriterien
 
-- [ ] `run start` ausgeführt, Status `CLAIMED`→`RUNNING`, Heartbeat gesetzt
+- [x] `run start` ausgeführt, Status `CLAIMED`→`RUNNING`, Heartbeat gesetzt
 - [ ] `run finish --commit` ausgeführt (lokal committet, **nicht** gepusht),
       Status `COMPLETED`
 - [ ] Kein Push ohne ausdrückliches Signal des Steuerchats

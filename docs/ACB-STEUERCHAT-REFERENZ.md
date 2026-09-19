@@ -22,7 +22,7 @@ um Aufträge kompatibel zu formulieren. Gliederung:
 - **Harte Regeln (nicht verhandelbar)**, wörtlich sieben Stück:
   Ubuntu/WSL nicht verändern, nicht in WSL-Distros hineingreifen,
   Dorfschaft nicht anfassen (außer read-only, BRIDGE-011/012), nur
-  innerhalb `E:\_DEV\Agent-Control-Bridge\claude` arbeiten, Fail-closed bei
+  innerhalb `E:\_DEV\Agent-Control-Bridge\dev` arbeiten, Fail-closed bei
   Unsicherheit, Least Privilege (kritische Aktionen nie ohne
   ausdrückliche Freigabe), getrennte Nummernräume `BRIDGE-xxx` vs.
   `DORF-xxx`.
