@@ -32,7 +32,7 @@ Neu: docs/concepts/ENTSCHEIDUNG-PUSH-MODELL.md (max. 60 Zeilen).
 Nur Sichtpruefung der Datei.
 
 ## Akzeptanzkriterien
-- [ ] Datei mit Optionen A/B/C und Empfehlung
-- [ ] Uebergangsregel bis G2 dokumentiert
-- [ ] Kollisionsschutz-V2-Behandlung dokumentiert
-- [ ] Status steht auf ENTWURF (Freigabe durch April)
+- [x] Datei mit Optionen A/B/C und Empfehlung
+- [x] Uebergangsregel bis G2 dokumentiert
+- [x] Kollisionsschutz-V2-Behandlung dokumentiert
+- [x] Status steht auf ENTWURF (Freigabe durch April)

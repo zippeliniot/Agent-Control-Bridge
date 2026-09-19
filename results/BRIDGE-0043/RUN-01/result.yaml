@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0043
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: c8ae32bd0f816c2671c1d0019d578857fd2225f2
+executor: claude-code
+started_at: '2026-09-19T14:06:12Z'
+ended_at: '2026-09-19T14:12:57Z'
+created_by: claude-code@DES11
+base_head: fb3f56ab5a6bc382e8a302a441f0d9a31453dbf4
+commits:
+- sha: 07bba04cb63360b03ccc22a5fb6f6d0b4522ed03
+  message: 'Ops: BRIDGE-0043 task_create (Steuerchat-Aktion via CLI)'
+- sha: c8ae32bd0f816c2671c1d0019d578857fd2225f2
+  message: 'Ops: BRIDGE-0043 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0043/RUN-01/heartbeat.json
+- tasks/BRIDGE-0043/task.yaml
+summary: 'Entscheidungsvorlage docs/concepts/ENTSCHEIDUNG-PUSH-MODELL.md angelegt
+  (Status ENTWURF, 57 Zeilen) mit Optionen A/B/C und Empfehlung B (push_mode pro Projekt).
+  Uebergangsregel bis Gate G2 dokumentiert: bis G2 IN KRAFT gilt CLAUDE.md unveraendert,
+  danach Draft-Modus nur in push_mode-draft-Projekten. Kollisionsschutz V2 ist nicht
+  im Repo, daher Mindestspezifikation M1-M5 (Single Writer, Writer-Lock, atomarer
+  Write, Lock-TTL, CAS-Ausblick) in dieselbe Datei aufgenommen.'
+physical_machine: DES11
