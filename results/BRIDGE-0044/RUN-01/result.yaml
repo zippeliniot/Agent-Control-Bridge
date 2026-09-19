@@ -1,0 +1,28 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0044
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: f26feeddb6f91af0e4a902ecdd56048968935424
+executor: claude-code
+started_at: '2026-09-19T14:31:06Z'
+ended_at: '2026-09-19T14:40:10Z'
+created_by: claude-code@DES11
+base_head: 885a8f08c789c3f7328ddf7b8cb1f810bf41d902
+commits:
+- sha: 644f7ef6ae40d3199c6c698c0f09e2876c2a7164
+  message: 'Ops: BRIDGE-0044 task_create (Steuerchat-Aktion via CLI)'
+- sha: f26feeddb6f91af0e4a902ecdd56048968935424
+  message: 'Ops: BRIDGE-0044 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0044/RUN-01/heartbeat.json
+- tasks/BRIDGE-0044/task.yaml
+summary: Namensreste 'Codex Control Bridge'/codex-control-bridge/CCB in requirements.txt,
+  scripts/*, README.md ersetzt; Default project-id = agent-control-bridge, Temp-Prefix
+  acb-int-out-. board-watch.bat zeigt auf ...\Agent-Control-Bridge\board (nur DES11).
+  Volle Suite 383 Tests OK, historische Dateien unveraendert.
+physical_machine: DES11
