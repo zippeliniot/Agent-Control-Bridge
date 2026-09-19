@@ -6,17 +6,10 @@
 
 ## Register
 
-Zwei getrennte lokale Klone pro Maschine — einer für Claude Code, einer für
-Codex/WSL (siehe Steuerchat-Diskussion zur sicheren Parallelverarbeitung):
-
-| Physische Maschine | Logische Umgebung | OS | Lokaler Pfad (Claude Code) | Lokaler Pfad (Codex/WSL) | Betrieb durch |
-|--------------------|-------------------|----|-----------------------------|----------------------------|---------------|
-| `HAM11` | `HAM01` | Windows (+ Ubuntu/WSL für Codex) | `E:\_DEV\Agent-Control-Bridge\claude` | `E:\_DEV\Agent-Control-Bridge\codex` | HAM-Standort |
-| `DES11` | `DES01` | Windows (+ Ubuntu/WSL für Codex) | `E:\_DEV\Agent-Control-Bridge\claude` | `E:\_DEV\Agent-Control-Bridge\codex` | DES-Standort |
-
-Codex nutzt unter WSL die Umgebungsvariable `ACB_PROJECT_BASE`, die auf den
-eigenen `codex`-Klon zeigt — keine Änderung an `registry.yaml` nötig, die
-Registry bleibt für die Befehlsreferenz (`bridge commands`) zuständig.
+| Physische Maschine | Logische Umgebung | OS | Lokaler Pfad | Betrieb durch |
+|--------------------|-------------------|----|--------------|---------------|
+| `HAM11` | `HAM01` | Windows (+ Ubuntu/WSL für Codex) | `E:\_DEV\Codex-Control-Bridge` | HAM-Standort |
+| `DES11` | `DES01` | Windows (+ Ubuntu/WSL für Codex) | `E:\_DEV\Codex-Control-Bridge` | DES-Standort |
 
 Beide Systeme sind **physisch getrennte Maschinen**. Das Laufwerk `E:` ist auf
 HAM11 und DES11 nur **namensgleich**, nicht geteilt — es gibt keine gemeinsame
@@ -28,8 +21,8 @@ Platte. Die beiden lokalen Arbeitskopien sind unabhängig und treffen sich
 Rollen:
 
 - **Claude Code — native Windows-App** = ausführende Instanz. Arbeitet direkt in
-  `E:\_DEV\Agent-Control-Bridge\claude`, ändert Dateien, führt Tests aus,
-  committet und pusht. Läuft **nicht** in der Ubuntu/WSL-Umgebung.
+  `E:\_DEV\Codex-Control-Bridge`, ändert Dateien, führt Tests aus, committet und
+  pusht. Läuft **nicht** in der Ubuntu/WSL-Umgebung.
 - **Claude im Browser** = Steuer- und Review-Ebene (Architektur, Zuschnitt der
   Arbeitspakete, Prüfung des gepushten Stands). Fasst das Repo nicht direkt an.
 - **GitHub** = einziger Austauschkanal zwischen HAM11 und DES11 und SSOT.
@@ -49,7 +42,7 @@ für ein zuverlässiges Bash-Tool sowie die Begrenzung auf das Repo-Verzeichnis.
   ausdrückliche Read-only-Aufträge BRIDGE-011/012).
 - Claude Code greift **nicht** über `\\wsl.localhost\...` oder `wsl`-Aufrufe in
   die Linux-Distros hinein.
-- Claude Code arbeitet ausschließlich innerhalb `E:\_DEV\Agent-Control-Bridge\claude`.
+- Claude Code arbeitet ausschließlich innerhalb `E:\_DEV\Codex-Control-Bridge`.
 - Erfordert eine Aufgabe eine System- oder WSL-Änderung → **fail-closed**:
   anhalten, `BLOCKED`, Rückfrage an den Steuerprozess.
 
