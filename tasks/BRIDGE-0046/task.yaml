@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0046
+project_id: agent-control-bridge
+title: Housekeeping (Punkt 7) + M4-Tippfehler
+description: 'Teile 0046. Details: work-packages/BRIDGE-046.md'
+task_class: DOCS
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: eabfd7cde2000a6be6114e93a668d7af9059fd4b
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0045
+acceptance_criteria:
+- Haken nur mit Nachweis gesetzt
+- Nicht belegte Haken in --summary gelistet
+- HANDOVER.md-Vermerk zu v4/v5
+- Hinweis zu 4-stelligen WP-Namen gemeldet
+- Pfadverweise in REFERENZ und STANDARDSTART auf dev angeglichen
+- Tippfehler M4 behoben, Nummern-Vermerk vorhanden, Status weiter FREIGEGEBEN
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
