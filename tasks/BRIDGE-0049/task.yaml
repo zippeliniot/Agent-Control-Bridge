@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0049
+project_id: agent-control-bridge
+title: 'B2 Draft-Grundlage: Schema, Ablage, task brief'
+description: 'Teile 0049, 0051, 0052. Details: work-packages/BRIDGE-049.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 71dd3625969bd198c165718953f92e26500b067e
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0047
+acceptance_criteria:
+- 'Teil 0049: draft.schema.yaml gueltig (Draft 2020-12)'
+- 'Teil 0049: result.schema additiv erweitert'
+- 'Teil 0049: 4 Schema-Tests gruen'
+- 'Teil 0049: Alte result.yaml weiter gueltig'
+- 'Teil 0051: write_draft/load_draft vorhanden'
+- 'Teil 0051: Ueberschreiben abgelehnt (Test)'
+- 'Teil 0051: Pfad ausserhalb drafts/ abgelehnt (Test)'
+- 'Teil 0051: Kein Audit-Eintrag durch write_draft (Test)'
+- 'Teil 0052: Kommando vorhanden, max. 15 Zeilen'
+- 'Teil 0052: Unbekannte ID Exit 1 (Test)'
+- 'Teil 0052: Alter Auftrag ohne neue Felder funktioniert (Test)'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
