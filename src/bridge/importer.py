@@ -201,6 +201,10 @@ def build_result(store, bridge_task_id, status, *, run_id=None, draft=None,
         if value is not None:
             result[key] = value
 
+    for key in ("tests", "findings"):
+        if draft.get(key) is not None:
+            result[key] = draft[key]
+
     for key, value in (
         ("physical_machine", machine),
         ("environment", environment),

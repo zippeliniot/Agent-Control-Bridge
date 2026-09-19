@@ -202,9 +202,9 @@ class ImportTests(Base):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def created_task(self):
+    def created_task(self, task_over=None, **draft_over):
         """Auftrag im Status CREATED (kein Lauf) + Draft RUN-01."""
-        self.store.create_task({
+        task = {
             "schema_version": "1.0", "kind": "bridge_task",
             "bridge_task_id": TASK_ID, "project_id": "codex-control-bridge",
             "title": "Testauftrag", "description": "Nur fuer Tests.",
@@ -212,8 +212,10 @@ class ImportTests(Base):
             "permissions": ["READ_ONLY"], "status": "CREATED",
             "created_at": "2026-01-01T00:00:00Z", "created_by": "steuerprozess",
             "git": {"expected_head": self.base_head},
-        })
-        self.store.write_draft({
+        }
+        task.update(task_over or {})
+        self.store.create_task(task)
+        doc = {
             "kind": "bridge_draft", "draft_version": "draft-a-1",
             "bridge_task_id": TASK_ID, "run_id": "RUN-01", "status": "COMPLETED",
             "summary": "fertig", "base_head": self.base_head,
@@ -221,7 +223,9 @@ class ImportTests(Base):
             "changed_files": ["src/a.py"],
             "tests": {"passed": 1, "failed": 0, "blocked": 0},
             "findings": [], "next_action": "",
-        })
+        }
+        doc.update(draft_over)
+        self.store.write_draft(doc)
 
     def test_dry_run_writes_nothing(self):
         self.created_task()
@@ -249,6 +253,22 @@ class ImportTests(Base):
         audit = (self.tmp / "audit" / "audit.jsonl").read_text(encoding="utf-8")
         self.assertIn("TASK_STARTED", audit)
         self.assertIn("RESULT", audit.upper())
+
+    def test_import_keeps_tests_findings_and_code(self):
+        finding = {"id": "SCOPE-1", "severity": "high", "text": "ausserhalb"}
+        self.created_task(status="BLOCKED", error_code="SCOPE_VIOLATION",
+                          summary="Abbruch", tests={"passed": 3, "failed": 1, "blocked": 0},
+                          findings=[finding])
+        rc, out, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 0, err)
+        result = yaml.safe_load(
+            (self.tmp / "results" / TASK_ID / "RUN-01" / "result.yaml")
+            .read_text(encoding="utf-8"))
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["tests"], {"passed": 3, "failed": 1, "blocked": 0})
+        self.assertEqual(result["findings"], [finding])
+        self.assertTrue(result["summary"].startswith("[SCOPE_VIOLATION] "))
+        self.assertIn("Abbruch", result["summary"])
 
     def test_second_import_is_noop(self):
         self.created_task()

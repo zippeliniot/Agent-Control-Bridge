@@ -29,8 +29,8 @@
 1. `importer.build_result`: `tests` und `findings` aus `draft` durchreichen (Result-Schema kennt beide optional).
 2. `draft.import_draft`: `draft={"tests":..., "findings":...}` an `runner.finish` uebergeben. Bei `error_code` im Draft: summary mit Praefix `[<CODE>] `.
 3. Test: BLOCKED-Draft (SCOPE_VIOLATION, 3/1/0) -> result.yaml enthaelt tests, findings und den Code im summary.
-- [ ] tests + findings im result.yaml (Test)
-- [ ] Fehlercode im summary (Test)
+- [x] tests + findings im result.yaml (Test)
+- [x] Fehlercode im summary (Test)
 
 ### Teil C - Import prueft Draft selbst nach
 **Ziel:** Das Board vertraut dem Executor nicht blind.

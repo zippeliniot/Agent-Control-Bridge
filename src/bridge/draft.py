@@ -243,7 +243,11 @@ def import_draft(store, task_id, run_id=None, *, actor, machine=None,
     doc = plan["draft"]
     if store.load_task(task_id)["status"] in runner._START_FROM:
         runner.start(store, task_id, actor, machine)
-    runner.finish(store, task_id, doc["status"], draft={}, base_head=doc["base_head"],
-                  actor=actor, machine=machine, summary=doc["summary"],
-                  git_info_fn=_draft_git_info(doc))
+    summary = doc["summary"]
+    if doc.get("error_code"):
+        summary = f"[{doc['error_code']}] {summary}"
+    runner.finish(store, task_id, doc["status"],
+                  draft={"tests": doc.get("tests"), "findings": doc.get("findings")},
+                  base_head=doc["base_head"], actor=actor, machine=machine,
+                  summary=summary, git_info_fn=_draft_git_info(doc))
     return plan
