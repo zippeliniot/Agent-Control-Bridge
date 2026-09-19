@@ -17,6 +17,10 @@ results/
     RUN-<yy>/
       result.yaml                 # Ergebnis eines Laufs (gegen result.schema.yaml)
       heartbeat.json              # Lebenszeichen des Laufs (heartbeat.schema.yaml, BRIDGE-008)
+drafts/
+  BRIDGE-<id>/
+    RUN-<yy>/
+      draft.yaml                  # Executor-Draft (draft.schema.yaml, BRIDGE-0049); kein Audit, kein Statuswechsel
 audit/
   audit.jsonl                     # append-only Auditspur (1 JSON-Ereignis pro Zeile)
 ```

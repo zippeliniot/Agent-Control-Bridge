@@ -38,10 +38,10 @@
 3. Kein Audit-Ereignis, kein Statuswechsel (das macht der Import).
 4. Layout-Doku: drafts/ ergaenzen.
 **Tests:** `python -m unittest tests.test_store`.
-- [ ] write_draft/load_draft vorhanden
-- [ ] Ueberschreiben abgelehnt (Test)
-- [ ] Pfad ausserhalb drafts/ abgelehnt (Test)
-- [ ] Kein Audit-Eintrag durch write_draft (Test)
+- [x] write_draft/load_draft vorhanden
+- [x] Ueberschreiben abgelehnt (Test)
+- [x] Pfad ausserhalb drafts/ abgelehnt (Test)
+- [x] Kein Audit-Eintrag durch write_draft (Test)
 
 ### Teil C (alt 0052) - CLI: task brief (tokenarmer Kurzauftrag)
 **Ziel:** `bridge task brief <id>`: max. 15 Zeilen Pflichtkontext (Klasse A). Rein lesend.

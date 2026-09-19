@@ -76,6 +76,7 @@ _RUN_RE = re.compile(r"^RUN-[0-9]{2,}$")
 _KIND_TO_SCHEMA = {
     "bridge_task": "task.schema.yaml",
     "bridge_result": "result.schema.yaml",
+    "bridge_draft": "draft.schema.yaml",
 }
 
 
@@ -99,6 +100,7 @@ class Store:
         )
         self.tasks_dir = self.root / "tasks"
         self.results_dir = self.root / "results"
+        self.drafts_dir = self.root / "drafts"
         self.audit_dir = self.root / "audit"
         self.audit_file = self.audit_dir / "audit.jsonl"
 
@@ -383,6 +385,40 @@ class Store:
             "RESULT_WRITTEN", task_id,
             actor=doc.get("created_by", "unknown"), run_id=run_id,
         ))
+        return doc
+
+    def _draft_path(self, task_id: str, run_id: str) -> Path:
+        if not isinstance(run_id, str) or not _RUN_RE.match(run_id):
+            raise StoreError(f"Unzulässige run_id: {run_id!r}")
+        path = self._in_root(
+            self.drafts_dir / self._check_id(task_id) / run_id / "draft.yaml"
+        )
+        if self.drafts_dir.resolve() not in path.parents:
+            raise StoreError(f"Draft-Pfad außerhalb drafts/: {path}")
+        return path
+
+    def write_draft(self, draft):
+        """Legt einen Executor-Draft unter drafts/<id>/RUN-yy/draft.yaml ab.
+
+        Kein Audit-Ereignis und kein Statuswechsel (das leistet der Import).
+        """
+        doc = self.validate(self._as_doc(draft))
+        if doc["kind"] != "bridge_draft":
+            raise SchemaValidationError("write_draft erwartet kind=bridge_draft.")
+        task_id = self._check_id(doc["bridge_task_id"])
+        if not self._in_root(self._task_path(task_id)).exists():
+            raise StoreError(f"Draft ohne Auftrag: {task_id}")
+        path = self._draft_path(task_id, doc["run_id"])
+        self._write_new(path, self._dump_yaml(doc))
+        return doc
+
+    def load_draft(self, task_id, run_id):
+        path = self._draft_path(task_id, run_id)
+        if not path.exists():
+            raise StoreError(f"Draft nicht gefunden: {task_id} {run_id}")
+        doc = _load_yaml(path)
+        if not isinstance(doc, dict):
+            raise StoreError(f"Draftdatei unbrauchbar: {path}")
         return doc
 
     def last_transition_at(self, task_id, new_state) -> str | None:

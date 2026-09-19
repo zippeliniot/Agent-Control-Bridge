@@ -552,5 +552,53 @@ class DraftSchemaTests(unittest.TestCase):
         self.assertTrue(list(v.iter_errors(valid_result(tests={"passed": 1}))))
 
 
+class DraftStoreTests(unittest.TestCase):
+    """BRIDGE-0049 Teil B: Store.write_draft/load_draft."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-draft-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        self.store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        self.store.create_task(valid_task())
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def audit_lines(self):
+        f = self.tmp / "audit" / "audit.jsonl"
+        return f.read_text(encoding="utf-8").splitlines() if f.exists() else []
+
+    def test_write_and_load_roundtrip(self):
+        self.store.write_draft(valid_draft())
+        self.assertTrue((self.tmp / "drafts" / "BRIDGE-0900" / "RUN-01" / "draft.yaml").exists())
+        loaded = self.store.load_draft("BRIDGE-0900", "RUN-01")
+        self.assertEqual(loaded["summary"], "Draft-Test")
+
+    def test_overwrite_rejected(self):
+        self.store.write_draft(valid_draft())
+        with self.assertRaises(StoreError):
+            self.store.write_draft(valid_draft(summary="anders"))
+
+    def test_path_outside_drafts_rejected(self):
+        with self.assertRaises(StoreError):
+            self.store._draft_path("BRIDGE-0900", "RUN-01/../../../x")
+        with self.assertRaises(StoreError):
+            self.store._draft_path("../evil", "RUN-01")
+
+    def test_no_audit_entry_from_write_draft(self):
+        before = self.audit_lines()
+        self.store.write_draft(valid_draft())
+        self.assertEqual(self.audit_lines(), before)
+
+    def test_draft_without_task_rejected(self):
+        with self.assertRaises(StoreError):
+            self.store.write_draft(valid_draft(bridge_task_id="BRIDGE-0901"))
+
+    def test_invalid_draft_rejected(self):
+        with self.assertRaises(SchemaValidationError):
+            self.store.write_draft(valid_draft(bogus=1))
+
+
 if __name__ == "__main__":
     unittest.main()
