@@ -1,0 +1,45 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0047
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 254d02755c0560f6a6000391636f4ee1571dd43d
+executor: claude-code
+started_at: '2026-09-19T16:01:19Z'
+ended_at: '2026-09-19T16:08:11Z'
+created_by: claude-code@DES11
+base_head: d98eaf9fbc3abefe148ac2d6b7b90de7facf9c69
+commits:
+- sha: 92c8eb8744f978029769790061bb98c0aab3be87
+  message: 'Ops: BRIDGE-0047 task_create (Steuerchat-Aktion via CLI)'
+- sha: edf99bb7a32e7dad39438b2d9555b1fdab48bd3c
+  message: 'Ops: BRIDGE-0047 run_start (Steuerchat-Aktion via CLI)'
+- sha: e5c3ed4bdf08336119a200fc167ef2bf0225a497
+  message: 'BRIDGE-0047 Teil A: Profilfeld push_mode (direct|draft)'
+- sha: 448106c48be5ce212aed71c5a63232f99a23baa4
+  message: 'BRIDGE-0047 Teil B: Task-Schema task_type, allowed_paths, forbidden_actions,
+    stop_conditions'
+- sha: 254d02755c0560f6a6000391636f4ee1571dd43d
+  message: 'BRIDGE-0047 Teil C: Fehlercodes als SSOT (error-codes.yaml + Loader)'
+changed_files:
+- audit/audit.jsonl
+- docs/architecture/ARCHITECTURE.md
+- results/BRIDGE-0047/RUN-01/heartbeat.json
+- schemas/error-codes.yaml
+- schemas/project.schema.yaml
+- schemas/task.schema.yaml
+- src/bridge/errorcodes.py
+- src/bridge/profiles.py
+- tasks/BRIDGE-0047/task.yaml
+- tests/test_errorcodes.py
+- tests/test_profiles.py
+- tests/test_store.py
+- work-packages/BRIDGE-047.md
+summary: 'B1 Schema-Basis umgesetzt: push_mode (Schema, get_push_mode, Tests), vier
+  optionale Task-Felder inkl. stop_conditions-Enum und Fehlercodes als SSOT (error-codes.yaml
+  + errorcodes.py, Gleichheitstest). Alle Akzeptanzkriterien Teil A-C abgehakt, volle
+  Suite 396/396 gruen. Befund: WP nennt 8 Profile, real 7 (examples ist kein Profil).'
+physical_machine: DES11
