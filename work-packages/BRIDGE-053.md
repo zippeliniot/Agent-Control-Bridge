@@ -1,37 +1,46 @@
-# BRIDGE-0053 - CLI: draft write (Executor-Seite)
+# BRIDGE-0053 - B3 Draft write und import
 
 | Feld | Wert |
 |---|---|
 | bridge_task_id | BRIDGE-0053 |
 | project_id | agent-control-bridge |
-| Typ / Klasse | T2 / FEATURE |
+| Typ / Klasse | Buendel / FEATURE |
+| Teile (alte Nummern) | 0053, 0054 |
 | Rechte | WORKTREE_WRITE, TEST_EXECUTION, GIT_PUSH |
-| **Modell / Denkstufe** | **Claude Sonnet 5 / MEDIUM** - Neue Logik mit Git-Nachweis und Scope-Pruefung. |
-| Modellwechsel zum Vorgaenger | NUR DENKSTUFE |
-| depends_on | BRIDGE-0052 |
+| **Modell / Denkstufe** | **Claude Sonnet 5 / MEDIUM** - Ein Modul (draft.py): write + import, sicherheitsrelevant. |
+| Modellwechsel zum Vorgaenger | NEIN |
+| depends_on | BRIDGE-0049 |
 | Gate | G1 |
-| stop_conditions | DIRTY_WORKTREE, SCOPE_VIOLATION |
+| stop_conditions | DIRTY_WORKTREE, SCOPE_VIOLATION, CONCEPT_CONFLICT |
 
-> Regeln: `docs/concepts/ACB-UMSETZUNGSKONZEPT-V2.md` §3 (gelten ohne Wiederholung).
-> **MODELL-GATE:** Erste Zeile der Antwort = `MODELL: <x> / DENKSTUFE: <y>`. Weicht sie von der Tabelle ab: STOPP, auf April warten. Erst danach Schritt 1.
+> Ablauf: Claude Code `/acb-auftrag BRIDGE-0053` (Datei `.claude/commands/acb-auftrag.md`). Regeln: `docs/concepts/ACB-UMSETZUNGSKONZEPT-V2.md` §3.
+> **MODELL-GATE:** erste Antwortzeile `MODELL: <x> / DENKSTUFE: <y>`. Abweichung von der Tabelle = STOPP.
 
-## Ziel
-`bridge draft write <id> --status S --summary T [--tests P/F/B]`. Schreibt nur drafts/. Pusht nie.
+**Teile strikt nacheinander (A, B, ...). Pro Teil: Haken setzen, Commit, Push. Scheitert ein Teil: STOPP (BLOCKED), spaetere Teile nicht beginnen.**
 
-## Scope
-src/bridge/draft.py (neu), src/bridge/cli.py (Verdrahtung), src/bridge/gitops.py (kind `draft_write`), tests/test_draft.py (neu).
-
-## Schritte
+### Teil A (alt 0053) - CLI: draft write (Executor-Seite)
+**Ziel:** `bridge draft write <id> --status S --summary T [--tests P/F/B]`. Schreibt nur drafts/. Pusht nie.
+**Scope:** src/bridge/draft.py (neu), src/bridge/cli.py (Verdrahtung), src/bridge/gitops.py (kind `draft_write`), tests/test_draft.py (neu).
 1. Git-Nachweis ueber `importer.collect_git_info`; base_head = task.git.expected_head, fehlt er -> fail-closed.
 2. Scope-Check: changed_files ausserhalb allowed_paths -> Draft-Status BLOCKED, error_code SCOPE_VIOLATION. Sauberer Worktree Pflicht sonst DIRTY_WORKTREE.
 3. `--commit`: nur drafts/<id>/<run>/draft.yaml, push=False.
 4. Schreibt NIE in tasks/, results/, audit/ (Test).
-
-## Tests
-`python -m unittest tests.test_draft`, dann volle Suite EINMAL.
-
-## Akzeptanzkriterien
+**Tests:** `python -m unittest tests.test_draft`, dann volle Suite EINMAL.
 - [ ] draft write erzeugt validen Draft
 - [ ] Scope-Verstoss -> BLOCKED + Code (Test)
 - [ ] Kein Push, keine Schreibzugriffe auf tasks/results/audit (Test)
 - [ ] --commit committet nur die Draft-Datei (Test)
+
+### Teil B (alt 0054) - CLI: draft import (Board-Seite) mit --dry-run
+**Ziel:** `bridge draft import <id> [--run RUN-yy] [--dry-run]`: Draft -> result.yaml + Statuswechsel + Audit ueber vorhandene Runner/Importer-Logik.
+**Scope:** src/bridge/draft.py, src/bridge/cli.py, tests/test_draft.py.
+1. Pruefungen vor Schreiben: Draft valide, Auftrag existiert, Zustandsuebergang erlaubt (state_machine), Idempotenz: gleicher Draft bereits importiert -> No-op Exit 0.
+2. Wiederverwendung: `runner.start` (falls noetig) + `runner.finish` mit `git_info_fn` aus dem Draft. Kein neuer Statuspfad.
+3. `--dry-run`: gibt geplante Schritte aus, schreibt NICHTS (Test per Datei-Snapshot).
+4. Writer-Guard: Klonordner muss `board` heissen, ausser `ACB_ALLOW_ANY_CLONE=1` (nur Tests) -> sonst SCOPE_VIOLATION.
+5. Erster echter Import nur nach Freigabe durch April.
+**Tests:** `python -m unittest tests.test_draft`, dann volle Suite EINMAL.
+- [ ] --dry-run schreibt nichts (Test)
+- [ ] Import erzeugt result.yaml + Audit (Test)
+- [ ] Zweiter Import = No-op (Test)
+- [ ] Writer-Guard greift ausserhalb board (Test)
