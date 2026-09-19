@@ -94,12 +94,21 @@ Whitelist-/Branch-Logik wie für Claude Code — kein `git add -A`, kein
 
 ## Sofort pushen, nicht sammeln (verschärft, 12.09.2026)
 
-Wie bei Claude Code (`CLAUDE.md` „Checkpoint & Resume" Punkt 4): jeder
+Nur bei `push_mode: direct` (bei `draft` siehe „Draft-Modus" unten). Wie bei Claude Code (`CLAUDE.md` „Checkpoint & Resume" Punkt 4): jeder
 Commit wird **unmittelbar gepusht**, nicht erst am Laufende gebündelt.
 Bei mehreren parallel laufenden Projekten/Maschinen ist GitHub die
 einzige Stelle, an der ein neuer Steuerchat oder eine andere Maschine
 den echten Stand sieht. Ein pausiertes Projekt muss auf GitHub trotzdem
 seinen letzten echten Stand zeigen, nicht einen veralteten.
+
+## Draft-Modus (nur bei `push_mode: draft`)
+
+- Gilt ausschließlich bei `push_mode: draft` (Gate G2, Stufe A); bei
+  `push_mode: direct` gilt „Sofort pushen" unverändert.
+- Ergebnis nur über `bridge draft write` ablegen (nach `drafts/<id>/<run>/`).
+- Kein `git push`, auch nicht mit `GIT_PUSH` in `permissions`.
+- Kein Schreiben in `tasks/`, `results/`, `audit/`; kein `run start`/`run finish`.
+- Import und Push übernimmt das Board bzw. der Mensch.
 
 ## Status dieses Dokuments
 

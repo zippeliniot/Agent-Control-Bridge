@@ -37,6 +37,6 @@
 2. 'Sofort pushen' explizit auf `push_mode: direct` begrenzen.
 3. Widerspruchssuche: `git grep -n -i push -- CLAUDE.md CODEX.md CONTROL.md`, Befund in --summary.
 **Tests:** Keine (nur Doku).
-- [ ] Abschnitt Draft-Modus in CLAUDE.md und CODEX.md
-- [ ] Push-Regel eindeutig begrenzt
+- [x] Abschnitt Draft-Modus in CLAUDE.md und CODEX.md
+- [x] Push-Regel eindeutig begrenzt
 - [ ] Keine Widersprueche in CLAUDE/CODEX/CONTROL

@@ -53,13 +53,16 @@ Vor jeder Übergabe ausführen: `scripts\handover-check.ps1` (bzw. unter Git Bas
 `bash scripts/handover-check.sh`). Meldet das Skript `FAIL`, ist die Übergabe
 nicht zulässig, bis alles committed und gepusht ist.
 
-**Seit mehreren Projekten/Maschinen parallel (12.09.2026): dieselbe
+**Seit mehreren Projekten/Maschinen parallel (12.09.2026), nur bei
+`push_mode: direct`: dieselbe
 Sofort-Push-Pflicht gilt nicht nur bei Maschinenwechsel, sondern durchgehend
 — siehe „Checkpoint & Resume" Punkt 4 unten. Grund: Ein Projekt kann pausiert
 werden, während ein anderes auf einer anderen Maschine weiterläuft — GitHub
 muss jederzeit den wahren Stand zeigen, nicht nur am Wochenrhythmus-Wechsel.**
 
 ## Git Push durch Claude Code
+
+Gilt nur bei `push_mode: direct` (siehe „Draft-Modus" am Ende).
 
 Push bleibt grundsätzlich eine bewusste, freigegebene Aktion (Regel 6:
 Least Privilege) — das ändert sich hier nicht. Trägt ein Auftrag jedoch
@@ -165,7 +168,8 @@ Regeln für jeden Auftrag:
    die Lauf-ID (`RUN-02`, …). Der Steuerprozess vermerkt
    `WAITING_FOR_RESUME → RUNNING`; bei Bedarf trägt `resume_hint` im Ergebnis die
    feinere Notiz.
-4. **Sofort pushen, nicht sammeln (verschärft, 12.09.2026).** Jeder Commit aus
+4. **Sofort pushen, nicht sammeln (verschärft, 12.09.2026) — nur bei
+   `push_mode: direct`, nicht im Draft-Modus.** Jeder Commit aus
    Punkt 1 wird **unmittelbar gepusht**, nicht erst am Ende des Laufs oder vor
    einem Maschinenwechsel gebündelt. Grund: Bei mehreren parallel laufenden
    Projekten/Maschinen ist GitHub die einzige Stelle, an der ein neuer
@@ -193,3 +197,12 @@ python src/bridge/cli.py run beat <BRIDGE-id> --actor claude-code
 So bleiben die Schläge aus, sobald die Arbeit stirbt (z. B. Usage-Limit), und der
 Watcher erkennt den steckengebliebenen Lauf. Der Heartbeat ersetzt nicht das
 Committen — er begleitet es.
+
+## Draft-Modus (nur bei `push_mode: draft`)
+
+- Gilt ausschließlich bei `push_mode: draft` (Gate G2, Stufe A); bei
+  `push_mode: direct` gelten „Git Push" und „Sofort pushen" unverändert.
+- Ergebnis nur über `bridge draft write` ablegen (nach `drafts/<id>/<run>/`).
+- Kein `git push`, auch nicht mit `GIT_PUSH` im Berechtigungsprofil.
+- Kein Schreiben in `tasks/`, `results/`, `audit/`; kein `run start`/`run finish`.
+- Import und Push übernimmt das Board bzw. der Mensch.
