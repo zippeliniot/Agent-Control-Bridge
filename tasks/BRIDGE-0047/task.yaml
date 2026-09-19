@@ -30,6 +30,6 @@ acceptance_criteria:
 - 'Teil 0050: error-codes.yaml + Loader vorhanden'
 - 'Teil 0050: SSOT-Gleichheitstest gruen'
 - 'Teil 0050: state-model.yaml unveraendert'
-status: REVIEW_REQUIRED
+status: ARCHIVED
 created_at: '2026-09-19T00:00:00Z'
 created_by: browser-claude
