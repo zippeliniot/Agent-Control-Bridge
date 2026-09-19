@@ -26,11 +26,11 @@
 3. profiles.py: `get_push_mode(profile) -> str` (Default `direct`).
 4. Alle 8 bestehenden Profile bleiben ohne Aenderung gueltig.
 **Tests:** `python -m unittest tests.test_profiles`, dann volle Suite EINMAL.
-- [ ] Entscheidung war FREIGEGEBEN
-- [ ] push_mode im Schema, Default direct
-- [ ] get_push_mode vorhanden
-- [ ] Ungueltiger Wert wird abgelehnt (Test)
-- [ ] Alle Profile unveraendert gueltig
+- [x] Entscheidung war FREIGEGEBEN
+- [x] push_mode im Schema, Default direct
+- [x] get_push_mode vorhanden
+- [x] Ungueltiger Wert wird abgelehnt (Test)
+- [x] Alle Profile unveraendert gueltig
 
 ### Teil B (alt 0048) - Task-Schema: task_type, allowed_paths, forbidden_actions, stop_conditions
 **Ziel:** Vier optionale Felder in task.schema.yaml. Kein CLI-Umbau.

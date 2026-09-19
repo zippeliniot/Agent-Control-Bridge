@@ -121,6 +121,14 @@ properties:
         description: "Unterstuetzende/pruefende KI (Cross-Check, keine Alleinverantwortung)."
         type: ["string", "null"]
         enum: [anthropic, openai, human, null]
+  push_mode:
+    description: >-
+      Push-Modell des Projekts (BRIDGE-0047, ENTSCHEIDUNG-PUSH-MODELL).
+      direct = Executor darf pushen (bis Gate G2); draft = Executor legt nur
+      Drafts an, der Steuerprozess ist Single Writer. Optional, Default direct.
+    type: string
+    enum: [direct, draft]
+    default: direct
   github_repo:
     description: >-
       Vollqualifizierter GitHub-Slug ("Besitzer/Repo") fuer Steuerprozesse

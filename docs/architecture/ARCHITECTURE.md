@@ -238,6 +238,11 @@ Ein Projektprofil kennt u. a. `project_id`, `repository`, `default_branch`,
 `migration_policy`, `test_policy`, `handover_policy`, `task_number_prefix`.
 Mechanismus: **BRIDGE-010**.
 
+Optional kennt das Profil `push_mode` (`direct` | `draft`, Default `direct`;
+BRIDGE-0047, Grundlage `docs/concepts/ENTSCHEIDUNG-PUSH-MODELL.md`). In
+`draft`-Projekten legt der Executor nur Drafts an; Zugriff über
+`profiles.get_push_mode(profile)`. Additiv: Profile ohne das Feld bleiben gültig.
+
 ---
 
 ## 13. Modellsteuerung

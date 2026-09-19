@@ -126,6 +126,11 @@ def get_controller(profile) -> str | None:
     return profile.get("controller")
 
 
+def get_push_mode(profile) -> str:
+    """Push-Modell des Profils (direct | draft); Default direct (BRIDGE-0047)."""
+    return profile.get("push_mode") or "direct"
+
+
 def requires_automation(profile) -> bool:
     """True, wenn executor gesetzt ist UND nicht read-only."""
     return profile.get("executor") is not None and profile.get("read_only") is not True

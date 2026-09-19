@@ -164,6 +164,27 @@ class ProfilesTests(unittest.TestCase):
         with self.assertRaises(profiles.ProfileError):
             profiles.validate_profile(bad, SCHEMA_DIR)
 
+    # -- push_mode (BRIDGE-0047) -------------------------------------
+
+    def test_push_mode_default_direct(self):
+        self.assertEqual(profiles.get_push_mode(valid_profile()), "direct")
+        self.assertEqual(profiles.get_push_mode({"push_mode": None}), "direct")
+
+    def test_push_mode_valid_values(self):
+        for mode in ("direct", "draft"):
+            doc = profiles.validate_profile(valid_profile(push_mode=mode), SCHEMA_DIR)
+            self.assertEqual(profiles.get_push_mode(doc), mode)
+
+    def test_push_mode_invalid_rejected(self):
+        with self.assertRaises(profiles.ProfileError):
+            profiles.validate_profile(valid_profile(push_mode="force"), SCHEMA_DIR)
+
+    def test_all_existing_profiles_still_valid(self):
+        ids = profiles.list_profiles(REPO_ROOT)
+        self.assertTrue(ids)
+        for pid in ids:
+            profiles.load_profile(REPO_ROOT, pid, SCHEMA_DIR)
+
     # -- Resolution: Task-Override vor Projekt-Default (BRIDGE-019) --
 
     def test_resolve_executor_task_override_wins(self):
