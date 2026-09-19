@@ -51,6 +51,6 @@
 2. errorcodes.py: `load_error_codes(schema_dir)`, `is_known(code)`.
 3. Test: Schluessel == Enum `stop_conditions` in task.schema.yaml (SSOT-Gleichheit).
 **Tests:** `python -m unittest tests.test_errorcodes`, dann volle Suite EINMAL.
-- [ ] error-codes.yaml + Loader vorhanden
-- [ ] SSOT-Gleichheitstest gruen
-- [ ] state-model.yaml unveraendert
+- [x] error-codes.yaml + Loader vorhanden
+- [x] SSOT-Gleichheitstest gruen
+- [x] state-model.yaml unveraendert

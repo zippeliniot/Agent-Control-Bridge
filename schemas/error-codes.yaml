@@ -1,0 +1,25 @@
+# Agent Control Bridge - Fehlercodes (SSOT)
+# BRIDGE-0047 Teil C. Schluessel == Enum `stop_conditions` in task.schema.yaml
+# (Gleichheit per tests/test_errorcodes.py erzwungen).
+# Alle Codes fuehren in den bestehenden Zustand BLOCKED; es gibt keinen neuen
+# Zustand (state-model.yaml bleibt unveraendert).
+
+schema_version: '1.0'
+kind: bridge_error_codes
+
+codes:
+  IDENTITY_MISMATCH:
+    description: "Maschinen-/Akteuridentitaet passt nicht zum Auftrag oder Profil."
+    state: BLOCKED
+  HEAD_MISMATCH:
+    description: "Git-HEAD weicht vom erwarteten HEAD (git.expected_head) ab."
+    state: BLOCKED
+  DIRTY_WORKTREE:
+    description: "Working Tree ist nicht sauber (uncommittete Aenderungen)."
+    state: BLOCKED
+  CONCEPT_CONFLICT:
+    description: "Auftrag widerspricht dem freigegebenen Konzept/der Entscheidung."
+    state: BLOCKED
+  SCOPE_VIOLATION:
+    description: "Aenderung ausserhalb des im Auftrag erlaubten Scopes."
+    state: BLOCKED
