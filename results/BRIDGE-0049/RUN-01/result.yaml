@@ -1,0 +1,43 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0049
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: a7b224028c89c52ea92deb924d25d3f4d1832192
+executor: claude-code
+started_at: '2026-09-19T16:46:23Z'
+ended_at: '2026-09-19T17:08:58Z'
+created_by: claude-code@DES11
+base_head: 71dd3625969bd198c165718953f92e26500b067e
+commits:
+- sha: af28ec3c2551a9af53817b0bb6be0db5c30509c2
+  message: 'Ops: BRIDGE-0049 task_create (Steuerchat-Aktion via CLI)'
+- sha: 729f5434645d036c829cb13043998a7a4b0ceb18
+  message: 'Ops: BRIDGE-0049 run_start (Steuerchat-Aktion via CLI)'
+- sha: dc06bdb5c04eadb8d1759f27afde02b360d4b874
+  message: 'BRIDGE-0049 Teil A: Draft-Schema draft-a-1, result tests/findings'
+- sha: 6c4868e7d737a2b9fd9bae1e62931b43966d977a
+  message: 'BRIDGE-0049 Teil B: Draft-Ablage im Store'
+- sha: a7b224028c89c52ea92deb924d25d3f4d1832192
+  message: 'BRIDGE-0049 Teil C: task brief (Kurzauftrag)'
+changed_files:
+- audit/audit.jsonl
+- docs/protocols/storage-layout.md
+- results/BRIDGE-0049/RUN-01/heartbeat.json
+- schemas/README.md
+- schemas/draft.schema.yaml
+- schemas/result.schema.yaml
+- src/bridge/cli.py
+- src/bridge/store.py
+- tasks/BRIDGE-0049/task.yaml
+- tests/test_cli.py
+- tests/test_store.py
+- work-packages/BRIDGE-049.md
+summary: 'Draft-Grundlage umgesetzt: draft.schema.yaml (draft-a-1) plus optionale
+  tests/findings im Result-Schema, Store.write_draft/load_draft unter drafts/<id>/RUN-yy
+  mit Ueberschreibschutz ohne Audit, und CLI ''task brief'' (max. 15 Zeilen, rein
+  lesend). Alle Akzeptanzkriterien erfuellt, volle Suite 410/410 gruen.'
+physical_machine: DES11
