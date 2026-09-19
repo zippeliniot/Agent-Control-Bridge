@@ -1,0 +1,38 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0067
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 92b298197e726e540f3bd980d471dc6a1eecd2dc
+executor: claude-code
+started_at: '2026-09-19T19:10:17Z'
+ended_at: '2026-09-19T19:28:47Z'
+created_by: claude-code@DES11
+base_head: a189cb6e4b4f9d9ead77c80a02995a464e62f599
+commits:
+- sha: 011f673dfc9ca07b32fc75f6f873493024d49d2d
+  message: 'Ops: BRIDGE-0067 task_create (Steuerchat-Aktion via CLI)'
+- sha: 5e4e429798e3fc0ddb639514538120a1ee0d2f34
+  message: 'Ops: BRIDGE-0067 run_start (Steuerchat-Aktion via CLI)'
+- sha: 69cba0619eec39ecb17045b82ee451d90851823a
+  message: 'BRIDGE-0067 Teil A: draft write ohne run start'
+- sha: 3aa4b9ea279760a760e94c0569287e507594d05c
+  message: 'BRIDGE-0067 Teil B: Import uebernimmt tests, findings, Fehlercode'
+- sha: 92b298197e726e540f3bd980d471dc6a1eecd2dc
+  message: 'BRIDGE-0067 Teil C: Import prueft base_head und Scope nach'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0067/RUN-01/heartbeat.json
+- src/bridge/draft.py
+- src/bridge/importer.py
+- tasks/BRIDGE-0067/task.yaml
+- tests/test_draft.py
+- work-packages/BRIDGE-067.md
+summary: draft write laeuft ohne run start (Lauf-ID wie plan_import); Import uebernimmt
+  tests, findings und Fehlercode ins result.yaml; plan_import prueft base_head (HEAD_MISMATCH)
+  und Scope (SCOPE_VIOLATION) selbst nach. Alle drei Teile mit Tests belegt, volle
+  Suite 436/436 OK.
+physical_machine: DES11

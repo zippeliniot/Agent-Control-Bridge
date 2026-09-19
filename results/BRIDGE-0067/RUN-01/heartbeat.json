@@ -2,7 +2,7 @@
   "actor": "claude-code",
   "bridge_task_id": "BRIDGE-0067",
   "kind": "bridge_heartbeat",
-  "last_seen": "2026-09-19T18:04:46Z",
+  "last_seen": "2026-09-19T19:10:17Z",
   "machine": "DES11",
   "run_id": "RUN-01"
 }
