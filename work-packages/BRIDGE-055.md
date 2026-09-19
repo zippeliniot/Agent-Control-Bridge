@@ -25,10 +25,10 @@
 2. Pruefen: Executor-Klon pusht nicht, schreibt nur drafts/; Dry-run aendert nichts; Import setzt Status + result.yaml + Audit.
 3. Bei PASS: April setzt in ENTSCHEIDUNG-PUSH-MODELL.md `G2: IN KRAFT` (nicht Claude Code).
 **Tests:** `python -m unittest tests.test_stage_a`, dann volle Suite EINMAL.
-- [ ] Abnahmetest gruen
-- [ ] Kein Push im Executor-Pfad belegt
-- [ ] Dry-run ohne Schreibzugriff belegt
-- [ ] Import-Ergebnis vollstaendig belegt
+- [x] Abnahmetest gruen
+- [x] Kein Push im Executor-Pfad belegt
+- [x] Dry-run ohne Schreibzugriff belegt
+- [x] Import-Ergebnis vollstaendig belegt
 
 ### Teil B (alt 0056) - Executor-Regeln auf Draft-Modus pruefen
 **Ziel:** CLAUDE.md und CODEX.md um kurzen Abschnitt 'Draft-Modus' ergaenzen, Widersprueche zu 'Sofort pushen' aufloesen.
