@@ -52,6 +52,6 @@
 2. Jede Ausgabezeile auf max. 120 Zeichen kuerzen (Ende `...`).
 3. Tests: DORF-Auftrag -> kein BRIDGE-Pfad; lange Kriterien werden gekuerzt.
 **Tests:** `python -m unittest tests.test_cli`.
-- [ ] WP-Pfad praefixrichtig oder `-`
-- [ ] Zeilen max. 120 Zeichen
-- [ ] Tests gruen
+- [x] WP-Pfad praefixrichtig oder `-`
+- [x] Zeilen max. 120 Zeichen
+- [x] Tests gruen

@@ -1431,6 +1431,8 @@ class CliTaskBriefTests(unittest.TestCase):
             git={"expected_head": "a" * 40},
             acceptance_criteria=[f"Kriterium {i}" for i in range(1, 9)],
         )
+        (self.tmp / "work-packages").mkdir()
+        (self.tmp / "work-packages" / "BRIDGE-900.md").write_text("x", encoding="utf-8")
         before = self.snapshot()
         code, out, _ = self.cli("task", "brief", "BRIDGE-0900")
         self.assertEqual(code, 0)
@@ -1442,6 +1444,42 @@ class CliTaskBriefTests(unittest.TestCase):
         self.assertNotIn("Kriterium 6", out)
         self.assertIn("work_package: work-packages/BRIDGE-900.md", lines)
         self.assertEqual(self.snapshot(), before)
+
+    def test_brief_missing_work_package_is_dash(self):
+        self.create()
+        code, out, _ = self.cli("task", "brief", "BRIDGE-0900")
+        self.assertEqual(code, 0)
+        self.assertIn("work_package: -", out.splitlines())
+
+    def test_brief_other_prefix_no_bridge_path(self):
+        (self.tmp / "work-packages").mkdir()
+        (self.tmp / "work-packages" / "BRIDGE-042.md").write_text("x", encoding="utf-8")
+        (self.tmp / "work-packages" / "DORF-042-R1.md").write_text("x", encoding="utf-8")
+        self.create(bridge_task_id="DORF-0042")
+        code, out, _ = self.cli("task", "brief", "DORF-0042")
+        self.assertEqual(code, 0)
+        self.assertIn("work_package: -", out.splitlines())
+        self.assertNotIn("BRIDGE-042", out)
+
+    def test_brief_review_suffix_kept(self):
+        (self.tmp / "work-packages").mkdir()
+        (self.tmp / "work-packages" / "BRIDGE-900-R1.md").write_text("x", encoding="utf-8")
+        self.create()
+        self.create(bridge_task_id="BRIDGE-0900-R1", task_class="READONLY_CHECK")
+        code, out, _ = self.cli("task", "brief", "BRIDGE-0900-R1")
+        self.assertEqual(code, 0)
+        self.assertIn("work_package: work-packages/BRIDGE-900-R1.md", out.splitlines())
+
+    def test_brief_long_lines_truncated_to_120(self):
+        self.create(acceptance_criteria=["A" * 300, "kurz"])
+        code, out, _ = self.cli("task", "brief", "BRIDGE-0900")
+        self.assertEqual(code, 0)
+        lines = out.splitlines()
+        self.assertTrue(all(len(line) <= 120 for line in lines))
+        crit = [line for line in lines if line.startswith("criterion_1:")][0]
+        self.assertEqual(len(crit), 120)
+        self.assertTrue(crit.endswith("..."))
+        self.assertIn("criterion_2: kurz", lines)
 
     def test_brief_unknown_id_exit_1(self):
         code, _, err = self.cli("task", "brief", "BRIDGE-0999")

@@ -305,6 +305,9 @@ def task_archive(store, task_id, actor, reason=None, machine=None):
                             reason=reason or "Auftrag abgeschlossen")
 
 
+_BRIEF_MAX_LINE = 120
+
+
 def _brief_value(value) -> str:
     if value is None or value == "" or value == []:
         return "-"
@@ -332,9 +335,11 @@ def _task_brief(store, task_id) -> list:
     for i in range(5):
         text = _brief_value(criteria[i]) if i < len(criteria) else "-"
         lines.append(f"criterion_{i + 1}: {text}")
-    wp = store.root / "work-packages" / f"BRIDGE-{task_id.split('-')[1][-3:]}.md"
-    lines.append(f"work_package: {wp.relative_to(store.root).as_posix()}")
-    return lines
+    wp = store.root / "work-packages" / f"{gitops._workpackage_filename(task_id)}.md"
+    lines.append(f"work_package: "
+                 f"{wp.relative_to(store.root).as_posix() if wp.is_file() else '-'}")
+    return [line if len(line) <= _BRIEF_MAX_LINE else line[:_BRIEF_MAX_LINE - 3] + "..."
+            for line in lines]
 
 
 def _cmd_task(args, store) -> int:
