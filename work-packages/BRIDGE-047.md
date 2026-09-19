@@ -40,9 +40,9 @@
 3. `stop_conditions`: array, Enum [IDENTITY_MISMATCH, HEAD_MISMATCH, DIRTY_WORKTREE, CONCEPT_CONFLICT, SCOPE_VIOLATION], default [].
 4. Bestehende task.yaml bleiben gueltig (Regressionstest).
 **Tests:** `python -m unittest tests.test_store`.
-- [ ] 4 Felder additiv im Schema
-- [ ] Unbekannter stop_condition-Wert abgelehnt (Test)
-- [ ] Alte task.yaml weiter gueltig (Test)
+- [x] 4 Felder additiv im Schema
+- [x] Unbekannter stop_condition-Wert abgelehnt (Test)
+- [x] Alte task.yaml weiter gueltig (Test)
 
 ### Teil C (alt 0050) - Fehlercodes als SSOT
 **Ziel:** schemas/error-codes.yaml + Mini-Loader. Codes mappen auf Zustand BLOCKED (kein neuer Zustand).

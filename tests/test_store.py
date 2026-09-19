@@ -282,6 +282,31 @@ class StoreTests(unittest.TestCase):
         with self.assertRaises(SchemaValidationError):
             self.store.validate(doc)
 
+    # -- task_type / allowed_paths / forbidden_actions / stop_conditions (BRIDGE-0047) --
+
+    def test_task_new_fields_valid(self):
+        self.store.validate(valid_task(
+            task_type="T2", allowed_paths=["schemas/", "src/bridge/"],
+            forbidden_actions=["git push --force"],
+            stop_conditions=["CONCEPT_CONFLICT", "SCOPE_VIOLATION"]))
+        self.store.validate(valid_task(task_type=None))
+
+    def test_task_unknown_stop_condition_rejected(self):
+        with self.assertRaises(SchemaValidationError):
+            self.store.validate(valid_task(stop_conditions=["EXPLODE"]))
+
+    def test_task_invalid_task_type_rejected(self):
+        with self.assertRaises(SchemaValidationError):
+            self.store.validate(valid_task(task_type="T9"))
+
+    def test_task_without_new_fields_still_valid(self):
+        # Regression: alte task.yaml ohne die vier Felder bleiben gueltig
+        doc = valid_task()
+        for key in ("task_type", "allowed_paths", "forbidden_actions", "stop_conditions"):
+            self.assertNotIn(key, doc)
+        self.store.validate(doc)
+        self.store.create_task(doc)
+
 
 class IdFormatTests(unittest.TestCase):
     """BRIDGE-015: <PRAEFIX bis 8 Grossbuchstaben>-<4 Ziffern>."""

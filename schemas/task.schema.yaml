@@ -211,3 +211,31 @@ properties:
       type: string
       pattern: "^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$"
     default: []
+
+  task_type:
+    description: "Auftragstyp T0..T5 (Modellmatrix, ACB-UMSETZUNGSKONZEPT-V2 §4). BRIDGE-0047, optional."
+    type: ["string", "null"]
+    enum: [T0, T1, T2, T3, T4, T5, null]
+    default: null
+
+  allowed_paths:
+    description: "Pfade, in denen der Auftrag schreiben darf (BRIDGE-0047, optional)."
+    type: array
+    items:
+      type: string
+    default: []
+
+  forbidden_actions:
+    description: "Ausdruecklich verbotene Aktionen fuer diesen Auftrag (BRIDGE-0047, optional)."
+    type: array
+    items:
+      type: string
+    default: []
+
+  stop_conditions:
+    description: "Stopp-Bedingungen (Fehlercodes, schemas/error-codes.yaml) -> Zustand BLOCKED (BRIDGE-0047, optional)."
+    type: array
+    items:
+      type: string
+      enum: [IDENTITY_MISMATCH, HEAD_MISMATCH, DIRTY_WORKTREE, CONCEPT_CONFLICT, SCOPE_VIOLATION]
+    default: []
