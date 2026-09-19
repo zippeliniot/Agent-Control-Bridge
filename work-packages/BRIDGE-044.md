@@ -32,8 +32,8 @@ requirements.txt, scripts/*, README.md (nur Zeile zu integration_readonly-Defaul
 `python -m unittest tests.test_integration_readonly`, dann volle Suite EINMAL (nur letzte 3 Zeilen ausgeben).
 
 ## Akzeptanzkriterien
-- [ ] Keine Namensreste mehr in requirements.txt, scripts/, README.md
-- [ ] Default project-id = agent-control-bridge
-- [ ] board-watch.bat zeigt auf ...\board
-- [ ] Historische Dateien unveraendert
-- [ ] Tests gruen
+- [x] Keine Namensreste mehr in requirements.txt, scripts/, README.md
+- [x] Default project-id = agent-control-bridge
+- [x] board-watch.bat zeigt auf ...\board
+- [x] Historische Dateien unveraendert
+- [x] Tests gruen

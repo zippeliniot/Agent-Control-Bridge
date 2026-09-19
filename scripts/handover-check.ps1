@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 #
-# handover-check.ps1 - Uebergabe-Gate der Codex Control Bridge (Windows/PowerShell).
+# handover-check.ps1 - Uebergabe-Gate der Agent Control Bridge (Windows/PowerShell).
 # Prueft fail-closed, ob der aktuelle Stand vollstaendig auf GitHub liegt.
 # Vor JEDEM Maschinenwechsel ausfuehren (siehe docs/handover/HANDOVER.md).
 #
@@ -23,7 +23,7 @@ function Indent($text) {
     }
 }
 
-Write-Host "=== Codex Control Bridge - Handover Check ==="
+Write-Host "=== Agent Control Bridge - Handover Check ==="
 
 # 0) Git-Repository vorhanden?
 git rev-parse --is-inside-work-tree *> $null

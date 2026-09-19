@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# handover-check.sh — Übergabe-Gate der Codex Control Bridge.
+# handover-check.sh — Übergabe-Gate der Agent Control Bridge.
 # Prüft fail-closed, ob der aktuelle Stand vollständig auf GitHub liegt.
 # Vor JEDEM Maschinenwechsel ausführen (siehe docs/handover/HANDOVER.md).
 #
@@ -19,7 +19,7 @@ ok()    { printf '[ OK ]   %s\n' "$1"; }
 bad()   { printf '[ FAIL ] %s\n' "$1"; FAIL=1; }
 warn()  { printf '[ WARN ] %s\n' "$1"; }
 
-echo "=== Codex Control Bridge — Handover Check ==="
+echo "=== Agent Control Bridge — Handover Check ==="
 
 # 0) Git-Repository vorhanden?
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then

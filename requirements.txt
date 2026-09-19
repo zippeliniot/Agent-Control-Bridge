@@ -1,4 +1,4 @@
-# Laufzeitabhängigkeiten der Codex Control Bridge.
+# Laufzeitabhängigkeiten der Agent Control Bridge.
 # Tests nutzen ausschließlich die Python-Standardbibliothek (unittest).
 pyyaml>=6.0
 jsonschema>=4.18

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """BRIDGE-012 - Read-only-Integrationstest gegen ein echtes Git-Repo.
 
-Beobachtet ein Zielrepo (Default: das CCB-Repo, in dem dieses Skript liegt) rein
+Beobachtet ein Zielrepo (Default: das ACB-Repo, in dem dieses Skript liegt) rein
 lesend über den Read-only-Adapter (BRIDGE-011) und legt ALLE Bridge-Ausgaben in
 einem separaten Store-root ab (Default: neues Temp-Verzeichnis). Weist nach,
 dass das Zielrepo dabei unverändert bleibt (HEAD + Working Tree vorher == nachher).
@@ -65,7 +65,7 @@ def _observation_task(task_id: str, target_name: str, project_id: str) -> dict:
 
 
 def run(target: Path, out: Path, schema_dir: Path, task_id: str = DEFAULT_TASK_ID, *,
-        project_id: str = "codex-control-bridge", task_prefix: str = "BRIDGE",
+        project_id: str = "agent-control-bridge", task_prefix: str = "BRIDGE",
         expected_branch: str | None = None, expected_head: str | None = None) -> dict:
     """Führt die Read-only-Beobachtung aus und gibt einen Report (dict) zurück.
     Wirft bei jedem Fehler (fail-closed)."""
@@ -124,13 +124,13 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="BRIDGE-012 Read-only-Integrationstest (Zielrepo bleibt unverändert)")
     parser.add_argument("--target", default=str(_REPO_ROOT),
-                        help="zu beobachtendes Git-Repo (Default: CCB-Repo)")
+                        help="zu beobachtendes Git-Repo (Default: ACB-Repo)")
     parser.add_argument("--out", default=None,
                         help="separater Store-root (Default: neues Temp-Verzeichnis)")
     parser.add_argument("--schema-dir", default=str(_REPO_ROOT / "schemas"))
     parser.add_argument("--task-id", default=DEFAULT_TASK_ID)
-    parser.add_argument("--project-id", default="codex-control-bridge",
-                        help="project_id des synthetischen Profils/Auftrags (Default: codex-control-bridge)")
+    parser.add_argument("--project-id", default="agent-control-bridge",
+                        help="project_id des synthetischen Profils/Auftrags (Default: agent-control-bridge)")
     parser.add_argument("--task-prefix", default="BRIDGE",
                         help="task_prefix des synthetischen Profils (Default: BRIDGE)")
     parser.add_argument("--expected-branch", default=None,
@@ -140,7 +140,7 @@ def main(argv=None) -> int:
                              "nicht mit diesem Wert beginnt (kurze oder lange SHA)")
     args = parser.parse_args(argv)
 
-    out = Path(args.out) if args.out else Path(tempfile.mkdtemp(prefix="ccb-int-out-"))
+    out = Path(args.out) if args.out else Path(tempfile.mkdtemp(prefix="acb-int-out-"))
 
     try:
         report = run(Path(args.target), out, Path(args.schema_dir), args.task_id,

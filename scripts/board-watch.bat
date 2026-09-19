@@ -1,19 +1,19 @@
 @echo off
-REM Codex Control Bridge - dauerhaftes Ueberwachungsfenster (BRIDGE-018).
+REM Agent Control Bridge - dauerhaftes Ueberwachungsfenster (BRIDGE-018).
 REM Kann an jedem Ort liegen (z. B. Downloads, Desktop) - der Pfad zum
 REM Repo ist unten fest eingetragen, unabhaengig davon, wo diese Datei
 REM selbst gespeichert ist.
 REM
-REM Passt zur registry.yaml: HAM11 und DES11 haben aktuell beide dieselbe
+REM Nur DES11 (HAM11 nach Umstellung). Passt zur registry.yaml: HAM11 und DES11 haben aktuell beide dieselbe
 REM Basis E:\_DEV. Bei einer neuen Maschine mit anderer Basis: die Zeile
 REM REPO_PATH unten UND registry.yaml im Repo anpassen.
 
 setlocal
 
-set "REPO_PATH=E:\_DEV\Codex-Control-Bridge"
+set "REPO_PATH=E:\_DEV\Agent-Control-Bridge\board"
 set "INTERVAL=15"
 
-echo === Codex Control Bridge - Board-Ueberwachung ===
+echo === Agent Control Bridge - Board-Ueberwachung ===
 echo Repo: %REPO_PATH%
 echo.
 
