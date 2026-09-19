@@ -101,9 +101,17 @@ def write_draft(store, task_id, status, summary, tests=None, *,
     if not base_head:
         raise DraftError(
             f"git.expected_head fehlt in task.yaml von {task_id} (fail-closed).")
-    run_id = runner.current_run_id(store, task_id)
-    if run_id is None:
-        raise DraftError(f"Kein Lauf fuer {task_id} vorhanden (erst run start).")
+    # Lauf-ID wie im Import bestimmen - kein ``run start`` noetig (schriebe
+    # tasks/results/audit, im Draft-Modus dem Executor verboten).
+    task_status = task.get("status")
+    if task_status == "RUNNING":
+        run_id = runner.current_run_id(store, task_id)
+        if run_id is None:
+            raise DraftError(f"Kein laufender RUN fuer {task_id} vorhanden.")
+    elif task_status in runner._START_FROM:
+        run_id = store.next_run_id(task_id)
+    else:
+        raise DraftError(f"Draft nicht moeglich: Auftrag ist {task_status}.")
 
     if _worktree_dirty(store.root):
         raise DraftError("Working Tree nicht sauber - vor draft write committen.",

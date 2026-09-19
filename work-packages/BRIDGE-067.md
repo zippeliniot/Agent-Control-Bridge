@@ -21,8 +21,8 @@
 **Ziel:** Im Draft-Modus darf der Executor nicht `run start` ausfuehren (schreibt tasks/results/audit). `write_draft` muss trotzdem laufen.
 1. Lauf-ID bestimmen wie `plan_import`: Status RUNNING -> `runner.current_run_id`; Status in `runner._START_FROM` -> `store.next_run_id`; sonst DraftError. Kein `run start` noetig.
 2. Test: Auftrag direkt nach `task create` (WAITING_FOR_HANDOFF_TO_EXECUTOR) -> `draft write` liefert RUN-01; danach `draft import` klappt (Start + Finish).
-- [ ] draft write ohne run start moeglich (Test)
-- [ ] Status RUNNING nutzt weiter den laufenden Lauf (Test)
+- [x] draft write ohne run start moeglich (Test)
+- [x] Status RUNNING nutzt weiter den laufenden Lauf (Test)
 
 ### Teil B - Import uebernimmt tests und findings
 **Ziel:** result.yaml darf keine Draft-Information verlieren.

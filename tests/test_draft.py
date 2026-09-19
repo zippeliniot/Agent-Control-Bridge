@@ -58,7 +58,7 @@ class Base(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def make_task(self, **over):
+    def make_task(self, start=True, **over):
         doc = {
             "schema_version": "1.0", "kind": "bridge_task",
             "bridge_task_id": TASK_ID, "project_id": "codex-control-bridge",
@@ -71,7 +71,8 @@ class Base(unittest.TestCase):
         }
         doc.update(over)
         self.store.create_task(doc)
-        runner.start(self.store, TASK_ID, "claude-code", machine="HAM11")
+        if start:
+            runner.start(self.store, TASK_ID, "claude-code", machine="HAM11")
         self.commit_all("ops")
 
     def commit_all(self, msg):
@@ -105,6 +106,35 @@ class WriteTests(Base):
         self.assertEqual(doc["base_head"], self.base_head)
         self.assertIn("src/a.py", doc["changed_files"])
         self.assertNotIn("error_code", doc)
+
+    def test_write_without_run_start(self):
+        self.make_task(start=False)
+        self.store.set_status(TASK_ID, "READY", "a")
+        self.store.set_status(TASK_ID, "WAITING_FOR_HANDOFF_TO_EXECUTOR", "a")
+        self.commit_all("ops")
+        self.work_commit("src/a.py")
+        before = _snapshot(self.tmp)
+        rc, out, err = self.cli("draft", "write", TASK_ID, "--status", "COMPLETED",
+                                "--summary", "fertig", "--tests", "1/0/0")
+        self.assertEqual(rc, 0, err)
+        self.assertEqual(_snapshot(self.tmp), before)
+        self.assertEqual(self.store.load_task(TASK_ID)["status"],
+                         "WAITING_FOR_HANDOFF_TO_EXECUTOR")
+        self.assertEqual(self.store.load_draft(TASK_ID, "RUN-01")["run_id"], "RUN-01")
+        with mock.patch.dict(os.environ, {"ACB_ALLOW_ANY_CLONE": "1"}):
+            rc, out, err = self.cli("draft", "import", TASK_ID)
+        self.assertEqual(rc, 0, err)
+        self.assertEqual(self.store.load_task(TASK_ID)["status"],
+                         "WAITING_FOR_COPY_TO_CONTROL")
+
+    def test_write_uses_running_run(self):
+        self.make_task()
+        self.work_commit("src/a.py")
+        rc, _, err = self.cli("draft", "write", TASK_ID, "--status", "COMPLETED",
+                              "--summary", "x")
+        self.assertEqual(rc, 0, err)
+        self.assertEqual(self.store.load_draft(TASK_ID, "RUN-01")["run_id"],
+                         runner.current_run_id(self.store, TASK_ID))
 
     def test_missing_expected_head_fails_closed(self):
         self.make_task(git={"allowed_changed_files": ["src/"]})
