@@ -1396,5 +1396,68 @@ class WebUiAutoPullTests(unittest.TestCase):
         self.assertFalse(thread.is_alive())
 
 
+class CliTaskBriefTests(unittest.TestCase):
+    """BRIDGE-0049 Teil C: task brief (rein lesend, max. 15 Zeilen)."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-brief-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def cli(self, *args):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = main(["--root", str(self.tmp), "--schema-dir", str(SCHEMA_DIR), *args])
+        return code, out.getvalue(), err.getvalue()
+
+    def create(self, **over):
+        path = self.tmp / "t.yaml"
+        path.write_text(yaml.safe_dump(task_doc(**over)), encoding="utf-8")
+        code, _, err = self.cli("task", "create", str(path))
+        self.assertEqual(code, 0, err)
+
+    def snapshot(self):
+        return sorted((str(p.relative_to(self.tmp)), p.stat().st_size)
+                      for p in self.tmp.rglob("*") if p.is_file())
+
+    def test_brief_full_task_max_15_lines(self):
+        self.create(
+            task_type="T2", model="Sonnet 5", reasoning_level="MEDIUM",
+            allowed_paths=["schemas/", "src/bridge/"],
+            forbidden_actions=["PUSH_FORCE"], stop_conditions=["SCOPE_VIOLATION"],
+            git={"expected_head": "a" * 40},
+            acceptance_criteria=[f"Kriterium {i}" for i in range(1, 9)],
+        )
+        before = self.snapshot()
+        code, out, _ = self.cli("task", "brief", "BRIDGE-0900")
+        self.assertEqual(code, 0)
+        lines = out.splitlines()
+        self.assertLessEqual(len(lines), 15)
+        self.assertIn("task_type: T2", lines)
+        self.assertIn("allowed_paths: schemas/, src/bridge/", lines)
+        self.assertIn("criterion_5: Kriterium 5", lines)
+        self.assertNotIn("Kriterium 6", out)
+        self.assertIn("work_package: work-packages/BRIDGE-900.md", lines)
+        self.assertEqual(self.snapshot(), before)
+
+    def test_brief_unknown_id_exit_1(self):
+        code, _, err = self.cli("task", "brief", "BRIDGE-0999")
+        self.assertEqual(code, 1)
+        self.assertTrue(err.strip())
+
+    def test_brief_old_task_without_new_fields(self):
+        self.create()
+        code, out, _ = self.cli("task", "brief", "BRIDGE-0900")
+        self.assertEqual(code, 0)
+        lines = out.splitlines()
+        self.assertLessEqual(len(lines), 15)
+        self.assertIn("task_type: -", lines)
+        self.assertIn("expected_head: -", lines)
+        self.assertIn("criterion_1: -", lines)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -52,6 +52,7 @@ def _build_parser() -> argparse.ArgumentParser:
     tcreate.add_argument("--commit", action="store_true",
                          help="nach erfolgreichem Anlegen lokal committen (kein Push, Exit 3 bei Fehler)")
     tsub.add_parser("show", help="Status + Kernfelder").add_argument("task_id")
+    tsub.add_parser("brief", help="Kurzauftrag (max. 15 Zeilen, rein lesend)").add_argument("task_id")
     tsub.add_parser("list", help="alle Aufträge mit Status")
     tcopied = tsub.add_parser(
         "copied", help="Ergebnis wurde in den Steuerchat kopiert (-> REVIEW_REQUIRED)")
@@ -285,6 +286,38 @@ def task_archive(store, task_id, actor, reason=None, machine=None):
                             reason=reason or "Auftrag abgeschlossen")
 
 
+def _brief_value(value) -> str:
+    if value is None or value == "" or value == []:
+        return "-"
+    if isinstance(value, (list, tuple)):
+        return ", ".join(str(v) for v in value)
+    return " ".join(str(value).split())
+
+
+def _task_brief(store, task_id) -> list:
+    """Tokenarmer Kurzauftrag (BRIDGE-0049 Teil C): max. 15 Zeilen, rein lesend."""
+    task = store.load_task(task_id)
+    git = task.get("git") or {}
+    lines = [
+        f"id: {_brief_value(task.get('bridge_task_id'))}",
+        f"status: {_brief_value(task.get('status'))}",
+        f"task_type: {_brief_value(task.get('task_type'))}",
+        f"model: {_brief_value(task.get('model'))}",
+        f"reasoning_level: {_brief_value(task.get('reasoning_level'))}",
+        f"expected_head: {_brief_value(git.get('expected_head'))}",
+        f"allowed_paths: {_brief_value(task.get('allowed_paths'))}",
+        f"forbidden_actions: {_brief_value(task.get('forbidden_actions'))}",
+        f"stop_conditions: {_brief_value(task.get('stop_conditions'))}",
+    ]
+    criteria = task.get("acceptance_criteria") or []
+    for i in range(5):
+        text = _brief_value(criteria[i]) if i < len(criteria) else "-"
+        lines.append(f"criterion_{i + 1}: {text}")
+    wp = store.root / "work-packages" / f"BRIDGE-{task_id.split('-')[1][-3:]}.md"
+    lines.append(f"work_package: {wp.relative_to(store.root).as_posix()}")
+    return lines
+
+
 def _cmd_task(args, store) -> int:
     if args.task_cmd == "create":
         doc = store.create_task(args.path)
@@ -309,6 +342,10 @@ def _cmd_task(args, store) -> int:
                     "branch", "created_by", "depends_on"):
             if key in task:
                 print(f"{key}: {task[key]}")
+        return 0
+    if args.task_cmd == "brief":
+        for line in _task_brief(store, args.task_id):
+            print(line)
         return 0
     if args.task_cmd == "list":
         rows = _list_tasks(store)

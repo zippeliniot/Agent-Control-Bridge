@@ -50,6 +50,6 @@
 2. Fehlende Felder als `-`. Unbekannte ID -> Exit 1.
 3. Kein Schreibzugriff.
 **Tests:** `python -m unittest tests.test_cli`.
-- [ ] Kommando vorhanden, max. 15 Zeilen
-- [ ] Unbekannte ID Exit 1 (Test)
-- [ ] Alter Auftrag ohne neue Felder funktioniert (Test)
+- [x] Kommando vorhanden, max. 15 Zeilen
+- [x] Unbekannte ID Exit 1 (Test)
+- [x] Alter Auftrag ohne neue Felder funktioniert (Test)
