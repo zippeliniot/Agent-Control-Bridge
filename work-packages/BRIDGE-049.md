@@ -25,10 +25,10 @@
 2. result.schema.yaml: optional `tests` und `findings` (gleiche Form). Additiv.
 3. Tests: gueltiger Draft, fehlendes Pflichtfeld, unbekanntes Feld, falsche draft_version.
 **Tests:** `python -m unittest tests.test_store`.
-- [ ] draft.schema.yaml gueltig (Draft 2020-12)
-- [ ] result.schema additiv erweitert
-- [ ] 4 Schema-Tests gruen
-- [ ] Alte result.yaml weiter gueltig
+- [x] draft.schema.yaml gueltig (Draft 2020-12)
+- [x] result.schema additiv erweitert
+- [x] 4 Schema-Tests gruen
+- [x] Alte result.yaml weiter gueltig
 
 ### Teil B (alt 0051) - Draft-Ablage im Store
 **Ziel:** `Store.write_draft/load_draft` unter drafts/<id>/RUN-yy/draft.yaml. Kein Ueberschreiben.

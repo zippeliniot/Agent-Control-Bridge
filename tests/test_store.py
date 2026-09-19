@@ -493,5 +493,64 @@ class DorfschaftProfileTests(unittest.TestCase):
         self.assertIs(git_policy.get("allow_push"), False)
 
 
+def valid_draft(**over):
+    doc = {
+        "kind": "bridge_draft",
+        "draft_version": "draft-a-1",
+        "bridge_task_id": "BRIDGE-0900",
+        "run_id": "RUN-01",
+        "status": "COMPLETED",
+        "summary": "Draft-Test",
+        "base_head": "0" * 40,
+        "head_after": "1" * 40,
+        "branch": "main",
+        "repository": "Agent-Control-Bridge",
+        "changed_files": ["schemas/draft.schema.yaml"],
+        "tests": {"passed": 4, "failed": 0, "blocked": 0},
+        "findings": [{"id": "F1", "severity": "LOW", "text": "Hinweis"}],
+        "next_action": "Import",
+    }
+    doc.update(over)
+    return doc
+
+
+class DraftSchemaTests(unittest.TestCase):
+    """BRIDGE-0049 Teil A: draft.schema.yaml + additive result-Felder."""
+
+    def setUp(self):
+        schema = yaml.safe_load((SCHEMA_DIR / "draft.schema.yaml").read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        self.validator = Draft202012Validator(schema, format_checker=_FORMAT_CHECKER)
+
+    def errors(self, doc):
+        return list(self.validator.iter_errors(doc))
+
+    def test_valid_draft(self):
+        self.assertEqual(self.errors(valid_draft()), [])
+        self.assertEqual(self.errors(valid_draft(error_code="SCOPE_VIOLATION")), [])
+
+    def test_missing_required_field(self):
+        doc = valid_draft()
+        del doc["summary"]
+        self.assertTrue(self.errors(doc))
+
+    def test_unknown_field_rejected(self):
+        self.assertTrue(self.errors(valid_draft(bogus=1)))
+
+    def test_wrong_draft_version(self):
+        self.assertTrue(self.errors(valid_draft(draft_version="draft-a-2")))
+
+    def test_result_accepts_optional_tests_and_findings(self):
+        store_schema = yaml.safe_load((SCHEMA_DIR / "result.schema.yaml").read_text(encoding="utf-8"))
+        v = Draft202012Validator(store_schema, format_checker=_FORMAT_CHECKER)
+        self.assertEqual(list(v.iter_errors(valid_result())), [])
+        extended = valid_result(
+            tests={"passed": 1, "failed": 0, "blocked": 0},
+            findings=[{"id": "F1", "severity": "LOW", "text": "x"}],
+        )
+        self.assertEqual(list(v.iter_errors(extended)), [])
+        self.assertTrue(list(v.iter_errors(valid_result(tests={"passed": 1}))))
+
+
 if __name__ == "__main__":
     unittest.main()

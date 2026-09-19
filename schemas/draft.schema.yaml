@@ -1,0 +1,127 @@
+# Agent Control Bridge - Draft-Schema
+# BRIDGE-0049 Teil A
+#
+# Vertrag fuer einen Executor-Draft ("bridge_draft"): Ergebnisvorschlag der
+# Ausfuehrungsinstanz, der spaeter durch den Import in ein result ueberfuehrt wird.
+# JSON Schema (Draft 2020-12) in YAML-Form, additionalProperties: false (fail-closed).
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/draft.schema.yaml"
+title: "Agent Control Bridge Draft"
+description: "Executor-Draft eines Auftragslaufs (Vorstufe des Ergebnisses)."
+type: object
+additionalProperties: false
+
+required:
+  - kind
+  - draft_version
+  - bridge_task_id
+  - run_id
+  - status
+  - summary
+  - base_head
+  - head_after
+  - branch
+  - repository
+  - changed_files
+  - tests
+  - findings
+  - next_action
+
+properties:
+  kind:
+    description: "Fester Diskriminator."
+    const: "bridge_draft"
+
+  draft_version:
+    description: "Version des Draft-Formats."
+    const: "draft-a-1"
+
+  bridge_task_id:
+    description: "Auftrag, zu dem der Draft gehoert."
+    type: string
+    pattern: "^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$"
+
+  run_id:
+    description: "Lauf-ID (RUN-01, RUN-02, ...)."
+    type: string
+    pattern: "^RUN-[0-9]{2,}$"
+
+  status:
+    description: "Ausgang des Laufs aus Sicht des Executors."
+    type: string
+    enum: [COMPLETED, BLOCKED, FAILED, INTERRUPTED]
+
+  summary:
+    description: "Kurzbeschreibung, was der Lauf getan hat."
+    type: string
+    minLength: 1
+
+  base_head:
+    description: "HEAD-Commit (SHA) zu Beginn des Laufs."
+    type: string
+    minLength: 1
+
+  head_after:
+    description: "HEAD-Commit (SHA) nach dem Lauf."
+    type: string
+    minLength: 1
+
+  branch:
+    description: "Arbeitsbranch des Laufs."
+    type: string
+    minLength: 1
+
+  repository:
+    description: "Repository des Laufs."
+    type: string
+    minLength: 1
+
+  changed_files:
+    description: "Im Lauf geaenderte Dateien/Pfade."
+    type: array
+    items:
+      type: string
+
+  tests:
+    description: "Testergebnis des Laufs."
+    type: object
+    additionalProperties: false
+    required: [passed, failed, blocked]
+    properties:
+      passed:
+        type: integer
+        minimum: 0
+      failed:
+        type: integer
+        minimum: 0
+      blocked:
+        type: integer
+        minimum: 0
+
+  findings:
+    description: "Befunde des Laufs."
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, severity, text]
+      properties:
+        id:
+          type: string
+          minLength: 1
+        severity:
+          type: string
+          minLength: 1
+        text:
+          type: string
+          minLength: 1
+
+  next_action:
+    description: "Empfohlene naechste Aktion."
+    type: string
+
+  error_code:
+    description: "Optionaler Fehlercode (siehe error-codes.yaml)."
+    type: string
+    minLength: 1

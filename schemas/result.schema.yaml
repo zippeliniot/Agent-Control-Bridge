@@ -120,6 +120,40 @@ properties:
           type: ["string", "null"]
           default: null
 
+  tests:
+    description: "Optional: Testergebnis des Laufs (aus dem Draft uebernommen)."
+    type: object
+    additionalProperties: false
+    required: [passed, failed, blocked]
+    properties:
+      passed:
+        type: integer
+        minimum: 0
+      failed:
+        type: integer
+        minimum: 0
+      blocked:
+        type: integer
+        minimum: 0
+
+  findings:
+    description: "Optional: Befunde des Laufs (aus dem Draft uebernommen)."
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, severity, text]
+      properties:
+        id:
+          type: string
+          minLength: 1
+        severity:
+          type: string
+          minLength: 1
+        text:
+          type: string
+          minLength: 1
+
   # ---------- Unterbrechung / Resume ----------
   interruption_reason:
     description: "Ursache bei status=INTERRUPTED, sonst null."

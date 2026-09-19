@@ -42,3 +42,5 @@ Zusätzlich (BRIDGE-011):
 | `git-readonly-allowlist.yaml`  | BRIDGE-011   | vorhanden |
 
 Erweiterung (BRIDGE-013): `project.schema.yaml` um `executor` und `controller` ergänzt (Stufe-3-Vorbereitung).
+
+Erweiterung (BRIDGE-0049): `draft.schema.yaml` (Executor-Draft `draft-a-1`) neu; `result.schema.yaml` um optionale `tests`/`findings` ergänzt.
