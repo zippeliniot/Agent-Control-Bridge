@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0044
+project_id: agent-control-bridge
+title: Namensreste beseitigen (Punkt 5)
+description: 'Alten Namen ''Codex Control Bridge''/''CCB''/''codex-control-bridge''
+  in aktiven Dateien ersetzen. ''Codex'' als Agent bleibt. Details: work-packages/BRIDGE-044.md'
+task_class: CHORE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 885a8f08c789c3f7328ddf7b8cb1f810bf41d902
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0043
+acceptance_criteria:
+- Keine Namensreste mehr in requirements.txt, scripts/, README.md
+- Default project-id = agent-control-bridge
+- board-watch.bat zeigt auf ...\board
+- Historische Dateien unveraendert
+- Tests gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
