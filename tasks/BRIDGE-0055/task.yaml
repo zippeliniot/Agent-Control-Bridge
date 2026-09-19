@@ -26,6 +26,6 @@ acceptance_criteria:
 - 'Teil 0056: Abschnitt Draft-Modus in CLAUDE.md und CODEX.md'
 - 'Teil 0056: Push-Regel eindeutig begrenzt'
 - 'Teil 0056: Keine Widersprueche in CLAUDE/CODEX/CONTROL'
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: RUNNING
 created_at: '2026-09-19T00:00:00Z'
 created_by: browser-claude
