@@ -15,8 +15,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -78,6 +80,32 @@ _KIND_TO_SCHEMA = {
     "bridge_result": "result.schema.yaml",
     "bridge_draft": "draft.schema.yaml",
 }
+
+
+def _atomic_write(path, text: str) -> None:
+    """Schreibt ``text`` atomar nach ``path`` (BRIDGE-0060 Teil A).
+
+    Temp-Datei im selben Ordner (gleiches Dateisystem), flush+fsync, dann
+    ``os.replace``. Schlägt etwas fehl, bleibt die Zieldatei unverändert und
+    die Temp-Datei wird entfernt.
+    """
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        dir=target.parent, prefix=f".{target.name}.", suffix=".tmp"
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp_name, target)
+    except BaseException:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
 
 
 def _load_yaml(path):
@@ -155,8 +183,7 @@ class Store:
         target = self._in_root(path)
         if target.exists():
             raise StoreError(f"Ziel existiert bereits (kein Überschreiben): {target}")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(text, encoding="utf-8")
+        _atomic_write(target, text)
 
     @staticmethod
     def _as_doc(doc_or_path):
@@ -299,8 +326,7 @@ class Store:
         doc = self.validate(self._as_doc(task))
         self._check_readonly_consistency(doc)
         path = self._in_root(self._task_path(doc["bridge_task_id"]))
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(self._dump_yaml(doc), encoding="utf-8")
+        _atomic_write(path, self._dump_yaml(doc))
         return doc
 
     def _event_type_for(self, from_state: str, to_state: str) -> str:

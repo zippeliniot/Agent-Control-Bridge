@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
@@ -19,6 +20,7 @@ from bridge.store import (  # noqa: E402
     StoreError,
     SchemaValidationError,
     _FORMAT_CHECKER,
+    _atomic_write,
 )
 
 SCHEMA_DIR = REPO_ROOT / "schemas"
@@ -598,6 +600,53 @@ class DraftStoreTests(unittest.TestCase):
     def test_invalid_draft_rejected(self):
         with self.assertRaises(SchemaValidationError):
             self.store.write_draft(valid_draft(bogus=1))
+
+
+class AtomicWriteTests(unittest.TestCase):
+    """BRIDGE-0060 Teil A: Temp-Datei + os.replace, kein Teilzustand."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="acb-atomic-"))
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_writes_new_and_overwrites(self):
+        target = self.tmp / "sub" / "f.txt"
+        _atomic_write(target, "eins")
+        self.assertEqual(target.read_text(encoding="utf-8"), "eins")
+        _atomic_write(target, "zwei")
+        self.assertEqual(target.read_text(encoding="utf-8"), "zwei")
+        self.assertEqual([p.name for p in target.parent.iterdir()], ["f.txt"])
+
+    def test_error_before_replace_keeps_original_and_leaves_no_temp(self):
+        target = self.tmp / "f.txt"
+        target.write_text("original", encoding="utf-8")
+        with mock.patch("bridge.store.os.replace", side_effect=OSError("boom")):
+            with self.assertRaises(OSError):
+                _atomic_write(target, "neu")
+        self.assertEqual(target.read_text(encoding="utf-8"), "original")
+        self.assertEqual([p.name for p in self.tmp.iterdir()], ["f.txt"])
+
+    def test_error_during_write_leaves_no_temp(self):
+        target = self.tmp / "f.txt"
+        with mock.patch("bridge.store.os.fsync", side_effect=OSError("boom")):
+            with self.assertRaises(OSError):
+                _atomic_write(target, "neu")
+        self.assertEqual(list(self.tmp.iterdir()), [])
+
+    def test_save_task_failure_keeps_original_task(self):
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        store.create_task(valid_task())
+        path = self.tmp / "tasks" / "BRIDGE-0900" / "task.yaml"
+        before = path.read_bytes()
+        with mock.patch("bridge.store.os.replace", side_effect=OSError("boom")):
+            with self.assertRaises(OSError):
+                store.save_task(valid_task(title="Anders"))
+        self.assertEqual(path.read_bytes(), before)
+        self.assertEqual([p.name for p in path.parent.iterdir()], ["task.yaml"])
 
 
 if __name__ == "__main__":

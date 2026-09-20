@@ -25,9 +25,9 @@
 2. Einsetzen bei create_task, save_task, write_result, write_draft, Heartbeat.
 3. Test: Fehler zwischen Schreiben und Replace laesst Originaldatei unveraendert.
 **Tests:** `python -m unittest tests.test_store tests.test_watcher`, dann volle Suite EINMAL.
-- [ ] Alle Schreibpfade atomar
-- [ ] Fehlerfall-Test gruen
-- [ ] Kein Temp-Rest nach Fehler (Test)
+- [x] Alle Schreibpfade atomar
+- [x] Fehlerfall-Test gruen
+- [x] Kein Temp-Rest nach Fehler (Test)
 
 ### Teil B (alt 0060) - Writer-Lock und sicheres Audit-Append
 **Ziel:** Dateilock `.acb-writer.lock` fuer alle Store-Schreibpfade + Append nach Entscheidung 0059.

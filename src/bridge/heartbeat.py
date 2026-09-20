@@ -26,7 +26,7 @@ if __package__ in (None, ""):
 import yaml
 from jsonschema import Draft202012Validator
 
-from bridge.store import StoreError, _FORMAT_CHECKER
+from bridge.store import StoreError, _FORMAT_CHECKER, _atomic_write
 
 _ID_RE = re.compile(r"^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$")
 _RUN_RE = re.compile(r"^RUN-[0-9]{2,}$")
@@ -110,10 +110,8 @@ def beat(root, bridge_task_id: str, run_id: str, actor=None, machine=None, *,
         raise HeartbeatError(f"Heartbeat verletzt Schema: {errors[0].message}")
 
     path = heartbeat_path(root, bridge_task_id, run_id)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(doc, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
-        encoding="utf-8",
+    _atomic_write(
+        path, json.dumps(doc, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
     )
     return doc
 
