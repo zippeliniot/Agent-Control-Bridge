@@ -356,3 +356,6 @@
 {"actor": "claude-code@DES11", "bridge_task_id": "BRIDGE-0055", "event_type": "RESULT_WRITTEN", "run_id": "RUN-01", "timestamp": "2026-09-19T20:38:42Z"}
 {"actor": "claude-code", "bridge_task_id": "BRIDGE-0055", "event_type": "REVIEW_REQUESTED", "machine": "DES11", "new_state": "REVIEW_REQUIRED", "old_state": "RUNNING", "reason": "runner: finish -> REVIEW_REQUIRED", "timestamp": "2026-09-19T20:38:42Z"}
 {"actor": "april", "bridge_task_id": "BRIDGE-0055", "event_type": "TASK_ARCHIVED", "machine": "DES11", "new_state": "ARCHIVED", "old_state": "REVIEW_REQUIRED", "reason": "Auftrag abgeschlossen", "timestamp": "2026-09-20T05:55:31Z"}
+{"actor": "browser-claude", "bridge_task_id": "BRIDGE-0057", "event_type": "TASK_CREATED", "new_state": "CREATED", "timestamp": "2026-09-20T07:21:08Z"}
+{"actor": "browser-claude", "bridge_task_id": "BRIDGE-0057", "event_type": "TASK_READY", "new_state": "READY", "old_state": "CREATED", "reason": "auto: Auftrag angelegt", "timestamp": "2026-09-20T07:21:08Z"}
+{"actor": "browser-claude", "bridge_task_id": "BRIDGE-0057", "event_type": "TASK_WAITING_FOR_HANDOFF", "new_state": "WAITING_FOR_HANDOFF_TO_EXECUTOR", "old_state": "READY", "reason": "auto: wartet auf Weitergabe an Executor", "timestamp": "2026-09-20T07:21:08Z"}
