@@ -56,8 +56,8 @@ appear to be a git repository`). Ausgabe unten einfuegen.
 
 | Klon | Datum | Schicht 1 gesetzt | Schicht 2 gesetzt | Ausgabe `git push --dry-run` | Exit-Code | Ergebnis |
 |---|---|---|---|---|---|---|
-| `claude` | | [ ] | [ ] | | | |
-| `codex` | | [ ] | [ ] | | | |
+| `claude` | 2026-09-20 | [x] | [x] | fatal: not a git repository (Push-URL DISABLED) | 128 | PASS |
+| `codex` | 2026-09-20 | n/a (global) | [x] | fatal: not a git repository (Push-URL DISABLED) | 128 | PASS |
 
 ## Gegenprobe (Writer bleiben Writer)
 
@@ -67,8 +67,8 @@ Schicht 1 noch Schicht 2 setzen.
 
 | Klon | Datum | Ausgabe `git push --dry-run` | Ergebnis |
 |---|---|---|---|
-| `dev` | | | |
-| `board` | | | |
+| `dev` | 2026-09-20 | Everything up-to-date | PASS |
+| `board` | 2026-09-20 | Everything up-to-date | PASS |
 
 ## Transfer - Draft vom Executor zum Board (BRIDGE-0057 Teil B)
 

@@ -57,3 +57,5 @@ Bis ein eigenes Konzept vorliegt, gilt diese Mindestspezifikation als verbindlic
 Freigabe durch April: Status dieser Datei auf `FREIGEGEBEN` setzen. Ohne Freigabe bleibt G1 geschlossen.
 
 Nummern: Teilpakete 0048,0050 -> 0047; 0051,0052 -> 0049; 0054 -> 0053; 0056 -> 0055; 0058 -> 0060; 0062 -> 0061; 0064 -> 0063 (siehe Konzept §2).
+
+G2: IN KRAFT (2026-09-20). Nachweis: tests.test_stage_a (BRIDGE-0055) und docs/security/PUSH-SPERRE-NACHWEIS.md (BRIDGE-0057). Gilt nur in Projekten mit `push_mode: draft`; alle Profile stehen weiter auf `direct`.
