@@ -1,0 +1,37 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0057
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: a142367dfc309a36b9b3a7a6025cd4e5a054a97c
+executor: claude-code
+started_at: '2026-09-20T08:13:25Z'
+ended_at: '2026-09-20T08:29:39Z'
+created_by: claude-code@DES11
+base_head: f81113842e3b0425e300f5987d8327b8418b11ed
+commits:
+- sha: f63b51e53d506861697cce1b049c2a3378bb5f81
+  message: 'Ops: BRIDGE-0057 task_create (Steuerchat-Aktion via CLI)'
+- sha: 1b943378e3803433dfd0be25d798c7c75f9c6046
+  message: 'Ops: BRIDGE-0057 run_start (Steuerchat-Aktion via CLI)'
+- sha: 51411a39a9020499e9098ab43ef03f734e633783
+  message: 'Docs: CONTROL.md Sofort-Push auf push_mode direct begrenzt; BRIDGE-057
+    Teil B (Transfer-Weg)'
+- sha: a142367dfc309a36b9b3a7a6025cd4e5a054a97c
+  message: 'BRIDGE-0057 Teil B: Transfer-Weg (Board zieht per lokalem Pfad), Nachweisdatei'
+changed_files:
+- CONTROL.md
+- audit/audit.jsonl
+- docs/security/PUSH-SPERRE-NACHWEIS.md
+- results/BRIDGE-0057/RUN-01/heartbeat.json
+- tasks/BRIDGE-0057/task.yaml
+- work-packages/BRIDGE-055.md
+- work-packages/BRIDGE-057.md
+summary: 'Nachweisdatei docs/security/PUSH-SPERRE-NACHWEIS.md angelegt (Schicht 1
+  Tool-Deny, Schicht 2 Git-Push-URL, Nachweis-/Gegenprobe-Tabellen). Teil B: Transfer-Weg
+  Executor-Draft -> Board per lokalem git pull dokumentiert, Push nur durch das Board.
+  Docs-only; volle Suite 437/0 OK.'
+physical_machine: DES11
