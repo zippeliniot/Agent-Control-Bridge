@@ -39,4 +39,4 @@
 **Tests:** Keine (nur Doku).
 - [x] Abschnitt Draft-Modus in CLAUDE.md und CODEX.md
 - [x] Push-Regel eindeutig begrenzt
-- [ ] Keine Widersprueche in CLAUDE/CODEX/CONTROL
+- [x] Keine Widersprueche in CLAUDE/CODEX/CONTROL

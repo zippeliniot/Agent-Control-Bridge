@@ -24,6 +24,14 @@
 3. Nachweis je Klon: `git push --dry-run` muss scheitern. Ausgabe als Zeile in die Datei (April fuellt).
 4. dev und board behalten Push-Recht (Writer).
 **Tests:** Keine.
-- [ ] Nachweisdatei mit beiden Schichten
-- [ ] Befehle exakt und kurz
-- [ ] Platz fuer Nachweis je Klon
+- [x] Nachweisdatei mit beiden Schichten
+- [x] Befehle exakt und kurz
+- [x] Platz fuer Nachweis je Klon
+
+### Teil B (Nachtrag aus BRIDGE-0055) - Transfer-Weg dokumentieren
+**Ziel:** Klaeren, wie ein Draft ohne Push des Executors zum Board kommt.
+**Scope:** docs/security/PUSH-SPERRE-NACHWEIS.md (Abschnitt Transfer).
+1. Regel: Der Executor committet den Draft (`bridge draft write --commit`), pusht aber nie. Das Board holt ihn lokal: `git pull <Pfad-des-Executor-Klons> main`; danach `bridge draft import`, Push NUR durch das Board.
+2. Schritt-fuer-Schritt-Befehle fuer DES11 (Klone board, claude, codex) in den Abschnitt schreiben, je 1 Zeile.
+- [ ] Transfer-Weg (Board zieht per lokalem Pfad) dokumentiert
+- [ ] Push nur durch das Board festgehalten

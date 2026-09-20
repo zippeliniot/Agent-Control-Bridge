@@ -49,7 +49,7 @@ Austauschkanal zwischen den Maschinen.
 
 **Sofort pushen, nicht sammeln (verschärft, 12.09.2026):** Der Controller hat
 per Definition keinen lokalen Checkout — er sieht nur, was auf GitHub liegt.
-Jeder Executor-Commit (Codex wie Claude Code) wird unmittelbar gepusht, nicht
+Bei `push_mode: direct` (Standard; im Draft-Modus gilt CLAUDE.md, Abschnitt Draft-Modus) wird jeder Executor-Commit (Codex wie Claude Code) unmittelbar gepusht, nicht
 erst am Laufende gebündelt. Ein pausiertes Projekt muss auf GitHub trotzdem
 seinen letzten echten Stand zeigen, sonst berichtet der Controller einem neuen
 Steuerchat einen veralteten Zustand.
