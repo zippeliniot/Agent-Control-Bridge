@@ -33,5 +33,5 @@
 **Scope:** docs/security/PUSH-SPERRE-NACHWEIS.md (Abschnitt Transfer).
 1. Regel: Der Executor committet den Draft (`bridge draft write --commit`), pusht aber nie. Das Board holt ihn lokal: `git pull <Pfad-des-Executor-Klons> main`; danach `bridge draft import`, Push NUR durch das Board.
 2. Schritt-fuer-Schritt-Befehle fuer DES11 (Klone board, claude, codex) in den Abschnitt schreiben, je 1 Zeile.
-- [ ] Transfer-Weg (Board zieht per lokalem Pfad) dokumentiert
-- [ ] Push nur durch das Board festgehalten
+- [x] Transfer-Weg (Board zieht per lokalem Pfad) dokumentiert
+- [x] Push nur durch das Board festgehalten
