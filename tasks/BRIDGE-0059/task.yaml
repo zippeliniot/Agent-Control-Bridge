@@ -1,0 +1,26 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0059
+project_id: agent-control-bridge
+title: Entscheidung Audit-Strategie
+description: 'Teile 0059. Details: work-packages/BRIDGE-059.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: f063ba2e4fcbb316fa56be25805aab0268a14cf8
+model: Claude Opus 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0057
+acceptance_criteria:
+- Entscheidungsdatei mit A/B, Schwellwert, Empfehlung
+- Lesecode-Folgen benannt
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
