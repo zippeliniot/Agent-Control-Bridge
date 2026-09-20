@@ -1,11 +1,11 @@
 # Entscheidung: Audit-Strategie (Dateiaufteilung)
 
-**Status:** ENTWURF - Freigabe durch April offen. BRIDGE-0059, Gate G2.
+**Status:** FREIGEGEBEN (2026-09-20, Option A). BRIDGE-0059, Gate G2.
 
 ## 1. Ist-Stand
 - `audit/audit.jsonl`: eine Datei, JSON Lines, Append-only.
 - Stand WP-Erstellung: ca. 260 Zeilen / ca. 58 KB.
-- Messung 20.09.2026: 373 Zeilen / 83.451 Byte. Wachstum ca. 100 Zeilen/Woche.
+- Messung 20.09.2026: 373 Zeilen / 83.451 Byte. Wachstum: +113 Zeilen seit gestern (intensive Umsetzungsphase), Dauerwert offen.
 
 ## 2. Optionen
 **A - Eine Datei + sicheres Append (Empfehlung).** Alles bleibt in
