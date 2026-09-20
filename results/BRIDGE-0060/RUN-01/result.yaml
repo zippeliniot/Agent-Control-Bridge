@@ -1,0 +1,40 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0060
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 8084631fee7c3706a7e6247f2fab2fa268a0b519
+executor: claude-code
+started_at: '2026-09-20T12:26:20Z'
+ended_at: '2026-09-20T14:05:48Z'
+created_by: claude-code@DES11
+base_head: 3f096af02c8a8bc2cfe35426fbcdaf36fbb26d71
+commits:
+- sha: c53e18febc2b372731f5d9ecdb6e3f9b48a78c03
+  message: 'Ops: BRIDGE-0060 task_create (Steuerchat-Aktion via CLI)'
+- sha: 8ec572a8a70215cd8f922a406b0788a346bd38d2
+  message: 'Ops: BRIDGE-0060 run_start (Steuerchat-Aktion via CLI)'
+- sha: 8de769574ad6e7ff0d524b57ce6b18f1a73e625f
+  message: 'BRIDGE-0060 Teil A: Atomare Store-Writes (_atomic_write)'
+- sha: 8084631fee7c3706a7e6247f2fab2fa268a0b519
+  message: 'BRIDGE-0060 Teil B: Writer-Lock + sicheres Audit-Append (Option A)'
+changed_files:
+- .gitignore
+- audit/audit.jsonl
+- results/BRIDGE-0060/RUN-01/heartbeat.json
+- src/bridge/heartbeat.py
+- src/bridge/lock.py
+- src/bridge/store.py
+- tasks/BRIDGE-0060/task.yaml
+- tests/test_lock.py
+- tests/test_store.py
+- work-packages/BRIDGE-060.md
+summary: 'Teil A: _atomic_write (Temp+fsync+os.replace) in store.py/heartbeat.py fuer
+  alle Schreibpfade, Fehlerfall-Tests. Teil B: lock.py (.acb-writer.lock, O_EXCL,
+  reentrant, Stale wird gemeldet statt gebrochen), alle Store-Schreibmethoden gelockt,
+  Audit-Append gem. Entscheidung 0059 Option A (ein Schreibaufruf, LF, fsync). Volle
+  Suite 452/452 OK.'
+physical_machine: DES11

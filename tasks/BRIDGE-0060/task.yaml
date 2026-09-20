@@ -26,6 +26,6 @@ acceptance_criteria:
 - 'Teil 0060: Zweiter Writer wartet/scheitert sauber (Test)'
 - 'Teil 0060: Stale Lock wird gemeldet, nicht gebrochen (Test)'
 - 'Teil 0060: Lockdatei in .gitignore'
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-09-19T00:00:00Z'
 created_by: browser-claude
