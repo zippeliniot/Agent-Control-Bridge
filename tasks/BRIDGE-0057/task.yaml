@@ -22,6 +22,6 @@ acceptance_criteria:
 - Nachweisdatei mit beiden Schichten
 - Befehle exakt und kurz
 - Platz fuer Nachweis je Klon
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-09-19T00:00:00Z'
 created_by: browser-claude
