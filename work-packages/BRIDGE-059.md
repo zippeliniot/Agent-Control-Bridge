@@ -24,5 +24,5 @@
 3. Konsequenz fuer Lesecode (`last_transition_at`, overview, watcher) je Option 2 Zeilen.
 4. Status ENTWURF - Freigabe durch April.
 **Tests:** Keine.
-- [ ] Entscheidungsdatei mit A/B, Schwellwert, Empfehlung
-- [ ] Lesecode-Folgen benannt
+- [x] Entscheidungsdatei mit A/B, Schwellwert, Empfehlung
+- [x] Lesecode-Folgen benannt
