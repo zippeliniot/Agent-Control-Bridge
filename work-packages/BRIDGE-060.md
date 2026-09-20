@@ -37,7 +37,7 @@
 3. Alle Store-Schreibmethoden nutzen den Lock.
 4. Audit-Append laut Entscheidung.
 **Tests:** `python -m unittest tests.test_lock tests.test_store`, dann volle Suite EINMAL.
-- [ ] Lock schuetzt alle Schreibpfade
-- [ ] Zweiter Writer wartet/scheitert sauber (Test)
-- [ ] Stale Lock wird gemeldet, nicht gebrochen (Test)
-- [ ] Lockdatei in .gitignore
+- [x] Lock schuetzt alle Schreibpfade
+- [x] Zweiter Writer wartet/scheitert sauber (Test)
+- [x] Stale Lock wird gemeldet, nicht gebrochen (Test)
+- [x] Lockdatei in .gitignore

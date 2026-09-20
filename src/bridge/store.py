@@ -14,6 +14,7 @@ Exception - es wird nichts geschrieben.
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import os
 import re
@@ -31,6 +32,7 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import SchemaError
 
+from bridge import lock as _lock
 from bridge import state_machine
 
 
@@ -108,6 +110,19 @@ def _atomic_write(path, text: str) -> None:
         raise
 
 
+def _writes(method):
+    """Dekorator: Store-Schreibmethode läuft unter dem Writer-Lock
+    (BRIDGE-0060 Teil B). Reentrant, verschachtelte Aufrufe sind unkritisch."""
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        try:
+            with _lock.writer_lock(self.root, self.lock_timeout):
+                return method(self, *args, **kwargs)
+        except _lock.WriterLockError as exc:
+            raise StoreError(str(exc)) from exc
+    return wrapper
+
+
 def _load_yaml(path):
     try:
         text = Path(path).read_text(encoding="utf-8")
@@ -120,8 +135,9 @@ def _load_yaml(path):
 
 
 class Store:
-    def __init__(self, root, schema_dir=None):
+    def __init__(self, root, schema_dir=None, lock_timeout=_lock.DEFAULT_TIMEOUT):
         self.root = Path(root).resolve()
+        self.lock_timeout = lock_timeout
         self.schema_dir = (
             Path(schema_dir).resolve() if schema_dir is not None
             else self.root / "schemas"
@@ -293,6 +309,7 @@ class Store:
         self._validate_against(doc, schema_name, doc["kind"])
         return doc
 
+    @_writes
     def create_task(self, task):
         doc = self.validate(self._as_doc(task))
         if doc["kind"] != "bridge_task":
@@ -322,6 +339,7 @@ class Store:
             raise StoreError(f"Auftragsdatei unbrauchbar: {path}")
         return doc
 
+    @_writes
     def save_task(self, task):
         doc = self.validate(self._as_doc(task))
         self._check_readonly_consistency(doc)
@@ -340,6 +358,7 @@ class Store:
             )
         return by_new[to_state]
 
+    @_writes
     def set_status(self, task_id, new_state, actor, machine=None, reason=None):
         task_id = self._check_id(task_id)
         task = self.load_task(task_id)
@@ -360,6 +379,7 @@ class Store:
     # Gueltige Prioritaetswerte (aus task.schema.yaml, Enum LOW/MEDIUM/HIGH).
     _PRIORITY_VALUES = frozenset(("LOW", "MEDIUM", "HIGH"))
 
+    @_writes
     def set_priority(self, task_id, new_priority, actor, machine=None):
         """Setzt die Prioritaet eines Auftrags (unabhaengig von set_status/state_machine).
 
@@ -395,6 +415,7 @@ class Store:
                     highest = max(highest, int(entry.name.split("-")[1]))
         return f"RUN-{highest + 1:02d}"
 
+    @_writes
     def write_result(self, result):
         doc = self.validate(self._as_doc(result))
         if doc["kind"] != "bridge_result":
@@ -423,6 +444,7 @@ class Store:
             raise StoreError(f"Draft-Pfad außerhalb drafts/: {path}")
         return path
 
+    @_writes
     def write_draft(self, draft):
         """Legt einen Executor-Draft unter drafts/<id>/RUN-yy/draft.yaml ab.
 
@@ -492,12 +514,18 @@ class Store:
             raise SchemaValidationError("Audit-Ereignis ist kein Objekt.")
         self._validate_against(event, "audit-event.schema.yaml", "Audit-Ereignis")
 
+    @_writes
     def append_audit(self, event):
         self._validate_audit(event)
         target = self._in_root(self.audit_file)
         target.parent.mkdir(parents=True, exist_ok=True)
-        with target.open("a", encoding="utf-8") as fh:
-            fh.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + "\n")
+        # Entscheidung 0059 (Option A): eine Datei, Zeile in EINEM Schreibaufruf
+        # (Binärmodus, LF) + flush/fsync -> keine halbe Zeile, keine CRLF-Mischung.
+        line = json.dumps(event, ensure_ascii=False, sort_keys=True) + "\n"
+        with target.open("ab") as fh:
+            fh.write(line.encode("utf-8"))
+            fh.flush()
+            os.fsync(fh.fileno())
         return event
 
 
