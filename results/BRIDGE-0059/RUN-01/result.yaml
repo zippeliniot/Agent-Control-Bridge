@@ -1,0 +1,33 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0059
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 50447afaa3384bf1c2b9c8b86ba40da289757b91
+executor: claude-code
+started_at: '2026-09-20T09:14:48Z'
+ended_at: '2026-09-20T09:45:38Z'
+created_by: claude-code@DES11
+base_head: f063ba2e4fcbb316fa56be25805aab0268a14cf8
+commits:
+- sha: 5cc75e66b88daa2921bb1d7f46d696eaacc5e3b3
+  message: 'Ops: BRIDGE-0059 task_create (Steuerchat-Aktion via CLI)'
+- sha: c0f23924df483b4da7259deb4e45e4a90ab557ab
+  message: 'Ops: BRIDGE-0059 run_start (Steuerchat-Aktion via CLI)'
+- sha: 50447afaa3384bf1c2b9c8b86ba40da289757b91
+  message: 'BRIDGE-0059 Teil A: Entscheidung Audit-Strategie (Option A, Schwellwert
+    1 MB / 5000 Zeilen)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-AUDIT.md
+- results/BRIDGE-0059/RUN-01/heartbeat.json
+- tasks/BRIDGE-0059/task.yaml
+- work-packages/BRIDGE-059.md
+summary: Entscheidungsdatei docs/concepts/ENTSCHEIDUNG-AUDIT.md angelegt (ENTWURF).
+  Empfehlung Option A (eine audit.jsonl mit sicherem Append), Wechsel zu Monatsdateien
+  erst ab 1 MB oder 5000 Zeilen. Folgen fuer last_transition_at, overview und watcher
+  je Option benannt; Ist-Stand 373 Zeilen / 83 KB gemessen.
+physical_machine: DES11
