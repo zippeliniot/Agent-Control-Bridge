@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0060
+project_id: agent-control-bridge
+title: 'B5 Store-Haertung: atomar + Writer-Lock'
+description: 'Teile 0058, 0060. Details: work-packages/BRIDGE-060.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 3f096af02c8a8bc2cfe35426fbcdaf36fbb26d71
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0059
+acceptance_criteria:
+- 'Teil 0058: Alle Schreibpfade atomar'
+- 'Teil 0058: Fehlerfall-Test gruen'
+- 'Teil 0058: Kein Temp-Rest nach Fehler (Test)'
+- 'Teil 0060: Lock schuetzt alle Schreibpfade'
+- 'Teil 0060: Zweiter Writer wartet/scheitert sauber (Test)'
+- 'Teil 0060: Stale Lock wird gemeldet, nicht gebrochen (Test)'
+- 'Teil 0060: Lockdatei in .gitignore'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
