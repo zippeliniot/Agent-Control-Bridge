@@ -1,6 +1,6 @@
 # Entscheidung: Windows-Benachrichtigung bei Fertigmeldung (BRIDGE-0068)
 
-**Status: ENTWURF - Freigabe durch April.** Keine Implementierung in diesem Auftrag.
+**Status: FREIGEGEBEN (2026-09-21, Option A, nur Fertigmeldung).** Keine Implementierung in diesem Auftrag.
 
 ## 1. Ist-Stand
 Der Executor pusht `result.yaml`, der Auftrag steht auf `WAITING_FOR_COPY_TO_CONTROL`.
