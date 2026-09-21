@@ -1,0 +1,38 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0069
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: a99aa8cf24925b70aeed2271d256ffeaac93720c
+executor: claude-code
+started_at: '2026-09-21T11:19:08Z'
+ended_at: '2026-09-21T13:27:00Z'
+created_by: claude-code@HAM11
+base_head: ac06eeadd3c9bda5c732fa4e31e07ae0519656f3
+commits:
+- sha: 5f3d017eb3cc5752552e547db5c31dc057fa074d
+  message: 'Ops: BRIDGE-0069 task_create (Steuerchat-Aktion via CLI)'
+- sha: 115bb7d8d46ae57bd20a6168e97bfa3b0b4596bc
+  message: 'Ops: BRIDGE-0069 run_start (Steuerchat-Aktion via CLI)'
+- sha: dbc9e1001ef875af6c0ce78143cd88988f98ece6
+  message: 'BRIDGE-0069 Teil A: notify.py, --notify-Hook, Tests'
+- sha: a99aa8cf24925b70aeed2271d256ffeaac93720c
+  message: 'BRIDGE-0069 Teil B: Doku --notify'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-REFERENZ.md
+- results/BRIDGE-0069/RUN-01/heartbeat.json
+- src/bridge/cli.py
+- src/bridge/notify.py
+- tasks/BRIDGE-0069/task.yaml
+- tests/test_notify.py
+- work-packages/BRIDGE-069.md
+summary: Neues Modul src/bridge/notify.py (Erkennung, Null-/PowerShell-Toast-Notifier,
+  fail-open) und Flag 'webui serve --notify' ueber optionalen after_pull-Callback
+  im Pull-Thread; rein lesend. 18 neue Tests in tests/test_notify.py, Doku in ACB-STEUERCHAT-REFERENZ
+  ergaenzt. Alle WP-Akzeptanzkriterien erfuellt; echter Toast wird von April auf HAM11
+  abgenommen.
+physical_machine: HAM11
