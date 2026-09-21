@@ -1,0 +1,28 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0070
+project_id: agent-control-bridge
+title: Toast-Kennung fuer Windows (Fix zu BRIDGE-0069)
+description: 'Teile 0070. Details: work-packages/BRIDGE-070.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: eff512a147fcd52cdc349c2d99209477b406c36e
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0069
+acceptance_criteria:
+- Kennung als Konstante, eigene Kennung entfernt
+- Test auf Kennung im Skript
+- Suite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-21T00:00:00Z'
+created_by: browser-claude
+task_version: 3
