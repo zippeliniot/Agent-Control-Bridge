@@ -187,6 +187,15 @@ properties:
         type: ["string", "null"]
         enum: [anthropic, openai, human, null]
 
+  # ---------- Version (Stufe B, BRIDGE-0061) ----------
+  task_version:
+    description: >-
+      Zaehler fuer optimistische Nebenlaeufigkeitskontrolle (CAS). Erhoeht sich
+      bei jedem Speichern (Store.save_task). Fehlt das Feld (Altbestand), gilt 1.
+    type: integer
+    minimum: 1
+    default: 1
+
   # ---------- Status / Provenienz ----------
   status:
     description: "Aktueller Status. Standard CREATED. Übergänge: BRIDGE-004."

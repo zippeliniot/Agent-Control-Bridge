@@ -19,6 +19,7 @@ from bridge.store import (  # noqa: E402
     Store,
     StoreError,
     SchemaValidationError,
+    VersionConflictError,
     _FORMAT_CHECKER,
     _atomic_write,
 )
@@ -647,6 +648,71 @@ class AtomicWriteTests(unittest.TestCase):
                 store.save_task(valid_task(title="Anders"))
         self.assertEqual(path.read_bytes(), before)
         self.assertEqual([p.name for p in path.parent.iterdir()], ["task.yaml"])
+
+
+class TaskVersionTests(unittest.TestCase):
+    """BRIDGE-0061 Teil A: task_version + optionales expected_version (CAS)."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="acb-cas-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        self.store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+        self.store.create_task(valid_task())
+        self.path = self.tmp / "tasks" / "BRIDGE-0900" / "task.yaml"
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def stored_version(self):
+        return yaml.safe_load(self.path.read_text(encoding="utf-8")).get("task_version", 1)
+
+    def test_version_increments_on_every_save(self):
+        self.assertEqual(self.stored_version(), 1)
+        self.store.save_task(self.store.load_task("BRIDGE-0900"))
+        self.assertEqual(self.stored_version(), 2)
+        self.store.set_status("BRIDGE-0900", "READY", actor="t")
+        self.assertEqual(self.stored_version(), 3)
+
+    def test_save_task_cas_conflict_rejects_and_writes_nothing(self):
+        before = self.path.read_bytes()
+        with self.assertRaises(VersionConflictError) as ctx:
+            self.store.save_task(valid_task(title="Anders"), expected_version=5)
+        self.assertIn("VERSION_CONFLICT", str(ctx.exception))
+        self.assertEqual(self.path.read_bytes(), before)
+
+    def test_save_task_cas_match_saves(self):
+        self.store.save_task(valid_task(title="Neu"), expected_version=1)
+        self.assertEqual(self.stored_version(), 2)
+        self.assertEqual(self.store.load_task("BRIDGE-0900")["title"], "Neu")
+
+    def test_set_status_cas_conflict_rejects_and_writes_nothing(self):
+        before = self.path.read_bytes()
+        audit = self.tmp / "audit" / "audit.jsonl"
+        audit_before = audit.read_bytes()
+        with self.assertRaises(VersionConflictError):
+            self.store.set_status("BRIDGE-0900", "READY", actor="t", expected_version=2)
+        self.assertEqual(self.path.read_bytes(), before)
+        self.assertEqual(audit.read_bytes(), audit_before)
+
+    def test_set_status_cas_match_transitions(self):
+        self.store.set_status("BRIDGE-0900", "READY", actor="t", expected_version=1)
+        self.assertEqual(self.store.load_task("BRIDGE-0900")["status"], "READY")
+        self.assertEqual(self.stored_version(), 2)
+
+    def test_old_behavior_without_expected_version(self):
+        # Altbestand ohne task_version-Feld; save/set_status ohne CAS funktionieren wie zuvor.
+        self.assertNotIn("task_version", self.store.load_task("BRIDGE-0900"))
+        self.store.set_status("BRIDGE-0900", "READY", actor="t")
+        self.store.save_task(valid_task(status="READY", title="X"))
+        self.assertEqual(self.store.load_task("BRIDGE-0900")["title"], "X")
+        self.assertEqual(self.stored_version(), 3)
+
+    def test_schema_rejects_invalid_task_version(self):
+        for bad in (0, "1", 1.5):
+            with self.assertRaises(SchemaValidationError):
+                self.store.validate(valid_task(task_version=bad))
+        self.store.validate(valid_task(task_version=1))
 
 
 if __name__ == "__main__":

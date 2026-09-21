@@ -26,9 +26,9 @@
 3. `expected_version` optional; Abweichung -> StoreError `VERSION_CONFLICT`, nichts geschrieben.
 4. Ohne expected_version: Verhalten unveraendert.
 **Tests:** `python -m unittest tests.test_store`, dann volle Suite EINMAL.
-- [ ] Freigabe G3 dokumentiert
-- [ ] CAS-Konflikt lehnt ab (Test)
-- [ ] Altes Verhalten unveraendert (Test)
+- [x] Freigabe G3 dokumentiert
+- [x] CAS-Konflikt lehnt ab (Test)
+- [x] Altes Verhalten unveraendert (Test)
 
 ### Teil B (alt 0062) - Claim/Lease-API
 **Ziel:** Python-API + CLI `bridge claim/release` mit Lease (Ablaufzeit).

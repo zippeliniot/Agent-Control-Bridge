@@ -40,6 +40,10 @@ class StoreError(Exception):
     """Basisfehler der Ablage-Schicht (fail-closed)."""
 
 
+class VersionConflictError(StoreError):
+    """CAS-Konflikt: expected_version weicht von task_version ab (VERSION_CONFLICT)."""
+
+
 class SchemaValidationError(StoreError):
     """Ein Dokument verletzt sein Schema."""
 
@@ -340,10 +344,26 @@ class Store:
         return doc
 
     @_writes
-    def save_task(self, task):
-        doc = self.validate(self._as_doc(task))
+    def save_task(self, task, expected_version=None):
+        """Speichert den Auftrag und erhoeht task_version (Fehlend = 1).
+
+        Mit expected_version (CAS): weicht sie von der gespeicherten Version ab,
+        VersionConflictError (VERSION_CONFLICT), nichts geschrieben.
+        Ohne expected_version: keine Pruefung.
+        """
+        doc = dict(self.validate(self._as_doc(task)))
         self._check_readonly_consistency(doc)
         path = self._in_root(self._task_path(doc["bridge_task_id"]))
+        current = None
+        if path.exists():
+            stored = _load_yaml(path)
+            current = stored.get("task_version", 1) if isinstance(stored, dict) else 1
+        if expected_version is not None and expected_version != current:
+            raise VersionConflictError(
+                f"VERSION_CONFLICT: {doc['bridge_task_id']} erwartet Version "
+                f"{expected_version!r}, gespeichert {current!r}."
+            )
+        doc["task_version"] = (current or 0) + 1
         _atomic_write(path, self._dump_yaml(doc))
         return doc
 
@@ -359,9 +379,17 @@ class Store:
         return by_new[to_state]
 
     @_writes
-    def set_status(self, task_id, new_state, actor, machine=None, reason=None):
+    def set_status(self, task_id, new_state, actor, machine=None, reason=None,
+                   expected_version=None):
         task_id = self._check_id(task_id)
         task = self.load_task(task_id)
+        if expected_version is not None:
+            stored = task.get("task_version", 1)
+            if expected_version != stored:
+                raise VersionConflictError(
+                    f"VERSION_CONFLICT: {task_id} erwartet Version "
+                    f"{expected_version!r}, gespeichert {stored!r}."
+                )
         old_state = task.get("status")
         # Fail-closed VOR jedem Schreiben.
         state_machine.assert_transition(old_state, new_state)
@@ -372,7 +400,7 @@ class Store:
         )
         self._validate_audit(event)
         task["status"] = new_state
-        self.save_task(task)
+        self.save_task(task, expected_version=expected_version)
         self.append_audit(event)
         return event
 
