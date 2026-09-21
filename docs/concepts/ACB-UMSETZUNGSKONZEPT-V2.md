@@ -82,5 +82,6 @@ Modell-Gate erfuellt, Scope eingehalten, Tests real gezaehlt, Ergebnis valide, H
 | BRIDGE-0063 | Buendel | Sonnet 5 | MEDIUM | G4 | B7 Ressourcenregel + Parallelitaetstests |
 | BRIDGE-0068 | T1 | Opus 5 | MEDIUM | - | Entscheidung Windows-Benachrichtigung |
 | BRIDGE-0069 | T2 | Sonnet 5 | MEDIUM | - | Windows-Benachrichtigung (webui serve --notify) |
+| BRIDGE-0070 | T2 | Sonnet 5 | LOW | - | Toast-Kennung fuer Windows (Fix zu 0069) |
 | BRIDGE-0065 | T2 | Sonnet 5 | MEDIUM | G5 | Dorfschaft: read-only Profil + Checkliste |
 | BRIDGE-0066 | T3 | Codex-Modell (April tragen ein) | LOW | G5 | Dorfschaft Read-only-Pilot |
