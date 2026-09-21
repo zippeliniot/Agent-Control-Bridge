@@ -27,11 +27,11 @@
 6. Tests (Linux, Fake-Notifier und Fake-Runner): Erkennung, Altbestand still, Wiedereintritt nach Verlassen meldet erneut, fail-open (Notifier wirft, Thread lebt), Nicht-Windows ohne Prozessaufruf, Windows-Pfad mit Fake-Runner (Argumentliste, kein shell, Texte nur in Umgebungsvariablen, Timeout gesetzt), ohne `--notify` unveraendertes Verhalten, Hook schreibt weder Store noch Audit. Kein echter Toast in Tests.
 7. Doku: `--notify` im Abschnitt `webui serve` von docs/ACB-STEUERCHAT-REFERENZ.md ergaenzen.
 **Tests:** `python -m unittest tests.test_notify`, dann volle Suite EINMAL.
-- [ ] Freigabe der Entscheidungsdatei geprueft
-- [ ] Erkennung und Entprellung (Test)
-- [ ] fail-open (Test)
-- [ ] Hook ohne Store-Write und Audit (Test)
-- [ ] Ohne --notify unveraendert (Test)
+- [x] Freigabe der Entscheidungsdatei geprueft
+- [x] Erkennung und Entprellung (Test)
+- [x] fail-open (Test)
+- [x] Hook ohne Store-Write und Audit (Test)
+- [x] Ohne --notify unveraendert (Test)
 - [ ] Doku ergaenzt
 
 Hinweis: Der echte Toast wird nach der Archivierung manuell von April auf HAM11 abgenommen, nicht vom Executor.

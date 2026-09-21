@@ -145,6 +145,10 @@ def _build_parser() -> argparse.ArgumentParser:
                         help="Sekunden zwischen automatischen 'git pull --ff-only'-Versuchen "
                              "im Hintergrund (Standard: 30; 0 deaktiviert den Pull-Thread "
                              "vollstaendig, BRIDGE-038)")
+    wserve.add_argument("--notify", action="store_true",
+                        help="Windows-Benachrichtigung, wenn ein Auftrag neu auf "
+                             "WAITING_FOR_COPY_TO_CONTROL steht (rein lesend, Standard: aus; "
+                             "braucht den Pull-Thread, BRIDGE-0069)")
 
     watch = sub.add_parser(
         "watch", help="Watcher: Ergebnisse/Heartbeats erkennen und weiterführen")
@@ -1193,7 +1197,7 @@ def _format_pull_log(result: dict) -> str:
 
 
 def _pull_loop(repo_root, interval_seconds, stop_event: threading.Event,
-               git_lock: threading.Lock) -> None:
+               git_lock: threading.Lock, after_pull=None) -> None:
     """Laeuft im Hintergrund-Thread, bis ``stop_event`` gesetzt wird.
 
     Fail-soft, zwingend: ein fehlgeschlagener Pull-Versuch (Netzwerk,
@@ -1207,10 +1211,16 @@ def _pull_loop(repo_root, interval_seconds, stop_event: threading.Event,
         except Exception as exc:  # noqa: BLE001 - Thread darf nie sterben
             result = {"pulled": False, "updated": False, "error": str(exc)}
         print(_format_pull_log(result), file=sys.stderr)
+        if after_pull is not None:
+            try:
+                after_pull()
+            except Exception as exc:  # noqa: BLE001 - Thread darf nie sterben
+                print(f"after_pull fehlgeschlagen: {exc}", file=sys.stderr)
         stop_event.wait(interval_seconds)
 
 
-def _maybe_start_pull_thread(repo_root, interval_seconds, git_lock: threading.Lock):
+def _maybe_start_pull_thread(repo_root, interval_seconds, git_lock: threading.Lock,
+                             after_pull=None):
     """Startet den Auto-Pull-Hintergrund-Thread, wenn ``interval_seconds`` > 0.
 
     Gibt ``(stop_event, thread)`` zurueck - ``thread`` ist ``None`` bei
@@ -1221,11 +1231,28 @@ def _maybe_start_pull_thread(repo_root, interval_seconds, git_lock: threading.Lo
     if interval_seconds <= 0:
         return stop_event, None
     thread = threading.Thread(
-        target=_pull_loop, args=(repo_root, interval_seconds, stop_event, git_lock),
+        target=_pull_loop,
+        args=(repo_root, interval_seconds, stop_event, git_lock, after_pull),
         daemon=True,
     )
     thread.start()
     return stop_event, thread
+
+
+def _build_notify_hook(store, notifier=None):
+    """after_pull-Hook fuer --notify (BRIDGE-0069): rein lesend ueber _list_task_docs.
+
+    Der Bestand beim Aufruf ist die Basis (Altbestand wird nicht gemeldet).
+    """
+    from bridge import notify
+
+    def snapshot():
+        return {t.get("bridge_task_id", "?"): str(t.get("title", ""))
+                for t in _list_task_docs(store)
+                if t.get("status") == "WAITING_FOR_COPY_TO_CONTROL"}
+
+    return notify.CompletionWatcher(
+        snapshot, notifier or notify.PowerShellToastNotifier())
 
 
 def _cmd_webui(args, store) -> int:
@@ -1242,8 +1269,21 @@ def _cmd_webui(args, store) -> int:
     host, port = httpd.server_address[0], httpd.server_address[1]
     print(f"Web-UI: http://{host}:{port}/ (nur lokal erreichbar, Strg+C zum Beenden)")
 
+    after_pull = None
+    if args.notify:
+        if args.pull_interval <= 0:
+            print("Hinweis: --notify braucht den Auto-Pull-Thread "
+                  "(--pull-interval > 0); keine Benachrichtigung.")
+        else:
+            try:
+                after_pull = _build_notify_hook(store)
+            except Exception as exc:  # noqa: BLE001 - fail-open
+                print(f"Hinweis: --notify nicht aktiv ({exc}).", file=sys.stderr)
+            else:
+                print("Benachrichtigung: aktiv (--notify)")
+
     stop_event, pull_thread = _maybe_start_pull_thread(
-        store.root, args.pull_interval, httpd.git_lock)
+        store.root, args.pull_interval, httpd.git_lock, after_pull)
     if pull_thread is not None:
         print(f"Auto-Pull: alle {args.pull_interval}s (git pull --ff-only)")
     else:
