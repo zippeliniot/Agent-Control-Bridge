@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0069
+project_id: agent-control-bridge
+title: Windows-Benachrichtigung bei Fertigmeldung (webui serve --notify)
+description: 'Teile 0069. Details: work-packages/BRIDGE-069.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: ac06eeadd3c9bda5c732fa4e31e07ae0519656f3
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0068
+acceptance_criteria:
+- Freigabe der Entscheidungsdatei geprueft
+- Erkennung und Entprellung (Test)
+- fail-open (Test)
+- Hook ohne Store-Write und Audit (Test)
+- Ohne --notify unveraendert (Test)
+- Doku ergaenzt
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-21T00:00:00Z'
+created_by: browser-claude
+task_version: 3
