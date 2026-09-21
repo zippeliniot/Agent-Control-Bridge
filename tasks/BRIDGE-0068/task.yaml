@@ -21,7 +21,7 @@ depends_on:
 acceptance_criteria:
 - Entscheidungsdatei mit A/B, Regeln, Empfehlung
 - Schnitt von BRIDGE-0069 benannt
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-09-21T00:00:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 8
