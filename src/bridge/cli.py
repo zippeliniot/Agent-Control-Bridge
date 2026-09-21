@@ -23,7 +23,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bridge import draft as draft_mod, gitops, heartbeat, importer, profiles, registry, runner, state_machine, watcher
+from bridge import claim as claim_mod, draft as draft_mod, gitops, heartbeat, importer, profiles, registry, runner, state_machine, watcher
 from bridge.store import Store, StoreError
 
 _ENGINE_ERRORS = (StoreError, state_machine.TransitionError, state_machine.ModelError,
@@ -172,6 +172,21 @@ def _build_parser() -> argparse.ArgumentParser:
     whb.add_argument("run_id")
     whb.add_argument("--actor")
     whb.add_argument("--machine")
+
+    cclaim = sub.add_parser("claim", help="Auftrag mit Lease reservieren (BRIDGE-0061)")
+    cclaim.add_argument("task_id")
+    cclaim.add_argument("--actor", required=True)
+    cclaim.add_argument("--machine")
+    cclaim.add_argument("--lease-seconds", type=int, default=claim_mod.DEFAULT_LEASE_SECONDS)
+    crenew = sub.add_parser("renew", help="Lease des eigenen Claims verlaengern")
+    crenew.add_argument("task_id")
+    crenew.add_argument("--actor", required=True)
+    crenew.add_argument("--machine")
+    crenew.add_argument("--lease-seconds", type=int, default=claim_mod.DEFAULT_LEASE_SECONDS)
+    crel = sub.add_parser("release", help="eigenen Claim freigeben")
+    crel.add_argument("task_id")
+    crel.add_argument("--actor", required=True)
+    crel.add_argument("--machine")
 
     run = sub.add_parser("run", help="Lauf-Lebenszyklus: start/beat/finish/resume")
     runsub = run.add_subparsers(dest="run_cmd", required=True)
@@ -1005,6 +1020,19 @@ def _print_findings(findings, applied) -> None:
                   f"{f.from_status} -> {f.target}{note}")
 
 
+def _cmd_claim(args, store) -> int:
+    machine = registry.machine_name(args.machine)
+    if args.cmd == "release":
+        claim_mod.release(store, args.task_id, args.actor, machine)
+        print(f"OK: Claim {args.task_id} freigegeben ({args.actor}@{machine})")
+        return 0
+    fn = claim_mod.claim if args.cmd == "claim" else claim_mod.renew
+    doc = fn(store, args.task_id, args.actor, machine, args.lease_seconds)
+    print(f"OK: {args.cmd} {args.task_id} {args.actor}@{machine} "
+          f"expires_at={doc['expires_at']}")
+    return 0
+
+
 def _cmd_run(args, store) -> int:
     if args.run_cmd == "start":
         run_id = runner.start(store, args.task_id, args.actor,
@@ -1243,6 +1271,9 @@ _DISPATCH = {
     "commands": _cmd_commands,
     "webui": _cmd_webui,
     "watch": _cmd_watch,
+    "claim": _cmd_claim,
+    "renew": _cmd_claim,
+    "release": _cmd_claim,
     "run": _cmd_run,
     "draft": _cmd_draft,
     "project": _cmd_project,

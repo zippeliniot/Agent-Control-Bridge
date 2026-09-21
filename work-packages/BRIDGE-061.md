@@ -37,6 +37,6 @@
 2. Aktiver fremder Claim -> Fehler. Abgelaufener Claim darf uebernommen werden (Audit-Reason).
 3. `release`, `renew`. Alles ueber writer_lock.
 **Tests:** `python -m unittest tests.test_claim`, dann volle Suite EINMAL.
-- [ ] claim/release/renew vorhanden
-- [ ] Fremder aktiver Claim abgelehnt (Test)
-- [ ] Abgelaufener Claim uebernehmbar (Test)
+- [x] claim/release/renew vorhanden
+- [x] Fremder aktiver Claim abgelehnt (Test)
+- [x] Abgelaufener Claim uebernehmbar (Test)
