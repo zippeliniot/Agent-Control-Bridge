@@ -1,0 +1,33 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0070
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: ad06a0eda16991f173f827282148859851b5392b
+executor: claude-code
+started_at: '2026-09-21T14:00:19Z'
+ended_at: '2026-09-21T14:27:36Z'
+created_by: claude-code@HAM11
+base_head: eff512a147fcd52cdc349c2d99209477b406c36e
+commits:
+- sha: 5d64f178f085786c4939c317931a8fee70aa3a2d
+  message: 'Ops: BRIDGE-0070 task_create (Steuerchat-Aktion via CLI)'
+- sha: 190b8760025e4ecfda8137ae95780760adba419b
+  message: 'Ops: BRIDGE-0070 run_start (Steuerchat-Aktion via CLI)'
+- sha: ad06a0eda16991f173f827282148859851b5392b
+  message: 'BRIDGE-0070 Teil A: Toast-Kennung PowerShell'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0070/RUN-01/heartbeat.json
+- src/bridge/notify.py
+- tasks/BRIDGE-0070/task.yaml
+- tests/test_notify.py
+- work-packages/BRIDGE-070.md
+summary: 'Toast-Kennung als Konstante _TOAST_APP_ID (PowerShell-AppUserModelID) in
+  notify.py, per Stringverkettung ins Skript eingesetzt; eigene Kennung entfernt.
+  Neuer Test prueft Kennung, Abwesenheit von ''Agent Control Bridge'' und ID/Titel
+  nur per Umgebungsvariable. Suite: 500 Tests OK.'
+physical_machine: HAM11
