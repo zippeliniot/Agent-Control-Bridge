@@ -1,0 +1,26 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0068
+project_id: agent-control-bridge
+title: Entscheidung Windows-Benachrichtigung bei Fertigmeldung
+description: 'Teile 0068. Details: work-packages/BRIDGE-068.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Opus 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0063
+acceptance_criteria:
+- Entscheidungsdatei mit A/B, Regeln, Empfehlung
+- Schnitt von BRIDGE-0069 benannt
+status: CREATED
+created_at: '2026-09-21T00:00:00Z'
+created_by: browser-claude
