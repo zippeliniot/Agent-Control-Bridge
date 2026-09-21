@@ -23,8 +23,8 @@
 2. `_TOAST_SCRIPT` verwendet diese Konstante statt `'Agent Control Bridge'` (als PowerShell-Stringliteral in Einzelanfuehrungszeichen, per Stringverkettung einsetzen, nicht per .format oder f-String wegen der geschweiften Klammern). Alles andere im Skript und im Notifier bleibt unveraendert (ID und Titel weiter nur per Umgebungsvariablen, kein shell, Timeout, fail-open).
 3. Test: Das Skript enthaelt die Kennung, enthaelt 'Agent Control Bridge' nicht mehr, und ID/Titel stehen weiterhin nicht im Skript.
 **Tests:** `python -m unittest tests.test_notify`, dann volle Suite EINMAL.
-- [ ] Kennung als Konstante, eigene Kennung entfernt
-- [ ] Test auf Kennung im Skript
+- [x] Kennung als Konstante, eigene Kennung entfernt
+- [x] Test auf Kennung im Skript
 - [ ] Suite gruen
 
 Hinweis: Der echte Toast wird nach der Archivierung erneut von April auf HAM11 abgenommen.

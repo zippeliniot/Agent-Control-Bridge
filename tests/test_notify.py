@@ -95,6 +95,16 @@ class ToastNotifierTests(unittest.TestCase):
         n("BRIDGE-1", "Titel")
         self.runner.assert_not_called()
 
+    def test_script_uses_powershell_app_id(self):
+        self.assertEqual(
+            notify._TOAST_APP_ID,
+            "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\WindowsPowerShell\\v1.0\\powershell.exe")
+        self.assertIn("'" + notify._TOAST_APP_ID + "'", notify._TOAST_SCRIPT)
+        self.assertNotIn("Agent Control Bridge", notify._TOAST_SCRIPT)
+        self.assertNotIn("BRIDGE-", notify._TOAST_SCRIPT)
+        self.assertIn("$env:ACB_NOTIFY_ID", notify._TOAST_SCRIPT)
+        self.assertIn("$env:ACB_NOTIFY_TITLE", notify._TOAST_SCRIPT)
+
     def test_windows_call_shape(self):
         n = self.make()
         title = "Titel'; Remove-Item -Recurse C:\\ #\"$(evil)"

@@ -19,6 +19,13 @@ Notifier = Callable[[str, str], None]
 TOAST_TIMEOUT_SECONDS = 10
 _MAX_TEXT_LEN = 200
 
+# Eine eigene Kennung wird von Windows still verworfen; die Kopfzeile des Toasts
+# zeigt deshalb "Windows PowerShell".
+_TOAST_APP_ID = (
+    "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}"
+    "\\WindowsPowerShell\\v1.0\\powershell.exe"
+)
+
 # Konstantes Skript: ID und Titel kommen ausschliesslich ueber Umgebungsvariablen
 # (nie in den Befehlsstring eingebettet). CreateTextNode escaped den Text.
 _TOAST_SCRIPT = (
@@ -31,7 +38,7 @@ _TOAST_SCRIPT = (
     "$t.Item(1).AppendChild($x.CreateTextNode($env:ACB_NOTIFY_TITLE)) | Out-Null; "
     "$n = [Windows.UI.Notifications.ToastNotification]::new($x); "
     "[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("
-    "'Agent Control Bridge').Show($n)"
+    "'" + _TOAST_APP_ID + "').Show($n)"
 )
 
 
