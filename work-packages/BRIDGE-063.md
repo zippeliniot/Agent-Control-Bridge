@@ -25,9 +25,9 @@
 2. `claim` lehnt ab, wenn anderer aktiver Claim denselben Schluessel hat -> BLOCKED-Grund `RESOURCE_CONFLICT`.
 3. Code in error-codes.yaml UND task.schema.yaml ergaenzen (SSOT-Test aus 0050 bleibt gruen).
 **Tests:** `python -m unittest tests.test_claim tests.test_errorcodes`, dann volle Suite EINMAL.
-- [ ] Regeldatei vorhanden
-- [ ] Zweiter Claim auf gleichen Schluessel abgelehnt (Test)
-- [ ] SSOT-Test weiter gruen
+- [x] Regeldatei vorhanden
+- [x] Zweiter Claim auf gleichen Schluessel abgelehnt (Test)
+- [x] SSOT-Test weiter gruen
 
 ### Teil B (alt 0064) - Parallelitaets- und Ausfalltests
 **Ziel:** Reproduzierbare Tests fuer Lock, Claim und Ausfall. Kein Produktcode.

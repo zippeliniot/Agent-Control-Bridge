@@ -23,3 +23,6 @@ codes:
   SCOPE_VIOLATION:
     description: "Aenderung ausserhalb des im Auftrag erlaubten Scopes."
     state: BLOCKED
+  RESOURCE_CONFLICT:
+    description: "Anderer aktiver Claim auf demselben Schluessel (repository, remote, branch)."
+    state: BLOCKED

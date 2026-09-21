@@ -7,6 +7,9 @@ Schreibzugriffe laufen unter dem Writer-Lock (``bridge.lock``).
 - ``claim``:   fremder aktiver Claim -> ``ClaimError`` (CLAIM_CONFLICT); abgelaufener
                Claim darf uebernommen werden (Audit-Reason nennt den Vorbesitzer);
                eigener Claim wird wie ``renew`` verlaengert.
+               Ressourcenregel (BRIDGE-0063, docs/concepts/ENTSCHEIDUNG-RESSOURCENREGEL.md):
+               ein neuer Claim wird abgelehnt (RESOURCE_CONFLICT), wenn ein anderer
+               Auftrag mit aktivem Claim denselben Schluessel (repository, remote, branch) hat.
 - ``renew``:   nur der Besitzer verlaengert die Lease.
 - ``release``: nur der Besitzer gibt frei (ein abgelaufener Claim darf von jedem
                entfernt werden).
@@ -19,6 +22,7 @@ Zeiten sind UTC im Format ``%Y-%m-%dT%H:%M:%SZ``; ``now`` ist fuer Tests injizie
 from __future__ import annotations
 
 import json
+import subprocess
 from datetime import datetime, timedelta, timezone
 
 from bridge import lock as _lock
@@ -106,6 +110,40 @@ def _write(store: Store, task_id: str, actor, machine, lease_seconds, now, claim
     return doc
 
 
+def _remote_url(store: Store) -> str:
+    """``git remote get-url origin`` im Repo-Root; ``<none>`` wenn nicht ermittelbar."""
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(store.root), "remote", "get-url", "origin"],
+            capture_output=True, text=True, timeout=30, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return "<none>"
+    return proc.stdout.strip() or "<none>" if proc.returncode == 0 else "<none>"
+
+
+def _resource_key(store: Store, task_id: str, remote: str) -> tuple:
+    task = store.load_task(task_id)
+    return (task.get("repository"), remote, task.get("branch"))
+
+
+def _check_resource(store: Store, task_id: str, moment: datetime) -> None:
+    """Ressourcenregel: kein anderer aktiver Claim auf (repository, remote, branch)."""
+    remote = _remote_url(store)
+    mine = _resource_key(store, task_id, remote)
+    if not store.results_dir.is_dir():
+        return
+    for entry in sorted(store.results_dir.iterdir()):
+        if entry.name == task_id or not (entry / CLAIM_FILE).is_file():
+            continue
+        other = get_claim(store, entry.name)
+        if other is None or _is_expired(other, moment):
+            continue
+        if _resource_key(store, entry.name, remote) == mine:
+            raise ClaimError(
+                f"RESOURCE_CONFLICT: {task_id} kollidiert mit {entry.name} "
+                f"({_describe(other)}) auf {mine}.")
+
+
 class _Locked:
     """Writer-Lock des Stores; WriterLockError -> ClaimError."""
 
@@ -135,6 +173,7 @@ def claim(store: Store, task_id: str, actor: str, machine: str, lease_seconds: i
         store.load_task(task_id)  # unbekannter Auftrag -> StoreError
         current = get_claim(store, task_id)
         if current is None:
+            _check_resource(store, task_id, moment)
             doc = _write(store, task_id, actor, machine, lease_seconds, moment)
             reason = f"claim lease={lease_seconds}s"
         elif _is_owner(current, actor, machine):
@@ -142,6 +181,7 @@ def claim(store: Store, task_id: str, actor: str, machine: str, lease_seconds: i
                          claimed_at=current.get("claimed_at"))
             return doc
         elif _is_expired(current, moment):
+            _check_resource(store, task_id, moment)
             doc = _write(store, task_id, actor, machine, lease_seconds, moment)
             reason = (f"takeover expired claim of {_describe(current)}; "
                       f"lease={lease_seconds}s")

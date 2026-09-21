@@ -123,6 +123,29 @@ class ClaimTests(unittest.TestCase):
         with self.assertRaises(ClaimError):
             claim_mod.claim(self.store, TID, "a", "HAM01", 60, now=T0)
 
+    # -- Ressourcenregel (BRIDGE-0063 Teil A) --------------------------
+
+    def test_second_claim_on_same_resource_key_rejected(self):
+        other = "BRIDGE-0901"
+        self.store.create_task(valid_task(bridge_task_id=other))
+        claim_mod.claim(self.store, TID, "a", "HAM01", 600, now=T0)
+        with self.assertRaises(ClaimError) as ctx:
+            claim_mod.claim(self.store, other, "b", "DES01", 600, now=T0 + timedelta(seconds=10))
+        self.assertIn("RESOURCE_CONFLICT", str(ctx.exception))
+        self.assertFalse((self.tmp / "results" / other / "claim.json").exists())
+
+    def test_resource_conflict_gone_after_expiry_release_or_other_branch(self):
+        other = "BRIDGE-0901"
+        self.store.create_task(valid_task(bridge_task_id=other))
+        claim_mod.claim(self.store, TID, "a", "HAM01", 600, now=T0)
+        claim_mod.claim(self.store, other, "b", "DES01", 600, now=T0 + timedelta(seconds=600))
+        claim_mod.release(self.store, other, "b", "DES01")
+        claim_mod.release(self.store, TID, "a", "HAM01", now=T0)
+        third = "BRIDGE-0902"
+        self.store.create_task(valid_task(bridge_task_id=third, branch="feature-x"))
+        claim_mod.claim(self.store, TID, "a", "HAM01", 600, now=T0)
+        claim_mod.claim(self.store, third, "b", "DES01", 600, now=T0)
+
     def test_claim_file_does_not_disturb_next_run_id(self):
         claim_mod.claim(self.store, TID, "a", "HAM01", 60, now=T0)
         self.assertEqual(self.store.next_run_id(TID), "RUN-01")

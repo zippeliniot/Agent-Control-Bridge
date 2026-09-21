@@ -19,7 +19,7 @@ SCHEMA_DIR = REPO_ROOT / "schemas"
 class ErrorCodesTests(unittest.TestCase):
     def test_load_and_state_blocked(self):
         codes = errorcodes.load_error_codes(SCHEMA_DIR)
-        self.assertEqual(len(codes), 5)
+        self.assertEqual(len(codes), 6)
         for entry in codes.values():
             self.assertEqual(entry["state"], "BLOCKED")
             self.assertTrue(entry["description"])
