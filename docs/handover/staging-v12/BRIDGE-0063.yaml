@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0063
+project_id: agent-control-bridge
+title: B7 Ressourcenregel + Parallelitaetstests
+description: 'Teile 0063, 0064. Details: work-packages/BRIDGE-063.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0061
+acceptance_criteria:
+- 'Teil 0063: Regeldatei vorhanden'
+- 'Teil 0063: Zweiter Claim auf gleichen Schluessel abgelehnt (Test)'
+- 'Teil 0063: SSOT-Test weiter gruen'
+- 'Teil 0064: Parallel-Test 5/5 gruen'
+- 'Teil 0064: Ausfalltest gruen'
+- 'Teil 0064: Keine Produktcode-Aenderung'
+status: CREATED
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude

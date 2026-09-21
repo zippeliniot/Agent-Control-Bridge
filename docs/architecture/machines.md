@@ -20,14 +20,14 @@ Checkout mehr — siehe Ausführungsmodell unten.
 
 | Physische Maschine | Logische Umgebung | OS | Stand |
 |--------------------|-------------------|----|-------|
-| `HAM11` | `HAM01` | Windows (+ Ubuntu/WSL für Codex) | **alte Topologie (`claude`/`codex`), Umstellung ausstehend, nächste Rotation** |
+| `HAM11` | `HAM01` | Windows (+ Ubuntu/WSL für Codex) | **neue Topologie (`board`/`dev`/`claude`/`codex`), umgesetzt 2026-09-20** |
 | `DES11` | `DES01` | Windows (+ Ubuntu/WSL für Codex) | **neue Topologie (`board`/`dev`/`claude`/`codex`), umgesetzt 19.09.2026** |
 
 Bis zur Umstellung auf HAM11: dort gilt weiterhin die alte Zuordnung
 (`claude\` = ACB-Entwicklung **und** Web-UI, `codex\` unverändert) — bei
 jeder Aussage über „den Klon" explizit prüfen, welche Maschine gemeint ist.
 
-Hinweis: `bridge commands` auf HAM11 zeigt bis zur Rotation keinen gültigen `dev`-Pfad (fail-soft).
+Hinweis: HAM11 und DES11 nutzen seit 2026-09-20 dieselbe Topologie (board/dev/claude/codex).
 
 Codex nutzt unter WSL die Umgebungsvariable `ACB_PROJECT_BASE`, die auf den
 eigenen `codex`-Klon zeigt — keine Änderung an `registry.yaml` nötig, die

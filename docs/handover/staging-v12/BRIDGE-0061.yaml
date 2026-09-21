@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0061
+project_id: agent-control-bridge
+title: 'B6 Stufe B: Version/CAS + Claim/Lease'
+description: 'Teile 0061, 0062. Details: work-packages/BRIDGE-061.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0060
+acceptance_criteria:
+- 'Teil 0061: Freigabe G3 dokumentiert'
+- 'Teil 0061: CAS-Konflikt lehnt ab (Test)'
+- 'Teil 0061: Altes Verhalten unveraendert (Test)'
+- 'Teil 0062: claim/release/renew vorhanden'
+- 'Teil 0062: Fremder aktiver Claim abgelehnt (Test)'
+- 'Teil 0062: Abgelaufener Claim uebernehmbar (Test)'
+status: CREATED
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude

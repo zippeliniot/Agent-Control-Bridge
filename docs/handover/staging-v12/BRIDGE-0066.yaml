@@ -1,0 +1,26 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0066
+project_id: agent-control-bridge
+title: Dorfschaft Read-only-Pilot
+description: 'Teile 0066. Details: work-packages/BRIDGE-066.md'
+task_class: INTEGRATION
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Codex-Modell (April tragen ein)
+reasoning_level: LOW
+executor: codex
+permissions:
+- READ_ONLY
+- GIT_PUSH
+depends_on:
+- BRIDGE-0065
+acceptance_criteria:
+- Pre-Flight-Check bestanden oder BLOCKED gemeldet
+- Zielrepo unveraendert (HEAD+Status vorher==nachher)
+- Ergebnis in --summary
+status: CREATED
+created_at: '2026-09-19T00:00:00Z'
+created_by: browser-claude
