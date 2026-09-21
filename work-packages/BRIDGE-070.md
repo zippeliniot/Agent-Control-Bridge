@@ -25,6 +25,6 @@
 **Tests:** `python -m unittest tests.test_notify`, dann volle Suite EINMAL.
 - [x] Kennung als Konstante, eigene Kennung entfernt
 - [x] Test auf Kennung im Skript
-- [ ] Suite gruen
+- [x] Suite gruen
 
 Hinweis: Der echte Toast wird nach der Archivierung erneut von April auf HAM11 abgenommen.
