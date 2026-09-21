@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0068
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: a02329d32104eb93b3b4e6526e6a3de0f1f36e1a
+executor: claude-code
+started_at: '2026-09-21T10:39:22Z'
+ended_at: '2026-09-21T10:40:19Z'
+created_by: claude-code@HAM11
+base_head: a176be0a294dcddc32a808f1ee84fe144e0b7a88
+commits:
+- sha: f9aff5d62249094f5742bd59d76c0948cc7fbc8c
+  message: 'Ops: BRIDGE-0068 task_create (Steuerchat-Aktion via CLI)'
+- sha: d74d1ea1c985757ccd07950526c745313ff62ffe
+  message: 'Ops: BRIDGE-0068 run_start (Steuerchat-Aktion via CLI)'
+- sha: a02329d32104eb93b3b4e6526e6a3de0f1f36e1a
+  message: 'BRIDGE-0068 Teil A: Entscheidungsdatei Windows-Benachrichtigung'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-BENACHRICHTIGUNG.md
+- results/BRIDGE-0068/RUN-01/heartbeat.json
+- tasks/BRIDGE-0068/task.yaml
+- work-packages/BRIDGE-068.md
+summary: 'Entscheidungsdatei docs/concepts/ENTSCHEIDUNG-BENACHRICHTIGUNG.md (ENTWURF)
+  angelegt: Ist-Stand, Optionen A (webui-serve-Auto-Pull-Hook) und B (board --watch),
+  Kanal PowerShell-Toast per Opt-in, Regeln rein lesend/fail-open/Entprellung/injizierbarer
+  Notifier. Empfehlung Option A. Schnitt BRIDGE-0069 (T2, Sonnet 5 / MEDIUM) benannt.'
+physical_machine: HAM11
