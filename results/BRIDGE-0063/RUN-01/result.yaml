@@ -1,0 +1,47 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0063
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: fe80e498fa9a78f2aa0e793f20b7a60f1c48241c
+executor: claude-code
+started_at: '2026-09-21T10:09:56Z'
+ended_at: '2026-09-21T10:27:08Z'
+created_by: claude-code@HAM11
+base_head: 6599bad9f7094ab685f5b596658c21ceddfd84fb
+commits:
+- sha: 20a0e78ecc3750f9a395d10e7d283cec47bd02d3
+  message: 'Ops: BRIDGE-0063 task_create (Steuerchat-Aktion via CLI)'
+- sha: e50a3e68330b499f0d2e28a4a6b26e0ea5d496ba
+  message: 'Ops: BRIDGE-0063 run_start (Steuerchat-Aktion via CLI)'
+- sha: 89034ebe3c5acfb8885148bbf2920f775decca04
+  message: 'BRIDGE-0063 Teil A: Ressourcenregel (RESOURCE_CONFLICT)'
+- sha: 934be78697b1aa19ad80ef5028d57a350392a838
+  message: 'Docs: BRIDGE-0068 Entscheidung Windows-Benachrichtigung (WP, Staging,
+    Konzept)'
+- sha: fe80e498fa9a78f2aa0e793f20b7a60f1c48241c
+  message: 'BRIDGE-0063 Teil B: Parallelitaets- und Ausfalltests'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ACB-UMSETZUNGSKONZEPT-V2.md
+- docs/concepts/ENTSCHEIDUNG-RESSOURCENREGEL.md
+- docs/handover/staging-v12/BRIDGE-0068.yaml
+- results/BRIDGE-0063/RUN-01/heartbeat.json
+- schemas/error-codes.yaml
+- schemas/task.schema.yaml
+- src/bridge/claim.py
+- tasks/BRIDGE-0063/task.yaml
+- tests/test_claim.py
+- tests/test_errorcodes.py
+- tests/test_parallel.py
+- work-packages/BRIDGE-063.md
+- work-packages/BRIDGE-068.md
+summary: 'Teil A: Ressourcenregel (repository, remote, branch) in claim.py mit Fehlercode
+  RESOURCE_CONFLICT in error-codes.yaml und task.schema.yaml, Regeldatei und Tests;
+  test_errorcodes-Zaehler 5->6 angepasst. Teil B: tests/test_parallel.py mit Subprozess-Tests
+  fuer Lock/Claim-Rennen und Ausfaelle (5/5 gruen), kein Produktcode. Volle Suite
+  481/481 OK.'
+physical_machine: HAM11
