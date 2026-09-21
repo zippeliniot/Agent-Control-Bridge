@@ -27,5 +27,5 @@
 6. Empfehlung A oder B, dazu Schnitt des Folgeauftrags BRIDGE-0069 (T2, Sonnet 5 / MEDIUM) in max. 3 Zeilen.
 7. Status ENTWURF - Freigabe durch April.
 **Tests:** Keine.
-- [ ] Entscheidungsdatei mit A/B, Regeln, Empfehlung
-- [ ] Schnitt von BRIDGE-0069 benannt
+- [x] Entscheidungsdatei mit A/B, Regeln, Empfehlung
+- [x] Schnitt von BRIDGE-0069 benannt
