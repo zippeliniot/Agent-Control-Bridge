@@ -219,6 +219,8 @@ CREATED → RUNNING → COMPLETED → WAITING_FOR_COPY_TO_CONTROL
 `--actor` ist **Pflicht** (Vorbelegung für die Aktions-Buttons). Bindet
 hart an `127.0.0.1`, kein `--host`-Flag — bewusst kein Fernzugriff
 möglich.
+`--notify` (Standard aus, BRIDGE-0069): Windows-Toast mit ID und Titel, sobald ein Auftrag neu auf `WAITING_FOR_COPY_TO_CONTROL` steht. Rein lesend, fail-open, Altbestand beim Start still.
+Läuft im Auto-Pull-Thread und braucht daher `--pull-interval` > 0 (sonst nur ein Hinweis); nur unter Windows, nur solange der Server läuft.
 
 ### `watch` — automatischer Beobachter (Stufe 2/3, aktuell selten genutzt)
 | Befehl | Zweck |

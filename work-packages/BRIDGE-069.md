@@ -32,6 +32,6 @@
 - [x] fail-open (Test)
 - [x] Hook ohne Store-Write und Audit (Test)
 - [x] Ohne --notify unveraendert (Test)
-- [ ] Doku ergaenzt
+- [x] Doku ergaenzt
 
 Hinweis: Der echte Toast wird nach der Archivierung manuell von April auf HAM11 abgenommen, nicht vom Executor.
