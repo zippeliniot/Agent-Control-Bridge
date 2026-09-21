@@ -36,6 +36,6 @@
 2. Prozess bricht mitten im Schreiben ab -> Datei intakt, stale Lock/Claim erkannt.
 3. Ohne Sleeps mit langen Wartezeiten (kurze Timeouts, Events).
 **Tests:** `python -m unittest tests.test_parallel` 5x, dann volle Suite EINMAL.
-- [ ] Parallel-Test 5/5 gruen
-- [ ] Ausfalltest gruen
-- [ ] Keine Produktcode-Aenderung
+- [x] Parallel-Test 5/5 gruen
+- [x] Ausfalltest gruen
+- [x] Keine Produktcode-Aenderung
