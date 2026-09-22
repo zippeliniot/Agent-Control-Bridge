@@ -1,0 +1,41 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0001
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: cf14e7c2b9890fcbd40cc538b4cbce3b9232218b
+executor: claude-code
+started_at: '2026-09-22T19:01:16Z'
+ended_at: '2026-09-22T19:08:08Z'
+created_by: claude-code@HAM11
+base_head: 02fcbdc
+commits:
+- sha: 168d66225303684576354b721bf04f0f795f4c44
+  message: 'Ops: WETTER-0001 task_create (Steuerchat-Aktion via CLI)'
+- sha: 192476b8791901069f233b1957b650560cd1601a
+  message: 'Ops: WETTER-0001 run_start (Steuerchat-Aktion via CLI)'
+- sha: f752df23570b8bab3be9addb16e819026abc5d76
+  message: 'WETTER-0001: Teil A Haken gesetzt (Ziel-Repo committet f345296)'
+- sha: cf14e7c2b9890fcbd40cc538b4cbce3b9232218b
+  message: 'WETTER-0001: verbleibende Haken gesetzt (manuelle Pruefung, Teil B, Scope)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0001/RUN-01/heartbeat.json
+- tasks/WETTER-0001/task.yaml
+- work-packages/WETTER-001.md
+summary: 'Teil A: precipitation_probability in fetchRegenNowcast (js/api.js) ergaenzt
+  und in regen.js durch Timeline/Peak/Hero/Chart-Tooltip gezogen; RING_KM um nahen
+  2-km-Ring erweitert ([2,5,10,20,30], DIRS bei 8 belassen wg. Rate-Limit-Guard, 41
+  statt 33 Punkte). Commit f345296 im Ziel-Repo (Wetter-App), gepusht. Manuelle Pruefung:
+  Claude-in-Chrome-Erweiterung in dieser Session nicht verbunden, daher Ersatzverfahren
+  - curl bestaetigt precipitation_probability im Open-Meteo-Response, und ein Node-Skript
+  hat regen.js refresh() fuer Hamburg und Gronenberg gegen die echte API ohne Fehler
+  ausgefuehrt. Teil B: DWD-RADOLAN-Recherche - opendata.dwd.de liefert nur binaere
+  RADOLAN-Composites ohne CORS-Freigabe (per curl bestaetigt: keine Access-Control-Allow-Origin-Header);
+  dwd.api.bund.dev (warnwetter-API) bietet keine Radar-/RADOLAN-JSON-Daten, nur Punktvorhersagen.
+  Keine CORS-faehige, JSON-aufbereitete DWD-RADOLAN-Quelle ohne eigenen Server gefunden
+  -> nicht umgesetzt.'
+physical_machine: HAM11
