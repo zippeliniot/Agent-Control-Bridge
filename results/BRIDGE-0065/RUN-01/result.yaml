@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0065
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 6d90b6b7c02fa4ba029497ab5e2aaeb8d4a0c8f2
+executor: claude-code
+started_at: '2026-09-22T09:26:23Z'
+ended_at: '2026-09-22T09:30:29Z'
+created_by: claude-code@HAM11
+base_head: 64464e1185a820080587435565be255a170a3ca4
+commits:
+- sha: f694958f0f67114945b5d2c6b3cf71e28c52fb9c
+  message: 'Ops: BRIDGE-0065 task_create (Steuerchat-Aktion via CLI)'
+- sha: febefddd0aad5ea083c671e4f52c263c3547be0b
+  message: 'Ops: BRIDGE-0065 run_start (Steuerchat-Aktion via CLI)'
+- sha: 6d90b6b7c02fa4ba029497ab5e2aaeb8d4a0c8f2
+  message: 'BRIDGE-0065 Teil 1: Checkliste-Doku erstellt, Profil bestaetigt'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-DORFSCHAFT-PILOT.md
+- results/BRIDGE-0065/RUN-01/heartbeat.json
+- tasks/BRIDGE-0065/task.yaml
+- work-packages/BRIDGE-065.md
+summary: Dorfschaft-Profil geprueft (read_only=true, allow_push=false); Checkliste
+  docs/ACB-DORFSCHAFT-PILOT.md mit Windows-Pfad, Worktree-Status und den drei offenen
+  Pflichtpunkten (a)-(c) erstellt; kein Dorfschaft-Zugriff; tests.test_profiles 42/42
+  gruen.
+physical_machine: HAM11
