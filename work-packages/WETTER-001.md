@@ -43,7 +43,7 @@ Actor = claude-code
 ## Abschluss
 `BR run finish WETTER-0001 --status COMPLETED --actor claude-code --commit --summary "<inkl. HEAD-SHA von E:\_DEV\Wetter-App nach Teil A>"`, `git push` (ACB-Repo, Klon `projects\wetter-app`).
 Ausgabe NUR: Footer (Auftrag/Lauf/Status) + max. 4 Zeilen: ACB-HEAD, Ziel-Repo-HEAD (SHA), Teil-A-Befund, Teil-B-Befund.
-- [ ] Teil A umgesetzt, im Ziel-Repo committet und gepusht
+- [x] Teil A umgesetzt, im Ziel-Repo committet und gepusht
 - [ ] Manuelle Pruefung ohne Konsolenfehler, beide Standorte
 - [ ] Teil B: Befund dokumentiert (umgesetzt ODER begruendet nicht umgesetzt)
 - [ ] Scope eingehalten (nur genannte Dateien in beiden Repos)
