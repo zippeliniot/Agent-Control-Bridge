@@ -24,6 +24,6 @@
 3. Offene Pflichtpunkte, VOR BRIDGE-0066 durch April zu klaeren (nicht durch Raten zu schliessen): (a) ob April `git worktree repair` im Hauptrepo ausfuehrt und welcher Worktree danach der massgebliche ist, oder ob stattdessen main als Pilotgrundlage dient; (b) expected_branch und expected_head fuer den so bestaetigten Stand; (c) ob Codex fuer BRIDGE-0066 mit Windows-Git im reparierten Worktree oder im Hauptrepo (main) arbeiten soll.
 4. Keine Dorfschaft-Datei lesen oder aendern.
 **Tests:** `python -m unittest tests.test_profiles`.
-- [ ] Profil read-only bestaetigt
-- [ ] Checkliste mit Windows-Pfad, Worktree-Status und den drei offenen Pflichtpunkten (a)-(c)
-- [ ] Kein Dorfschaft-Zugriff
+- [x] Profil read-only bestaetigt
+- [x] Checkliste mit Windows-Pfad, Worktree-Status und den drei offenen Pflichtpunkten (a)-(c)
+- [x] Kein Dorfschaft-Zugriff
