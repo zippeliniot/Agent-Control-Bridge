@@ -1,0 +1,26 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0001
+project_id: wetter-app
+title: 'Regen-Nowcast: Wahrscheinlichkeit, dichtere Abtastung, DWD-Radar pruefen'
+description: 'Details: work-packages/WETTER-001.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- Teil A umgesetzt, im Ziel-Repo committet und gepusht
+- Manuelle Pruefung ohne Konsolenfehler, beide Standorte
+- 'Teil B: Befund dokumentiert (umgesetzt ODER begruendet nicht umgesetzt)'
+- Scope eingehalten (nur genannte Dateien in beiden Repos)
+status: CREATED
+created_at: '2026-09-22T00:00:00Z'
+created_by: browser-claude
