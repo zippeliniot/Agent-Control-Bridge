@@ -16,6 +16,7 @@ Checkout mehr — siehe Ausführungsmodell unten.
 | `E:\_DEV\Agent-Control-Bridge\board` | Einzige Web-UI-/Writer-Instanz für den ACB-Store (`bridge webui serve`) | Steuerchat/April |
 | `E:\_DEV\Agent-Control-Bridge\dev` | ACB-Quellcode-Entwicklung (BRIDGE-Aufträge, die die Bridge selbst ändern) | Claude Code |
 | `E:\_DEV\Agent-Control-Bridge\claude` | Ausschließlich Produkt-/Projektarbeit mit Claude Code, **keine** ACB-Entwicklung | Claude Code |
+| `E:\_DEV\Agent-Control-Bridge\projects\<projekt-id>` | Produkt-/Projektarbeit fuer ein von ACB gesteuertes Fremdprojekt (z. B. `projects\wetter-app`, `projects\dorfschaft`). Ein Klon pro Projekt, beliebig viele parallel. Ersetzt `claude\` fuer neue Auftraege (2026-09-22). | Claude Code / Codex je nach Profil |
 | `E:\_DEV\Agent-Control-Bridge\codex` | Codex-Checkout (Windows-nativ oder WSL, je nach Auftrag) | Codex |
 
 | Physische Maschine | Logische Umgebung | OS | Stand |
@@ -38,6 +39,8 @@ HAM11 und DES11 nur **namensgleich**, nicht geteilt — es gibt keine gemeinsame
 Platte. Die beiden lokalen Arbeitskopien sind unabhängig und treffen sich
 **ausschließlich über GitHub**.
 
+Ordnername unter `projects\` = Repository-/GitHub-Name des Fremdprojekts (z. B. `wetter-app`), nicht die interne `project_id`, falls diese abweicht. Diese Klone enthalten NUR ACB-Koordinationsdateien (task.yaml/result.yaml/Audit/WP), niemals den Produktcode selbst - der liegt in seinem eigenen, unabhaengigen lokalen Pfad (z. B. `E:\_DEV\Wetter-App`).
+
 ## Ausführungsmodell (verbindlich)
 
 Rollen:
@@ -45,8 +48,8 @@ Rollen:
 - **Claude Code — native Windows-App** = ausführende Instanz. Arbeitet in
   `E:\_DEV\Agent-Control-Bridge\dev` (auf DES11), wenn der Auftrag die Bridge
   selbst ändert (`task_class: BUGFIX`/`FEATURE` am Bridge-Quellcode), sonst in
-  `E:\_DEV\Agent-Control-Bridge\claude` (reine Produkt-/Projektarbeit, kein
-  ACB-Quellcode). Ändert Dateien, führt Tests aus, committet und pusht. Läuft
+  `E:\_DEV\Agent-Control-Bridge\projects\<projekt-id>` (reine Produkt-/Projektarbeit
+  fuer ein Fremdprojekt, kein ACB-Quellcode; `claude\` nur noch fuer Altbestand). Ändert Dateien, führt Tests aus, committet und pusht. Läuft
   **nicht** in der Ubuntu/WSL-Umgebung.
 - **Web-UI/Writer** = einzige schreibende Instanz für den ACB-Store, läuft
   ausschließlich aus `E:\_DEV\Agent-Control-Bridge\board` (auf DES11) heraus
