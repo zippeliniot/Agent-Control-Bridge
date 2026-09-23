@@ -25,4 +25,4 @@
 - [x] Vorlage mit den 6 Platzhaltern (inkl. EXECUTOR_HINWEIS) angelegt
 - [x] Skript fuellt korrekt fuer claude-code UND codex (beide per Test belegt)
 - [x] Fehlendes Profilfeld / unbekannter executor fuehrt zu Fehler, nicht zu Raten (Test)
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
