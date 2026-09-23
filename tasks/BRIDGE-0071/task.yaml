@@ -21,7 +21,7 @@ acceptance_criteria:
 - Skript fuellt korrekt fuer claude-code UND codex (beide per Test belegt)
 - Fehlendes Profilfeld / unbekannter executor fuehrt zu Fehler, nicht zu Raten (Test)
 - Volle Suite gruen
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: RUNNING
 created_at: '2026-09-23T00:00:00Z'
 created_by: browser-claude
-task_version: 3
+task_version: 5
