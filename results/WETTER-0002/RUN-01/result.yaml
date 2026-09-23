@@ -1,0 +1,40 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0002
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 67674c4219287c1de588fc1e2c66b2a12640b8da
+executor: claude-code
+started_at: '2026-09-23T09:34:18Z'
+ended_at: '2026-09-23T09:41:15Z'
+created_by: claude-code@HAM11
+base_head: '8794262'
+commits:
+- sha: a2e4c7bbd456e1e33acbc321983b4c070c866e11
+  message: 'Ops: WETTER-0002 task_create (Steuerchat-Aktion via CLI)'
+- sha: 2bcf48789be8748fc14d009da037b896b47a11e9
+  message: 'Ops: WETTER-0002 run_start (Steuerchat-Aktion via CLI)'
+- sha: 67674c4219287c1de588fc1e2c66b2a12640b8da
+  message: 'WETTER-0002: Haken gesetzt (Teil A+B umgesetzt, Ziel-Repo 4831a8e)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0002/RUN-01/heartbeat.json
+- tasks/WETTER-0002/task.yaml
+- work-packages/WETTER-002.md
+summary: 'Teil A: index.html Footnote korrigiert (inkl. statt keine Regenwahrscheinlichkeit)
+  + neue immer sichtbare Stat-Kachel ''Regenwahrscheinlichkeit (2 h)'' unter dem Hero-Card;
+  regen.js berechnet maxProb (Maximum von site_prob ueber die 2h-Timeline) und setzt
+  es in render()/showError() immer, auch bei ''Kein Regen'' - bestehende bedingte
+  Texte in heroFeel/regen-peak-sub unveraendert. Teil B: main.js ruft updateSeaHeader()
+  jetzt auch im Erstlade-Pfad von loadAll() (if (!shellBuilt)-Zweig) direkt nach initCharts()
+  auf, analog zu loadFromCache() - marineCache ist zu diesem Zeitpunkt bereits gesetzt.
+  Commit 4831a8e im Ziel-Repo (Wetter-App), gepusht. Manuelle Pruefung: Claude-in-Chrome-Erweiterung
+  in dieser Session erneut nicht verbunden. Ersatzverfahren Teil A: Node-Skript hat
+  regen.js refresh() fuer Gronenberg gegen die echte Open-Meteo-API ausgefuehrt, regen-prob-main
+  zeigte ''0%'' bei ''Kein Regen'' (immer sichtbar, kein Fehler). Teil B: nur Code-Review
+  (kein Browser-Lauf) - marineCache-Zuweisung liegt nachweislich vor dem neuen Aufruf,
+  DOM-Bindung #sea-current per ui.dom.seaCurrent bestaetigt korrekt verdrahtet.'
+physical_machine: HAM11
