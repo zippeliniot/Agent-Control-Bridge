@@ -1,5 +1,7 @@
 # ACB-Steuerchat — Sitzungsstart-Prompt (generisch, für jede neue Sitzung)
 
+> **Geltungsbereich:** Startprompt des ACB-Kern-Steuerchats (Projekt `agent-control-bridge`). Für Fremdprojekte gilt `docs/ACB-STEUERCHAT-START-GENERISCH-v2.md`.
+
 > Dieser Text wird als **erste Nachricht** in einen neuen Browser-Claude-Chat
 > eingefügt, um eine Agent-Control-Bridge-Steuerchat-Sitzung zu starten.
 > Er ist absichtlich **nicht** auftragsspezifisch — er beschreibt den immer
@@ -26,24 +28,24 @@ rm -rf /home/claude/ccb-session && git clone --quiet https://github.com/zippelin
 
 In dieser Reihenfolge:
 
-1. **`docs/handover/CCB-UEBERGABE-v<N>.md`** — die Datei mit der
+1. **`docs/handover/ACB-UEBERGABE-v<N>.md`** — die Datei mit der
    **höchsten** Versionsnummer in `docs/handover/` (`ls docs/handover/ |
    sort -V`, nicht nach Erinnerung raten). Das ist die aktuellste Übergabe
    und enthält den Stand der letzten Sitzung, inklusive offener
    Entscheidungen — vollständig lesen, nicht überfliegen.
-2. `docs/ACB-STEUERCHAT-ARBEITSWEISE.md`
-3. `docs/ACB-STEUERCHAT-REFERENZ.md`
-4. `CLAUDE.md`
-5. `CODEX.md`
-6. `CONTROL.md`
-7. `docs/architecture/ARCHITECTURE.md`
-8. `docs/architecture/machines.md` (Maschinen-/Pfad-Register — wichtig,
+2. `docs/concepts/ACB-UMSETZUNGSKONZEPT-V2.md`
+3. `docs/concepts/ENTSCHEIDUNG-PUSH-MODELL.md`
+4. `.claude/commands/acb-auftrag.md`
+5. `docs/ACB-STEUERCHAT-ARBEITSWEISE.md`
+6. `docs/architecture/machines.md` (Maschinen-/Pfad-Register — wichtig,
    siehe Stolperfalle unten)
-9. `docs/security/SECURITY-MODEL.md`
-10. `docs/PROJEKTKONZEPT.md`
-11. `docs/ACB-PROJEKT-INTEGRATION.md`
-12. `docs/ACB-ORCHESTRATOR-KONZEPT.md`
-13. Alle `projects/<id>/project.yaml`
+7. `CLAUDE.md`
+
+Bei Bedarf (nicht Pflicht): `docs/ACB-STEUERCHAT-REFERENZ.md`, `CODEX.md`,
+`CONTROL.md`, `docs/architecture/ARCHITECTURE.md`,
+`docs/security/SECURITY-MODEL.md`, `docs/PROJEKTKONZEPT.md`,
+`docs/ACB-PROJEKT-INTEGRATION.md`, `docs/ACB-ORCHESTRATOR-KONZEPT.md`, alle
+`projects/<id>/project.yaml`.
 
 ## 3. Schemas lesen — Pflichtfelder/Zustandsübergänge nicht aus dem Gedächtnis rekonstruieren
 

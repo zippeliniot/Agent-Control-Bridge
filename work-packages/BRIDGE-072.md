@@ -44,8 +44,8 @@ In `docs/ACB-STEUERCHAT-STANDARDSTART.md` genau zwei Aenderungen:
 > **Geltungsbereich:** Startprompt des ACB-Kern-Steuerchats (Projekt `agent-control-bridge`). Für Fremdprojekte gilt `docs/ACB-STEUERCHAT-START-GENERISCH-v2.md`.
 ```
 2. In Abschnitt 2 die nummerierte Pflichtliste (13 Punkte, beginnend mit `CCB-UEBERGABE-v<N>.md`) ersetzen durch die aktuell gueltige Pflichtliste: (1) `docs/handover/ACB-UEBERGABE-v<N>.md` mit hoechster Versionsnummer (`ls docs/handover/ | sort -V`), (2) `docs/concepts/ACB-UMSETZUNGSKONZEPT-V2.md`, (3) `docs/concepts/ENTSCHEIDUNG-PUSH-MODELL.md`, (4) `.claude/commands/acb-auftrag.md`, (5) `docs/ACB-STEUERCHAT-ARBEITSWEISE.md`, (6) `docs/architecture/machines.md` (Maschinen-/Pfad-Register), (7) `CLAUDE.md`. Darunter neuer Absatz "Bei Bedarf (nicht Pflicht):" mit den bisherigen uebrigen Eintraegen (`docs/ACB-STEUERCHAT-REFERENZ.md`, `CODEX.md`, `CONTROL.md`, `docs/architecture/ARCHITECTURE.md`, `docs/security/SECURITY-MODEL.md`, `docs/PROJEKTKONZEPT.md`, `docs/ACB-PROJEKT-INTEGRATION.md`, `docs/ACB-ORCHESTRATOR-KONZEPT.md`, alle `projects/<id>/project.yaml`). Nichts sonst in der Datei aendern.
-- [ ] Geltungsbereich-Hinweis eingefuegt
-- [ ] Pflichtliste aktualisiert, `CCB-`-Name korrigiert, uebrige Eintraege unter "Bei Bedarf"
+- [x] Geltungsbereich-Hinweis eingefuegt
+- [x] Pflichtliste aktualisiert, `CCB-`-Name korrigiert, uebrige Eintraege unter "Bei Bedarf"
 
 ### Teil C - PROJEKT-INTEGRATION: Verweis auf die generische Anleitung
 In `docs/ACB-PROJEKT-INTEGRATION.md` direkt unter der Titelzeile diese Zeile einfuegen (woertlich), sonst nichts aendern:
