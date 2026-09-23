@@ -22,7 +22,7 @@
 2. scripts/steuerchat-vorlage.py: liest projects/<id>/project.yaml (--project-id Pflichtargument). Entnimmt project_id, task_prefix, github_repo, executor. PROJEKTNAME wie gehabt aus description ableiten oder project_id. EXECUTOR_HINWEIS: bei executor == claude-code der bekannte Text (Skill-Vermeidung, woertlich auf WP-Datei verweisen, Beispiel WETTER-0001 nennen); bei executor == codex ein kurzer, EHRLICH als vorlaeufig gekennzeichneter Platzhaltertext ("Codex laeuft nativ in PowerShell, keine Skills bekannt - noch keine dokumentierte Erfahrung mit diesem Profil, Steuerchat soll beim ersten Auftrag besonders genau pruefen und Abweichungen hier nachtragen"); bei jedem anderen/fehlenden Wert: Fehlermeldung auf stderr, Exit-Code != 0 (fail-closed, nicht raten). Fehlt project_id/task_prefix/github_repo im Profil: ebenfalls Fehler statt Raten. Ausgabe auf stdout (kein Datei-Write).
 3. Tests mit Fake-project.yaml (temp dir): (a) executor claude-code fuellt korrekt inkl. Skill-Hinweis, (b) executor codex fuellt korrekt inkl. Codex-Platzhaltertext, (c) fehlendes Pflichtfeld -> Fehler, (d) unbekannter executor-Wert -> Fehler, (e) unbekannte project-id -> Fehler.
 **Tests:** `python -m unittest tests.test_steuerchat_vorlage`, danach volle Suite EINMAL.
-- [ ] Vorlage mit den 6 Platzhaltern (inkl. EXECUTOR_HINWEIS) angelegt
+- [x] Vorlage mit den 6 Platzhaltern (inkl. EXECUTOR_HINWEIS) angelegt
 - [ ] Skript fuellt korrekt fuer claude-code UND codex (beide per Test belegt)
 - [ ] Fehlendes Profilfeld / unbekannter executor fuehrt zu Fehler, nicht zu Raten (Test)
 - [ ] Volle Suite gruen
