@@ -1,6 +1,7 @@
 # ACB-Steuerchat — Startprompt für ein neues Projekt (generisch, v2)
 
 Verwendung: In ein neues claude.ai-Projekt als Custom Instructions einfügen. Einziges Feld: `{{PROJEKT_ID}}`.
+Empfohlen: `scripts\steuerchat-vorlage.py --project-id <id>` gibt den Text ab der Linie fertig aus und prüft die ID gegen die Profile.
 Alles Weitere liest der Steuerchat selbst aus dem Projektprofil, es gibt nichts abzutippen außer der ID.
 Text ab der Linie.
 

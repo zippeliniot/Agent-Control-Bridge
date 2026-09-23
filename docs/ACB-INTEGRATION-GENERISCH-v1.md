@@ -37,7 +37,7 @@ muss alles gepusht sein (`scripts\handover-check.ps1`). Die Web-UI (`webui serve
 | 3 | Profil `projects/<id>/project.yaml` anlegen (Vorlage unten), mit `project validate` prüfen, im ACB-Repo committen und pushen. | Steuerchat liefert Datei, April committet |
 | 4 | ACB-Klon für das Projekt anlegen und `.venv` einrichten (unten). | April |
 | 5 | Im Zielrepo ein eigenes `CLAUDE.md` mit Regeln für den Executor anlegen (Scope, Tests, Fail-closed). Das Profil schützt nur begrenzt (siehe unten). | Steuerchat entwirft, April committet im Zielrepo |
-| 6 | Neues claude.ai-Projekt/Chat mit dem Steuerchat-Startprompt (`ACB-STEUERCHAT-START-GENERISCH-v2.md`) anlegen. | April |
+| 6 | Neues claude.ai-Projekt/Chat mit dem Steuerchat-Startprompt (`ACB-STEUERCHAT-START-GENERISCH-v2.md`) anlegen. Fertig befüllt per `scripts\steuerchat-vorlage.py --project-id <id>`. | April |
 
 **Profil-Vorlage (schreibend):**
 

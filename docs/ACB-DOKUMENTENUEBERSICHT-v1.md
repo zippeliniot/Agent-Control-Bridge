@@ -7,7 +7,7 @@ Beantwortet vier Fragen: welches Dokument wofür und wann, wo Eingaben passieren
 
 | Dokument | Ort | Wofür | Wann / durch wen |
 |---|---|---|---|
-| `ACB-STEUERCHAT-START-GENERISCH-v2.md` | ACB-Repo `docs/`; Text wird in claude.ai eingefügt | Startprompt eines Projekt-Steuerchats. Enthält Startablauf, Kommunikationsregeln, Prüfregeln. | **Einmal je Projekt**, von April in die Custom Instructions des neuen claude.ai-Projekts eingefügt. Einziges Feld: `{{PROJEKT_ID}}`. |
+| `ACB-STEUERCHAT-START-GENERISCH-v2.md` | ACB-Repo `docs/`; Text wird in claude.ai eingefügt | Startprompt eines Projekt-Steuerchats. Enthält Startablauf, Kommunikationsregeln, Prüfregeln. | **Einmal je Projekt**, von April in die Custom Instructions des neuen claude.ai-Projekts eingefügt. Fertig befüllt per `scripts\steuerchat-vorlage.py --project-id <id>` (prüft die ID gegen die Profile, kein manuelles Ersetzen). |
 | `ACB-INTEGRATION-GENERISCH-v1.md` | ACB-Repo `docs/` | Referenz: Einrichtung, Auftragsablauf, Vorlagen (Profil, Staging-YAML, Work-Package, Claude-Code-Anweisung), Prüfung, CLI. | Der Steuerchat liest sie beim Start selbst. April nutzt sie für die einmalige Einrichtung (Abschnitt 2 dort). |
 | `projects/<id>/project.yaml` | ACB-Repo | Projektprofil: einzige Quelle für Name, Präfix, Zielrepo, Executor, Rechte. | **Einmal je Projekt**, vor dem ersten Chat. Steuerchat liefert die Datei, April committet. |
 | `CLAUDE.md` im Zielrepo | Zielrepo | Regeln für den Executor im Produktcode (Scope, Tests, Fail-closed). | Einmal je Projekt, empfohlen vor dem ersten Auftrag. |
@@ -15,7 +15,11 @@ Beantwortet vier Fragen: welches Dokument wofür und wann, wo Eingaben passieren
 | `tasks/incoming/<ID>.yaml` | ACB-Klon lokal, gitignored | Staging-YAML zum Anlegen des Auftrags im Store. | Je Auftrag. April legt lokal ab, nicht committen. |
 | `docs/handover/<Präfix>-STEUERCHAT-UEBERGABE-v<N>.md` | ACB-Repo | Stand am Sitzungsende: Änderungen, HEADs, offene Entscheidungen, „nicht von selbst anfangen bei". | **Am Ende jeder Sitzung** oder vor Chatwechsel. Steuerchat liefert, April committet. Nächster Chat liest die höchste Version. |
 
-**Nicht verwenden für neue Projekte:** `ACB-STEUERCHAT-STANDARDSTART.md`, `ACB-STEUERCHAT-VORLAGE.md`, `scripts/steuerchat-vorlage.py` und `ACB-PROJEKT-INTEGRATION.md`. Sie enthalten ACB-Kern-Historie und veraltete Angaben. Die generischen Dokumente oben ersetzen sie für diesen Zweck. Für die ACB-Kernentwicklung selbst gelten sie weiter, bis sie per BRIDGE-Auftrag bereinigt sind.
+**Ältere Dokumente und ihr Geltungsbereich:**
+- `ACB-STEUERCHAT-STANDARDSTART.md` = nur ACB-Kern-Steuerchat.
+- `ACB-PROJEKT-INTEGRATION.md` = Detailreferenz zu Profilfeldern, Ablauf steht in der Integrationsdatei.
+- `ACB-STEUERCHAT-VORLAGE.md` = entfernt (BRIDGE-0072).
+- `scripts/steuerchat-vorlage.py` = füllt jetzt den Startprompt v2.
 
 ## 2. Wo welche Eingabe gemacht wird
 
