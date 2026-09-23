@@ -1,0 +1,51 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0072
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 6b46a0091f1c5663468f71a87fe17162928ac7ae
+executor: claude-code
+started_at: '2026-09-23T18:40:15Z'
+ended_at: '2026-09-23T21:17:59Z'
+created_by: claude-code@DES11
+base_head: 43eecee40e89d17e80526f36e8c31ed2e88d1fe3
+commits:
+- sha: ce449e6b9ddac185e7de9a72a019cd936c1463d5
+  message: 'Ops: BRIDGE-0072 task_create (Steuerchat-Aktion via CLI)'
+- sha: c8412682cefdb1d1c84cfa5ac7ec411abd07ef65
+  message: 'Ops: BRIDGE-0072 run_start (Steuerchat-Aktion via CLI)'
+- sha: ed9a5161b8bf6196b78fc9d5c305420780764b45
+  message: 'BRIDGE-0072 Teil A: Skript auf Startprompt v2 umstellen, alte Vorlage
+    entfernen'
+- sha: 367da9c5e7baecddaf53e47cef769d913ccab9d9
+  message: 'BRIDGE-0072 Teil B: STANDARDSTART Geltungsbereich + Pflichtliste korrigiert'
+- sha: 2ac18e1131fa2a19d728cd1685a9769491d34f3e
+  message: 'BRIDGE-0072 Teil C: Verweis auf generische Integrationsanleitung'
+- sha: 0959b933708629a7c3097959912e81f878f867ab
+  message: 'BRIDGE-0072 Teil D: generische Dokumente konsistent gemacht'
+- sha: 6b46a0091f1c5663468f71a87fe17162928ac7ae
+  message: 'BRIDGE-0072 Abschluss: Kontrolle ohne verwaiste Verweise, volle Suite
+    gruen'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-DOKUMENTENUEBERSICHT-v1.md
+- docs/ACB-INTEGRATION-GENERISCH-v1.md
+- docs/ACB-NEUES-PROJEKT-ANLEITUNG-v1.md
+- docs/ACB-PROJEKT-INTEGRATION.md
+- docs/ACB-STEUERCHAT-STANDARDSTART.md
+- docs/ACB-STEUERCHAT-START-GENERISCH-v2.md
+- docs/ACB-STEUERCHAT-VORLAGE.md
+- results/BRIDGE-0072/RUN-01/heartbeat.json
+- scripts/steuerchat-vorlage.py
+- tasks/BRIDGE-0072/task.yaml
+- tests/test_steuerchat_vorlage.py
+- work-packages/BRIDGE-072.md
+summary: 'Teil A: scripts/steuerchat-vorlage.py auf Startprompt v2 umgestellt (Profilvalidierung
+  inkl. ID-Abgleich, Trennlinien-Split, {{-Restpruefung), alte Vorlage entfernt, 7
+  neue Tests. Teil B/C/D: STANDARDSTART/PROJEKT-INTEGRATION/Uebersicht/Anleitung/Startprompt-v2
+  konsistent auf das neue Skript verwiesen. Kontrolle ohne verwaiste Verweise, volle
+  Suite 507/507 gruen.'
+physical_machine: DES11
