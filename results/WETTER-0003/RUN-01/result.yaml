@@ -1,0 +1,33 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0003
+project_id: wetter-app
+run_id: RUN-01
+status: REVIEW_REQUIRED
+repository: wetter-app
+branch: main
+head: c258a2ac44d03c83df14578ea760ffdc0720fe9a
+executor: claude-code
+started_at: '2026-09-23T15:19:48Z'
+ended_at: '2026-09-23T15:31:31Z'
+created_by: claude-code@DES11
+base_head: d637b7e
+commits:
+- sha: 61c15ec857cb82652ffdddc02df75f6fb7916446
+  message: 'Ops: WETTER-0003 task_create (Steuerchat-Aktion via CLI)'
+- sha: 75a24b567b10fa74ce89c7e5f9a537055c49866a
+  message: 'Ops: WETTER-0003 run_start (Steuerchat-Aktion via CLI)'
+- sha: c258a2ac44d03c83df14578ea760ffdc0720fe9a
+  message: 'WETTER-0003: WP Haken Teil A/B/Scope gesetzt, Teil C/Manuelle Pruefung
+    offen (kein Browser-Tool)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0003/RUN-01/heartbeat.json
+- tasks/WETTER-0003/task.yaml
+- work-packages/WETTER-003.md
+summary: 'Teil A/B umgesetzt: temp-current und wind-current Spans in index.html +
+  updateTempHeader()/updateWindHeader() in js/main.js, aufgerufen bei Erstladen (Cache+Fetch)
+  und Standortwechsel. Ziel-Repo committet+gepusht (HEAD 3c08ac7). Teil C (Ostsee-Kopf)
+  und manuelle Browser-Pruefung NICHT durchgefuehrt, da kein Browser-Tool in dieser
+  Session verfuegbar - nur statische Pruefung (node --check, Code-Review) moeglich.'
+physical_machine: DES11
