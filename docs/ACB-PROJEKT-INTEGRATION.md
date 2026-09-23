@@ -1,5 +1,7 @@
 # ACB — Arbeitsanweisung: Einbindung eines beliebigen neuen Projekts
 
+> Detailreferenz zu Profilfeldern und Durchsetzung. Den Ablauf (Einrichtung, Auftragsablauf, Vorlagen) beschreibt `docs/ACB-INTEGRATION-GENERISCH-v1.md`, die Übersicht `docs/ACB-DOKUMENTENUEBERSICHT-v1.md`.
+
 Beschreibt, was konkret zu tun ist, um die Agent Control Bridge für ein
 **neues, beliebiges** Projekt nutzbar zu machen — nicht nur für sich
 selbst. Vollständig gegen den echten Code geprüft (Schema, Loader,

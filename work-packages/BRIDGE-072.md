@@ -52,7 +52,7 @@ In `docs/ACB-PROJEKT-INTEGRATION.md` direkt unter der Titelzeile diese Zeile ein
 ```
 > Detailreferenz zu Profilfeldern und Durchsetzung. Den Ablauf (Einrichtung, Auftragsablauf, Vorlagen) beschreibt `docs/ACB-INTEGRATION-GENERISCH-v1.md`, die Übersicht `docs/ACB-DOKUMENTENUEBERSICHT-v1.md`.
 ```
-- [ ] Verweis eingefuegt
+- [x] Verweis eingefuegt
 
 ### Teil D - generische Dokumente konsistent machen
 1. `docs/ACB-STEUERCHAT-START-GENERISCH-v2.md`: im Kopfbereich (vor der `---`-Linie) die Zeile `Verwendung: ...Einziges Feld: {{PROJEKT_ID}}.` um diesen Satz ergaenzen (woertlich); der Text ab der Linie bleibt unveraendert:
