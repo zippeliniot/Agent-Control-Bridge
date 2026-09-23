@@ -20,7 +20,7 @@ ACB-Steuerchat.
 - Teil A: precipitation_probability ergaenzt, RING_KM um 2-km-Ring erweitert. Zielrepo-Commit f3452963a5a119d7809edf8a68b56f7e950d3f9d, verifiziert (Diff nur js/api.js + js/regen.js, node --check OK, precipitation_probability ist echter Open-Meteo-Parameter).
 - Teil B (DWD-Radar): nicht umgesetzt, RADOLAN ist binaer ohne bekannte CORS-Freigabe - nachvollziehbar recherchiert, kein Blocker.
 - ACB-Repo-HEAD nach Abschluss: e0653a6d3ef9dcbacc350d8d6cc349a88aa6c486
-- Offen bei Uebergabe: April muss noch die Live-Seite kurz pruefen und in der Web-UI Kopiert->Review, dann Archivieren klicken.
+- Status: ARCHIVED. Live-Seite von April geprueft, Kopiert->Review und Archivieren erledigt.
 
 ## Naechster moeglicher Auftrag
 Noch keiner zugeschnitten. Ideen aus WETTER-0001-Zusammenfassung: keine offenen technischen Vorschlaege, da Teil B ergebnislos war.
