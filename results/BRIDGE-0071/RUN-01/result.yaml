@@ -1,0 +1,38 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0071
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 4901a791b2e7be01f30666f19a7fe206a1d91258
+executor: claude-code
+started_at: '2026-09-23T10:32:38Z'
+ended_at: '2026-09-23T10:43:42Z'
+created_by: claude-code@HAM11
+base_head: 7fc7d9769579b8965499cf6325cda0c4afe43905
+commits:
+- sha: 626d52d24ca145d1cd1b91e74ec3798101685af8
+  message: 'Ops: BRIDGE-0071 task_create (Steuerchat-Aktion via CLI)'
+- sha: 3ba52f80fa44aabdc1d47ef7e14f03696f6b0470
+  message: 'Ops: BRIDGE-0071 run_start (Steuerchat-Aktion via CLI)'
+- sha: 330b1f4dbeee15a67b5137d3bdad9b307c0b5c01
+  message: 'BRIDGE-0071 Teil 1: Steuerchat-Vorlage mit Platzhaltern angelegt'
+- sha: 4901a791b2e7be01f30666f19a7fe206a1d91258
+  message: 'BRIDGE-0071 Teil 2+3: Fuell-Skript und Tests (executor-bewusst)'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-VORLAGE.md
+- results/BRIDGE-0071/RUN-01/heartbeat.json
+- scripts/steuerchat-vorlage.py
+- tasks/BRIDGE-0071/task.yaml
+- tests/test_steuerchat_vorlage.py
+- work-packages/BRIDGE-071.md
+summary: 'Generische Steuerchat-Vorlage docs/ACB-STEUERCHAT-VORLAGE.md mit 6 Platzhaltern
+  (inkl. EXECUTOR_HINWEIS) angelegt und scripts/steuerchat-vorlage.py geschrieben,
+  das aus projects/<id>/project.yaml executor-bewusst fuellt (claude-code: Skill-Vermeidungshinweis;
+  codex: als vorlaeufig gekennzeichneter Platzhaltertext). 5 neue Tests in tests/test_steuerchat_vorlage.py
+  decken beide Executoren sowie fehlendes Pflichtfeld, unbekannten executor und unbekannte
+  project-id als Fehlerfaelle ab; volle Suite laeuft gruen durch.'
+physical_machine: HAM11
