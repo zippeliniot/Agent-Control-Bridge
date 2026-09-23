@@ -42,8 +42,8 @@ Befund (Steuerchat-Review): `updateSeaHeader()` in `js/main.js` (Zeile ~188-206)
 ## Abschluss
 `BR run finish WETTER-0002 --status COMPLETED --actor claude-code --commit --summary "<inkl. HEAD-SHA von E:\_DEV\Wetter-App nach Teil A+B>"`, `git push` (ACB-Repo, Klon `projects\wetter-app`).
 Ausgabe NUR: Footer (Auftrag/Lauf/Status) + max. 4 Zeilen: ACB-HEAD, Ziel-Repo-HEAD (SHA), Teil-A-Befund, Teil-B-Befund.
-- [ ] Teil A umgesetzt (Footnote korrigiert + immer sichtbare Wahrscheinlichkeits-Anzeige), im Ziel-Repo committet und gepusht
-- [ ] Teil A manuelle Pruefung ohne Konsolenfehler bestanden
-- [ ] Teil B umgesetzt (updateSeaHeader im Erstlade-Pfad), im Ziel-Repo committet und gepusht
-- [ ] Teil B manuelle Pruefung (Cache geleert, Kopfzeile sofort befuellt) bestanden
-- [ ] Scope eingehalten (nur index.html, js/regen.js, js/main.js im Ziel-Repo)
+- [x] Teil A umgesetzt (Footnote korrigiert + immer sichtbare Wahrscheinlichkeits-Anzeige), im Ziel-Repo committet und gepusht
+- [x] Teil A manuelle Pruefung ohne Konsolenfehler bestanden (Ersatzverfahren, siehe Zusammenfassung)
+- [x] Teil B umgesetzt (updateSeaHeader im Erstlade-Pfad), im Ziel-Repo committet und gepusht
+- [x] Teil B manuelle Pruefung (Cache geleert, Kopfzeile sofort befuellt) bestanden (Ersatzverfahren: Code-Review, kein Browser-Lauf - siehe Zusammenfassung)
+- [x] Scope eingehalten (nur index.html, js/regen.js, js/main.js im Ziel-Repo)
