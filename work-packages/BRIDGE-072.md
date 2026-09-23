@@ -68,5 +68,5 @@ In `docs/ACB-PROJEKT-INTEGRATION.md` direkt unter der Titelzeile diese Zeile ein
 1. Kontrolle: `git grep -n "ACB-STEUERCHAT-VORLAGE"` darf ausserhalb von `docs/handover/`, `work-packages/`, `results/`, `tasks/` und `docs/ACB-DOKUMENTENUEBERSICHT-v1.md` (dort nur als "entfernt") nichts liefern. Sonst STOPP mit Fundstellen.
 2. Volle Suite EINMAL, nur die letzten 3 Zeilen zeigen.
 3. `git status` sauber, dann Abschluss wie im Slash-Befehl.
-- [ ] Kontrolle ohne verwaiste Verweise
-- [ ] Volle Suite gruen
+- [x] Kontrolle ohne verwaiste Verweise
+- [x] Volle Suite gruen
