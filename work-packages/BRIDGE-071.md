@@ -23,6 +23,6 @@
 3. Tests mit Fake-project.yaml (temp dir): (a) executor claude-code fuellt korrekt inkl. Skill-Hinweis, (b) executor codex fuellt korrekt inkl. Codex-Platzhaltertext, (c) fehlendes Pflichtfeld -> Fehler, (d) unbekannter executor-Wert -> Fehler, (e) unbekannte project-id -> Fehler.
 **Tests:** `python -m unittest tests.test_steuerchat_vorlage`, danach volle Suite EINMAL.
 - [x] Vorlage mit den 6 Platzhaltern (inkl. EXECUTOR_HINWEIS) angelegt
-- [ ] Skript fuellt korrekt fuer claude-code UND codex (beide per Test belegt)
-- [ ] Fehlendes Profilfeld / unbekannter executor fuehrt zu Fehler, nicht zu Raten (Test)
+- [x] Skript fuellt korrekt fuer claude-code UND codex (beide per Test belegt)
+- [x] Fehlendes Profilfeld / unbekannter executor fuehrt zu Fehler, nicht zu Raten (Test)
 - [ ] Volle Suite gruen
