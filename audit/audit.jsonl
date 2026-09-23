@@ -476,3 +476,6 @@
 {"actor": "april", "bridge_task_id": "WETTER-0002", "event_type": "TASK_ARCHIVED", "machine": "HAM11", "new_state": "ARCHIVED", "old_state": "REVIEW_REQUIRED", "reason": "Auftrag abgeschlossen", "timestamp": "2026-09-23T10:44:14Z"}
 {"actor": "april", "bridge_task_id": "BRIDGE-0071", "event_type": "REVIEW_REQUESTED", "machine": "HAM11", "new_state": "REVIEW_REQUIRED", "old_state": "WAITING_FOR_COPY_TO_CONTROL", "reason": "Ergebnis in Steuerchat kopiert", "timestamp": "2026-09-23T10:48:56Z"}
 {"actor": "april", "bridge_task_id": "BRIDGE-0071", "event_type": "TASK_ARCHIVED", "machine": "HAM11", "new_state": "ARCHIVED", "old_state": "REVIEW_REQUIRED", "reason": "Auftrag abgeschlossen", "timestamp": "2026-09-23T10:49:07Z"}
+{"actor": "claude-code", "bridge_task_id": "WETTER-0003", "event_type": "TASK_CREATED", "new_state": "CREATED", "timestamp": "2026-09-23T15:18:45Z"}
+{"actor": "claude-code", "bridge_task_id": "WETTER-0003", "event_type": "TASK_READY", "new_state": "READY", "old_state": "CREATED", "reason": "auto: Auftrag angelegt", "timestamp": "2026-09-23T15:18:45Z"}
+{"actor": "claude-code", "bridge_task_id": "WETTER-0003", "event_type": "TASK_WAITING_FOR_HANDOFF", "new_state": "WAITING_FOR_HANDOFF_TO_EXECUTOR", "old_state": "READY", "reason": "auto: wartet auf Weitergabe an Executor", "timestamp": "2026-09-23T15:18:45Z"}
