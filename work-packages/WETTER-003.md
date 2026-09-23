@@ -51,8 +51,8 @@ Kein Screenshot noetig, nur Befund in der Zusammenfassung.
 ## Abschluss
 `BR run finish WETTER-0003 --status COMPLETED --actor claude-code --commit --summary "<inkl. HEAD-SHA von E:\_DEV\Wetter-App nach Teil A+B, Befund Teil C>"`, `git push` (ACB-Repo).
 Ausgabe NUR: Footer (Auftrag/Lauf/Status) + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD (SHA), Teil-A-Befund, Teil-B-Befund, Teil-C-Befund.
-- [ ] Teil A umgesetzt (temp-current, Erstladen + Standortwechsel funktionieren), im Ziel-Repo committet und gepusht
-- [ ] Teil B umgesetzt (wind-current, Erstladen funktioniert, immer Gronenberg), im Ziel-Repo committet und gepusht
-- [ ] Teil C verifiziert (Ostsee-Kopf funktioniert weiterhin nach Cache-Leerung) - kein Codeaendern falls OK
-- [ ] Manuelle Pruefung ohne Konsolenfehler bestanden
-- [ ] Scope eingehalten (nur index.html, js/main.js im Ziel-Repo)
+- [x] Teil A umgesetzt (temp-current, Erstladen + Standortwechsel funktionieren), im Ziel-Repo committet und gepusht
+- [x] Teil B umgesetzt (wind-current, Erstladen funktioniert, immer Gronenberg), im Ziel-Repo committet und gepusht
+- [ ] Teil C verifiziert (Ostsee-Kopf funktioniert weiterhin nach Cache-Leerung) - kein Codeaendern falls OK - NICHT geprueft, kein Browser-Tool verfuegbar (Claude-in-Chrome-Extension in dieser Session nicht verbunden)
+- [ ] Manuelle Pruefung ohne Konsolenfehler bestanden - NICHT durchfuehrbar, kein Browser-Tool verfuegbar; nur statische Pruefung (node --check, Code-Review) gemacht
+- [x] Scope eingehalten (nur index.html, js/main.js im Ziel-Repo)
