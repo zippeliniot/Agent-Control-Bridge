@@ -1,18 +1,19 @@
 #!/usr/bin/env python
-"""BRIDGE-0071 - Steuerchat-Vorlage aus projects/<id>/project.yaml fuellen.
+"""BRIDGE-0072 - Generischen Startprompt v2 mit der Projekt-ID fuellen.
 
-Liest die Vorlage docs/ACB-STEUERCHAT-VORLAGE.md und ersetzt deren
-Platzhalter mit Werten aus dem Projektprofil (--project-id Pflichtargument).
-executor-abhaengig wird ein passender EXECUTOR_HINWEIS eingesetzt (bekannter
-Text fuer claude-code, ehrlich als vorlaeufig gekennzeichneter Platzhaltertext
-fuer codex). Fail-closed: fehlt ein Pflichtfeld im Profil oder ist executor
-weder claude-code noch codex, wird NICHT geraten, sondern mit Fehlermeldung
-auf stderr und Exit-Code != 0 abgebrochen.
+Liest docs/ACB-STEUERCHAT-START-GENERISCH-v2.md, prueft die uebergebene
+--project-id gegen projects/<id>/project.yaml (Pflichtfelder, ID-Konsistenz)
+und ersetzt {{PROJEKT_ID}} im Text ab der ersten '---'-Trennlinie (der
+Kopfbereich davor ist Meta-Dokumentation der Vorlage selbst und nicht Teil
+des Steuerchat-Texts). Fail-closed: fehlt ein Pflichtfeld, weicht die
+project_id im Profil vom Argument ab, fehlt die Trennlinie oder bleibt
+danach ein unaufgeloester Platzhalter stehen, wird NICHT geraten, sondern
+mit Fehlermeldung auf stderr und Exit-Code != 0 abgebrochen.
 
 Aufruf:
     .venv/Scripts/python.exe scripts/steuerchat-vorlage.py --project-id wetter-app
 
-Ausgabe: gefuellte Vorlage auf stdout (kein Datei-Write).
+Ausgabe: gefuellter Text ab der Trennlinie auf stdout (kein Datei-Write).
 """
 
 from __future__ import annotations
@@ -25,82 +26,59 @@ import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
-EXECUTOR_HINWEIS_CLAUDE_CODE = """\
-Diese Ausführungsinstanz ist Claude Code mit Slash-Befehl `/acb-auftrag`
-(`.claude/commands/acb-auftrag.md`). Der Skill greift für Nicht-BRIDGE-IDs
-fälschlich eine alte BRIDGE-ID auf (siehe WETTER-0001-Vorfall) — deshalb bei
-Aufträgen mit anderem Präfix NIE den Slash-Befehl oder das Wort
-„Auftrag"/„acb-auftrag" in der ersten Anweisung verwenden, sondern wörtlich
-auf die Work-Package-Datei verweisen."""
-
-EXECUTOR_HINWEIS_CODEX = """\
-Diese Ausführungsinstanz ist Codex, läuft nativ in PowerShell und kennt keine
-Skills/Slash-Befehle. Vorläufiger Hinweis (noch keine dokumentierte Erfahrung
-mit diesem Profil): der Steuerchat soll beim ersten Auftrag besonders genau
-prüfen und Abweichungen hier nachtragen."""
-
-REQUIRED_FIELDS = ("project_id", "task_prefix", "github_repo")
+REQUIRED_FIELDS = ("task_prefix", "github_repo", "repository")
 
 
-def _project_name(profile: dict) -> str:
-    description = profile.get("description")
-    if description:
-        return str(description)
-    return str(profile["project_id"])
-
-
-def _executor_hinweis(executor: str) -> str:
-    if executor == "claude-code":
-        return EXECUTOR_HINWEIS_CLAUDE_CODE
-    if executor == "codex":
-        return EXECUTOR_HINWEIS_CODEX
-    raise ValueError(
-        f"Unbekannter executor-Wert: {executor!r} (erwartet: claude-code oder codex)")
+def _existing_project_ids(repo_root: Path) -> list[str]:
+    projects_dir = repo_root / "projects"
+    if not projects_dir.is_dir():
+        return []
+    return sorted(
+        p.name for p in projects_dir.iterdir()
+        if p.is_dir() and (p / "project.yaml").is_file()
+    )
 
 
 def build(project_id: str, repo_root: Path = _REPO_ROOT) -> str:
     profile_path = repo_root / "projects" / project_id / "project.yaml"
     if not profile_path.is_file():
-        raise ValueError(f"Kein Projektprofil gefunden: {profile_path}")
+        known = ", ".join(_existing_project_ids(repo_root)) or "(keine gefunden)"
+        raise ValueError(
+            f"Kein Projektprofil gefunden: {profile_path}. "
+            f"Vorhandene Verzeichnisse unter projects/: {known}"
+        )
 
     profile = yaml.safe_load(profile_path.read_text(encoding="utf-8")) or {}
+
+    profile_project_id = profile.get("project_id")
+    if profile_project_id != project_id:
+        raise ValueError(
+            f"project_id im Profil ({profile_project_id!r}) weicht vom "
+            f"Argument ({project_id!r}) ab: {profile_path}"
+        )
 
     missing = [field for field in REQUIRED_FIELDS if not profile.get(field)]
     if missing:
         raise ValueError(f"Profilfeld(er) fehlen in {profile_path}: {', '.join(missing)}")
 
-    executor = profile.get("executor")
-    if not executor:
-        raise ValueError(f"Profilfeld fehlt in {profile_path}: executor")
-
     github_repo = str(profile["github_repo"])
     if "/" not in github_repo:
         raise ValueError(
             f"github_repo muss als '<org>/<repo>' vorliegen, ist: {github_repo!r}")
-    github_org, _, github_repo_name = github_repo.partition("/")
 
-    executor_hinweis = _executor_hinweis(str(executor))
-
-    template_path = repo_root / "docs" / "ACB-STEUERCHAT-VORLAGE.md"
-    full_template = template_path.read_text(encoding="utf-8")
+    template_path = repo_root / "docs" / "ACB-STEUERCHAT-START-GENERISCH-v2.md"
+    full_template = template_path.read_text(encoding="utf-8").replace("\r\n", "\n")
     # Der Kopfbereich vor der ersten "---"-Trennlinie ist Meta-Dokumentation
-    # der Vorlagendatei selbst (nennt die Platzhalter literal) und ist NICHT
-    # Teil des zu fuellenden Steuerchat-Texts.
-    _, _, template = full_template.partition("\n---\n")
-    if not template:
+    # der Vorlagendatei selbst und NICHT Teil des zu fuellenden Steuerchat-Texts.
+    _, sep, template = full_template.partition("\n---\n")
+    if not sep:
         raise ValueError(f"Vorlage ohne '---'-Trennlinie: {template_path}")
 
-    replacements = {
-        "{{PROJEKTNAME}}": _project_name(profile),
-        "{{GITHUB_ORG}}": github_org,
-        "{{GITHUB_REPO}}": github_repo_name,
-        "{{PROJEKT_ID}}": str(profile["project_id"]),
-        "{{PRAEFIX}}": str(profile["task_prefix"]),
-        "{{EXECUTOR_HINWEIS}}": executor_hinweis,
-    }
-    result = template
-    for placeholder, value in replacements.items():
-        result = result.replace(placeholder, value)
+    result = template.replace("{{PROJEKT_ID}}", project_id)
+    if "{{" in result:
+        raise ValueError(
+            f"Nach dem Ersetzen bleibt ein unaufgeloester Platzhalter stehen: {template_path}"
+        )
     return result
 
 

@@ -33,9 +33,9 @@ Dokumente in deutschem Klartext mit Umlauten (wie die Zieldateien), Edits einzel
 `tests/test_steuerchat_vorlage.py` neu, stdlib unittest, temp-Repo-Root mit Kopie des echten v2-Startprompts und Fake-`project.yaml`: (a) fuellt die ID ein, kein `{{` im Ergebnis; (b) Ergebnis enthaelt nicht den Kopfbereich vor der `---`-Linie; (c) funktioniert mit `\r\n`-Zeilenenden der Vorlage; (d) unbekannte project-id -> Fehler, der eine vorhandene ID nennt; (e) fehlendes Pflichtfeld -> Fehler; (f) `project_id` im Profil weicht vom Argument ab -> Fehler; (g) Profil ohne `executor` ist zulaessig.
 Danach `git rm docs/ACB-STEUERCHAT-VORLAGE.md`.
 **Tests:** `python -m unittest tests.test_steuerchat_vorlage`.
-- [ ] Skript fuellt `{{PROJEKT_ID}}` in den v2-Startprompt, validiert die ID gegen die Profile
-- [ ] Tests (a)-(g) gruen
-- [ ] `docs/ACB-STEUERCHAT-VORLAGE.md` entfernt
+- [x] Skript fuellt `{{PROJEKT_ID}}` in den v2-Startprompt, validiert die ID gegen die Profile
+- [x] Tests (a)-(g) gruen
+- [x] `docs/ACB-STEUERCHAT-VORLAGE.md` entfernt
 
 ### Teil B - STANDARDSTART als ACB-Kern-Startprompt korrigieren
 In `docs/ACB-STEUERCHAT-STANDARDSTART.md` genau zwei Aenderungen:
