@@ -501,3 +501,7 @@
 {"actor": "claude-code", "bridge_task_id": "WETTER-0004", "event_type": "TASK_STARTED", "machine": "DES11", "new_state": "RUNNING", "old_state": "CLAIMED", "reason": "runner: start -> RUNNING", "timestamp": "2026-09-24T16:17:47Z"}
 {"actor": "claude-code@DES11", "bridge_task_id": "WETTER-0004", "event_type": "RESULT_WRITTEN", "run_id": "RUN-01", "timestamp": "2026-09-24T16:54:43Z"}
 {"actor": "claude-code", "bridge_task_id": "WETTER-0004", "event_type": "REVIEW_REQUESTED", "machine": "DES11", "new_state": "REVIEW_REQUIRED", "old_state": "RUNNING", "reason": "runner: finish -> REVIEW_REQUIRED", "timestamp": "2026-09-24T16:54:43Z"}
+{"actor": "claude-code", "bridge_task_id": "WETTER-0004", "event_type": "TASK_STARTED", "machine": "DES11", "new_state": "RUNNING", "old_state": "REVIEW_REQUIRED", "reason": "runner: resume", "timestamp": "2026-09-24T22:18:21Z"}
+{"actor": "claude-code@DES11", "bridge_task_id": "WETTER-0004", "event_type": "RESULT_WRITTEN", "run_id": "RUN-02", "timestamp": "2026-09-24T22:21:02Z"}
+{"actor": "claude-code", "bridge_task_id": "WETTER-0004", "event_type": "TASK_COMPLETED", "machine": "DES11", "new_state": "COMPLETED", "old_state": "RUNNING", "reason": "runner: finish -> COMPLETED", "timestamp": "2026-09-24T22:21:02Z"}
+{"actor": "claude-code", "bridge_task_id": "WETTER-0004", "event_type": "TASK_WAITING_FOR_COPY", "machine": "DES11", "new_state": "WAITING_FOR_COPY_TO_CONTROL", "old_state": "COMPLETED", "reason": "auto: wartet auf Kopie in den Steuerchat", "timestamp": "2026-09-24T22:21:02Z"}
