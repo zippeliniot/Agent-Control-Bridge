@@ -1,0 +1,39 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0004
+project_id: wetter-app
+title: 'Layout-Fix: temp-current/wind-current in Flex-Wrapper analog Taschensee/Ostsee'
+description: 'temp-current/wind-current wurden in WETTER-0003 als drittes Geschwister-Element
+  in .chart-head eingefuegt, dadurch verteilt justify-content:space-between sie zentriert
+  statt rechtsbuendig. Fix: beide Spans zusammen mit dem jeweils bestehenden Legende-Element
+  (.chart-legend bzw. .wind-thr) in einen neuen Flex-Column-Wrapper packen, analog
+  zum Taschensee-Muster (#sw-current-Wrapper). Nur index.html, kein JS-Aenderung.'
+task_class: BUGFIX
+repository: wetter-app
+branch: main
+git:
+  expected_head: 3c08ac7db4de100b1d84d6355ccadc5d4289e6b0
+  allowed_changed_files:
+  - index.html
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+controller: human
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-24T09:00:00Z'
+created_by: claude-code
+depends_on:
+- WETTER-0003
+stop_conditions:
+- SCOPE_VIOLATION
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- Fix umgesetzt (beide Kopfzeilen in Wrapper), nur index.html geaendert, committet
+  und gepusht
+- Echte Browser-Verifikation durchgefuehrt (nicht nur Code-Review) - Ergebnis dokumentiert
+- Scope eingehalten (nur index.html)
+task_version: 3
