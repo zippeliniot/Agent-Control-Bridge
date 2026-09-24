@@ -1,0 +1,25 @@
+﻿schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0004
+project_id: wetter-app
+title: 'Layout-Fix: temp-current/wind-current in Flex-Wrapper analog Taschensee/Ostsee'
+description: 'Details: work-packages/WETTER-004.md'
+task_class: BUGFIX
+repository: wetter-app
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- Fix umgesetzt (beide Kopfzeilen in Wrapper), nur index.html geaendert, committet und gepusht
+- Echte Browser-Verifikation durchgefuehrt (nicht nur Code-Review) - Ergebnis dokumentiert
+- Scope eingehalten (nur index.html)
+status: CREATED
+created_at: '2026-09-24T00:00:00Z'
+created_by: browser-claude
