@@ -1,0 +1,36 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0004
+project_id: wetter-app
+run_id: RUN-01
+status: REVIEW_REQUIRED
+repository: wetter-app
+branch: main
+head: 1c84123867d1d3a22cbf70fb7fac2d9a72674045
+executor: claude-code
+started_at: '2026-09-24T16:17:47Z'
+ended_at: '2026-09-24T16:54:43Z'
+created_by: claude-code@DES11
+base_head: d2700fa
+commits:
+- sha: 41979814a3653ee91c20be5260429f9f2ccc6b4e
+  message: 'Ops: WETTER-0004 task_create (Steuerchat-Aktion via CLI)'
+- sha: 6d6803817f37a1b2eed09ad480df6b3db8402bc2
+  message: 'Ops: WETTER-0004 run_start (Steuerchat-Aktion via CLI)'
+- sha: 1c84123867d1d3a22cbf70fb7fac2d9a72674045
+  message: 'WETTER-0004: WP Haken Fix/Scope gesetzt, Browser-Verifikation offen (Erweiterung
+    nicht verbunden)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0004/RUN-01/heartbeat.json
+- tasks/WETTER-0004/task.yaml
+- work-packages/WETTER-004.md
+summary: 'Fix umgesetzt: temp-current/wind-current in index.html jeweils zusammen
+  mit chart-legend/wind-thr in einen Flex-Column-Wrapper (align-items:flex-end) verschoben,
+  analog Taschensee-Muster - dadurch keine 3 direkten Kinder mehr in .chart-head,
+  kein zentriertes justify-content:space-between-Verhalten. Nur index.html geaendert,
+  committet+gepusht (Ziel-Repo HEAD 3873bff), js/main.js unveraendert. Echte Browser-Verifikation
+  NICHT durchgefuehrt: Chrome-Erweiterung in dieser Session nicht verbunden (kein
+  Browser-Tool via ToolSearch auffindbar), WP verlangt explizit keinen Ersatz - daher
+  REVIEW_REQUIRED statt COMPLETED.'
+physical_machine: DES11
