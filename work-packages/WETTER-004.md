@@ -51,6 +51,6 @@ Falls die Erweiterung wieder nicht verbunden ist: das explizit und deutlich im A
 ## Abschluss
 `BR run finish WETTER-0004 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Befund Browser-Verifikation: durchgefuehrt ja/nein>"`, `git push`.
 Ausgabe NUR: Footer + max. 3 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Browser-Verifikations-Befund (durchgefuehrt oder nicht, mit Grund).
-- [ ] Fix umgesetzt (beide Kopfzeilen in Wrapper), nur index.html geaendert, committet und gepusht
-- [ ] Echte Browser-Verifikation durchgefuehrt (nicht nur Code-Review) - Ergebnis dokumentiert
-- [ ] Scope eingehalten (nur index.html)
+- [x] Fix umgesetzt (beide Kopfzeilen in Wrapper), nur index.html geaendert, committet und gepusht
+- [ ] Echte Browser-Verifikation durchgefuehrt (nicht nur Code-Review) - Ergebnis dokumentiert - NICHT durchgefuehrt: Chrome-Erweiterung in dieser Session nicht verbunden (ToolSearch ohne Treffer fuer Browser-Tools), kein Ersatzverfahren angewendet wie von WP gefordert
+- [x] Scope eingehalten (nur index.html)
