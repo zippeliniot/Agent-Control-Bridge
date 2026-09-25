@@ -81,9 +81,9 @@ Der Button neben `#btn-regen` (`.header-left`) kommt erst in einem eigenen, spae
 ## Abschluss
 `BR run finish WETTER-0005 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Teil A/B-Befund, Browser-Verifikations-Befund>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Teil-A-Befund, Teil-B-Befund, Browser-Verifikation.
-- [ ] Teil A: beide Export-Skripte + 4 systemd-Units + install.sh-Ergaenzung, nur pi-scripts/, committet+gepusht
-- [ ] Teil B: tanken-view + tanken.js, nur index.html (Ergaenzung) + js/tanken.js, committet+gepusht
-- [ ] Teil C NICHT umgesetzt (kein Header-Button)
-- [ ] Browser-Verifikation mit lokaler Testdatei bestanden, Testdatei NICHT committet
-- [ ] Attribution + Zeitstempel im Frontend vorhanden
-- [ ] Scope eingehalten (siehe Dateiliste je Teil)
+- [x] Teil A: beide Export-Skripte + 4 systemd-Units + install.sh-Ergaenzung, nur pi-scripts/, committet+gepusht (1ab7db7)
+- [x] Teil B: tanken-view + tanken.js, nur index.html (Ergaenzung) + js/tanken.js, committet+gepusht (9e31fe7)
+- [x] Teil C NICHT umgesetzt (kein Header-Button)
+- [x] Browser-Verifikation mit lokaler Testdatei bestanden, Testdatei NICHT committet
+- [x] Attribution + Zeitstempel im Frontend vorhanden
+- [x] Scope eingehalten (siehe Dateiliste je Teil)
