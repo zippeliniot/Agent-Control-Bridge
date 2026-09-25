@@ -67,8 +67,8 @@ In `window.openFS(type)`: einen `else if (type === 'tanken')`-Zweig ergaenzen, d
 ## Abschluss
 `BR run finish WETTER-0007 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Teil A/B/C-Befund, Browser-Verifikations-Befund>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Teil-A-Befund, Teil-B/C-Befund, Browser-Verifikation.
-- [ ] Teil A: Verlaufs-Sammlung in export_tanken_prices.py, 3-Tage-Trimming ueber Zeitstempel, kein Crash bei Fehlern
-- [ ] Teil B: Zahnrad+Panel, localStorage-Persistenz, getFSConfig() mit Stations-/Sorten-Filter + 1-Tag/3-Tage, Auto-Refresh alle 5 Min nur wenn Ansicht aktiv
-- [ ] Teil C: openFS('tanken')-Anbindung, minimal
-- [ ] Browser-Verifikation bestanden (inkl. F5-Persistenz-Test)
-- [ ] Scope eingehalten (nur die 4 genannten Dateien)
+- [x] Teil A: Verlaufs-Sammlung in export_tanken_prices.py, 3-Tage-Trimming ueber Zeitstempel, kein Crash bei Fehlern (0e962db)
+- [x] Teil B: Zahnrad+Panel, localStorage-Persistenz, getFSConfig() mit Stations-/Sorten-Filter + 1-Tag/3-Tage, Auto-Refresh alle 5 Min nur wenn Ansicht aktiv (0e962db)
+- [x] Teil C: openFS('tanken')-Anbindung, minimal (0e962db)
+- [x] Browser-Verifikation bestanden (inkl. F5-Persistenz-Test)
+- [x] Scope eingehalten (nur die 4 genannten Dateien)
