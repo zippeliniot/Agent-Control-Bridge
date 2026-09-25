@@ -1,0 +1,37 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0009
+project_id: wetter-app
+title: Tanken-Button im Haupt-Header (finale Aktivierung)
+description: 'Header-Button war seit WETTER-0005 bewusst zurueckgestellt (Teil C),
+  bis echte Daten live liefen. Backend, Frontend, false/null-Fix und Deploy-Fix sind
+  inzwischen abgeschlossen (WETTER-0005 bis 0008). Letzter Schritt: Button in .header-left
+  ergaenzen, ruft bereits vorhandenes window.showTanken() auf.'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: 956f187416ebc2ef05feb0f70eeeec100a900f5c
+  allowed_changed_files:
+  - index.html
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+controller: human
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-25T00:00:00Z'
+created_by: claude-code
+depends_on:
+- WETTER-0008
+stop_conditions:
+- SCOPE_VIOLATION
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- Button ergaenzt, im Ziel-Repo committet und gepusht
+- Browser-Verifikation bestanden (Button sichtbar, Ansicht oeffnet/schliesst korrekt)
+- Scope eingehalten (nur index.html)
+task_version: 3
