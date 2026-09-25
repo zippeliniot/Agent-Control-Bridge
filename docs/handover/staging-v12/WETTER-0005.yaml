@@ -1,0 +1,28 @@
+﻿schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0005
+project_id: wetter-app
+title: 'Tankstellenpreise (Tankerkoenig-API): Pi-Export + Frontend-Ansicht (ohne Nav-Button)'
+description: 'Details: work-packages/WETTER-005.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- 'Teil A: Export-Skripte + systemd-Units + install.sh-Ergaenzung, nur pi-scripts/, committet+gepusht'
+- 'Teil B: tanken-view + tanken.js, nur index.html (Ergaenzung) + js/tanken.js, committet+gepusht'
+- Teil C NICHT umgesetzt (kein Header-Button)
+- Browser-Verifikation mit lokaler Testdatei bestanden, Testdatei NICHT committet
+- Attribution + Zeitstempel im Frontend vorhanden
+- Scope eingehalten (siehe Dateiliste je Teil im WP)
+status: CREATED
+created_at: '2026-09-25T00:00:00Z'
+created_by: browser-claude
