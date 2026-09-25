@@ -1,0 +1,26 @@
+﻿schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0006
+project_id: wetter-app
+title: 'Bugfix: Tankerkoenig false statt null bei fehlender Kraftstoffsorte (Crash im Rendering)'
+description: 'Details: work-packages/WETTER-006.md'
+task_class: BUGFIX
+repository: wetter-app
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- Python-Normalisierung in beiden Export-Skripten umgesetzt
+- Frontend-Haertung in js/tanken.js umgesetzt (fmtPrice + Sortierung)
+- Browser-Verifikation MIT false/null-Randfall bestanden (nicht nur Idealfall)
+- Scope eingehalten (nur die 3 genannten Dateien)
+status: CREATED
+created_at: '2026-09-25T00:00:00Z'
+created_by: browser-claude
