@@ -22,7 +22,7 @@ model: Claude Sonnet 5
 reasoning_level: MEDIUM
 executor: claude-code
 controller: human
-status: WAITING_FOR_COPY_TO_CONTROL
+status: ARCHIVED
 created_at: '2026-09-25T00:00:00Z'
 created_by: claude-code
 depends_on:
@@ -34,4 +34,4 @@ acceptance_criteria:
 - Button ergaenzt, im Ziel-Repo committet und gepusht
 - Browser-Verifikation bestanden (Button sichtbar, Ansicht oeffnet/schliesst korrekt)
 - Scope eingehalten (nur index.html)
-task_version: 7
+task_version: 9
