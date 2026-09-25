@@ -1,0 +1,25 @@
+﻿schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0009
+project_id: wetter-app
+title: 'Tanken-Button im Haupt-Header (finale Aktivierung)'
+description: 'Details: work-packages/WETTER-009.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- Button ergaenzt, im Ziel-Repo committet und gepusht
+- Browser-Verifikation bestanden (Button sichtbar, Ansicht oeffnet/schliesst korrekt)
+- Scope eingehalten (nur index.html)
+status: CREATED
+created_at: '2026-09-25T00:00:00Z'
+created_by: browser-claude
