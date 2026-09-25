@@ -1,0 +1,47 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0007
+project_id: wetter-app
+title: 'Tanken: Preisverlauf-Chart (3 Tage) + Zahnrad-Auswahl Stationen/Sorten pro
+  Geraet'
+description: Historie sammeln in export_tanken_prices.py (data/tanken_history.json,
+  3-Tage-Trimming ueber Zeitstempel, kein Crash bei Fehlern). Zahnrad-Icon im Tanken-Header
+  (analog .settings-btn) mit Panel fuer Stations-/Sortenauswahl, persistiert in localStorage
+  (tanken-chart-prefs). getFSConfig() in tanken.js fuer Vollbild-Chart mit 1-Tag/3-Tage-Umschalter,
+  gefiltert auf Auswahl. Auto- Refresh alle 5 Min solange Tanken-Ansicht aktiv. openFS(tanken)-Anbindung
+  in main.js.
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: 64896c9db3ba68a778a80e9831bc88bf728fc600
+  allowed_changed_files:
+  - pi-scripts/export_tanken_prices.py
+  - index.html
+  - js/tanken.js
+  - js/main.js
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+controller: human
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-25T00:00:00Z'
+created_by: claude-code
+depends_on:
+- WETTER-0006
+stop_conditions:
+- SCOPE_VIOLATION
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Teil A: Verlaufs-Sammlung in export_tanken_prices.py, 3-Tage-Trimming ueber Zeitstempel,
+  kein Crash bei Fehlern'
+- 'Teil B: Zahnrad+Panel, localStorage-Persistenz, getFSConfig() mit Stations-/ Sorten-Filter
+  + 1-Tag/3-Tage, Auto-Refresh alle 5 Min nur wenn Ansicht aktiv'
+- 'Teil C: openFS(tanken)-Anbindung, minimal'
+- Browser-Verifikation bestanden (inkl. F5-Persistenz-Test)
+- Scope eingehalten (nur die 4 genannten Dateien)
+task_version: 3
