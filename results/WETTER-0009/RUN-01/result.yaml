@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0009
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: b98bfc76b763e12ff634f8f15c35cda0f4a7a517
+executor: claude-code
+started_at: '2026-09-25T21:03:14Z'
+ended_at: '2026-09-25T21:04:12Z'
+created_by: claude-code@DES11
+base_head: 74ff369
+commits:
+- sha: 98e9f38e9b486077356e0274ee979d13834fa3c8
+  message: 'Ops: WETTER-0009 task_create (Steuerchat-Aktion via CLI)'
+- sha: ab0f0080ff32ea4fc0dc807ed8bfc5690a95531e
+  message: 'Ops: WETTER-0009 run_start (Steuerchat-Aktion via CLI)'
+- sha: b98bfc76b763e12ff634f8f15c35cda0f4a7a517
+  message: 'WETTER-0009: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0009/RUN-01/heartbeat.json
+- tasks/WETTER-0009/task.yaml
+- work-packages/WETTER-009.md
+summary: 'Ziel-Repo HEAD 453717a. Fix: Button #btn-tanken (class nav-btn, kein dry-Modifier)
+  in .header-left direkt nach #btn-regen ergaenzt, ruft window.showTanken() auf. Browser-Verifikation
+  (lokaler http.server + Playwright/Chromium): Button ''Tanken'' sichtbar rechts neben
+  ''Kein Regen'', Klick oeffnet Tanken-Ansicht (main-view/main-header werden hidden,
+  tanken-view/tanken-header sichtbar), Zurueck-Button fuehrt korrekt zur Hauptansicht
+  zurueck (main-view wieder sichtbar, tanken-view wieder hidden), keine PageErrors
+  (nur erwartete 404 fuer externe API-Calls ohne Backend; ohne lokale Testdatei data/tanken.json
+  zeigt die Liste erwartungsgemaess den sauberen Fehlertext statt Absturz).'
+physical_machine: DES11
