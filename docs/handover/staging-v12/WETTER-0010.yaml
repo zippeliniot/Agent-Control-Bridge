@@ -1,0 +1,28 @@
+﻿schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0010
+project_id: wetter-app
+title: 'Zahnrad-Auswahl filtert auch die Stationsliste (nicht nur den Chart)'
+description: 'Details: work-packages/WETTER-010.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: EXPECTED_HEAD
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- Stationsliste filtert nach ausgewaehlten Stationen
+- Preiszeilen filtern nach ausgewaehlten Sorten, Sortier-Umschalter blendet nicht ausgewaehlte Sorten aus
+- Automatischer Sortier-Wechsel bei Abwahl der aktiven Sortier-Sorte funktioniert
+- Leerzustaende (keine Stationen/keine Sorten ausgewaehlt) sauber abgefangen
+- Browser-Verifikation bestanden (alle 6 Punkte)
+- Scope eingehalten (nur js/tanken.js)
+status: CREATED
+created_at: '2026-09-25T00:00:00Z'
+created_by: browser-claude
