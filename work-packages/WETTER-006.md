@@ -42,7 +42,7 @@ Live-Aufruf von `data/tanken.json` (echte Tankerkoenig-Antwort) zeigt fuer Stati
 ## Abschluss
 `BR run finish WETTER-0006 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Fix-Befund, Browser-Verifikations-Befund>"`, `git push`.
 Ausgabe NUR: Footer + max. 4 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Fix-Befund, Browser-Verifikation.
-- [ ] Python-Normalisierung in beiden Export-Skripten umgesetzt
-- [ ] Frontend-Haertung in js/tanken.js umgesetzt (fmtPrice + Sortierung)
-- [ ] Browser-Verifikation MIT false/null-Randfall bestanden (nicht nur Idealfall)
-- [ ] Scope eingehalten (nur die 3 genannten Dateien)
+- [x] Python-Normalisierung in beiden Export-Skripten umgesetzt (64896c9)
+- [x] Frontend-Haertung in js/tanken.js umgesetzt (fmtPrice + Sortierung) (64896c9)
+- [x] Browser-Verifikation MIT false/null-Randfall bestanden (nicht nur Idealfall)
+- [x] Scope eingehalten (nur die 3 genannten Dateien)
