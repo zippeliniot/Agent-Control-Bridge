@@ -1,0 +1,36 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0008
+project_id: wetter-app
+title: 'Bugfix: js/tanken.js fehlt dauerhaft in deploy_web.py WEB_FILES'
+description: 'WETTER-0005 hat js/tanken.js eingefuehrt, deploy_web.py WEB_FILES wurde
+  nie aktualisiert. Nach dem WETTER-0007-Deploy fehlte js/tanken.js live (404), obwohl
+  index.html/main.js es bereits importieren. Fix: "js/tanken.js" in WEB_FILES ergaenzen.'
+task_class: BUGFIX
+repository: wetter-app
+branch: main
+git:
+  expected_head: 0e962dbcf7751f6d07bd6c5a7d29e16e511770c0
+  allowed_changed_files:
+  - pi-scripts/deploy_web.py
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+controller: human
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-25T00:00:00Z'
+created_by: claude-code
+depends_on:
+- WETTER-0007
+stop_conditions:
+- SCOPE_VIOLATION
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- js/tanken.js in WEB_FILES ergaenzt, committet+gepusht
+- Dry-Run zeigt 12 Dateien inkl. js/tanken.js
+- Scope eingehalten (nur pi-scripts/deploy_web.py)
+task_version: 3
