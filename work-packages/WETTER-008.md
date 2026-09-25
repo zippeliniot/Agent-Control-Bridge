@@ -35,6 +35,6 @@ In `pi-scripts/deploy_web.py`, `WEB_FILES`-Liste: `"js/tanken.js"` ergaenzen (Po
 ## Abschluss
 `BR run finish WETTER-0008 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Dry-Run-Befund: 12 Dateien inkl. tanken.js>"`, `git push`.
 Ausgabe NUR: Footer + max. 3 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Dry-Run-Befund.
-- [ ] js/tanken.js in WEB_FILES ergaenzt, committet+gepusht
-- [ ] Dry-Run zeigt 12 Dateien inkl. js/tanken.js
-- [ ] Scope eingehalten (nur pi-scripts/deploy_web.py)
+- [x] js/tanken.js in WEB_FILES ergaenzt, committet+gepusht (956f187)
+- [x] Dry-Run zeigt 12 Dateien inkl. js/tanken.js
+- [x] Scope eingehalten (nur pi-scripts/deploy_web.py)
