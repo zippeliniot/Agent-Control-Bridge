@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0008
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 29833db372782c3231b8ce40cbdd7b3a5893fa98
+executor: claude-code
+started_at: '2026-09-25T20:38:37Z'
+ended_at: '2026-09-25T20:40:16Z'
+created_by: claude-code@DES11
+base_head: e0929fe
+commits:
+- sha: 8a27d048dea13d4c8872e246c9d3aaf7dab5e22d
+  message: 'Ops: WETTER-0008 task_create (Steuerchat-Aktion via CLI)'
+- sha: 2ec55fc72452fa09cd02b191d40b56b2245b4af1
+  message: 'Ops: WETTER-0008 run_start (Steuerchat-Aktion via CLI)'
+- sha: 29833db372782c3231b8ce40cbdd7b3a5893fa98
+  message: 'WETTER-0008: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0008/RUN-01/heartbeat.json
+- tasks/WETTER-0008/task.yaml
+- work-packages/WETTER-008.md
+summary: 'Ziel-Repo HEAD 956f187. Fix: "js/tanken.js" in WEB_FILES von pi-scripts/deploy_web.py
+  ergaenzt (nach js/regen.js). Dry-Run-Befund: python pi-scripts/deploy_web.py --dry-run
+  zeigt 12 Dateien (140284 B) inkl. js/tanken.js (11958 B), vorher 11 Dateien. py_compile
+  fehlerfrei.'
+physical_machine: DES11

@@ -21,7 +21,7 @@ model: Claude Sonnet 5
 reasoning_level: MEDIUM
 executor: claude-code
 controller: human
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-09-25T00:00:00Z'
 created_by: claude-code
 depends_on:
@@ -33,4 +33,4 @@ acceptance_criteria:
 - js/tanken.js in WEB_FILES ergaenzt, committet+gepusht
 - Dry-Run zeigt 12 Dateien inkl. js/tanken.js
 - Scope eingehalten (nur pi-scripts/deploy_web.py)
-task_version: 5
+task_version: 7
