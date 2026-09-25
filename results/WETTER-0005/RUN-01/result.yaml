@@ -1,0 +1,39 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0005
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 6d6316e1460ca0f42a7c0b3d5400ab5159e1b191
+executor: claude-code
+started_at: '2026-09-25T10:18:53Z'
+ended_at: '2026-09-25T10:22:29Z'
+created_by: claude-code@DES11
+base_head: 87f004d
+commits:
+- sha: 7951a51bf85859bd5ab29a24574afe95289ec644
+  message: 'Ops: WETTER-0005 task_create (Steuerchat-Aktion via CLI)'
+- sha: ee7742b31f244f5472618a8a63bb313bb3203dd7
+  message: 'Ops: WETTER-0005 run_start (Steuerchat-Aktion via CLI)'
+- sha: 6d6316e1460ca0f42a7c0b3d5400ab5159e1b191
+  message: 'WETTER-0005: Akzeptanzkriterien abgehakt (Teil A/B fertig, Teil C bewusst
+    ausgelassen)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0005/RUN-01/heartbeat.json
+- tasks/WETTER-0005/task.yaml
+- work-packages/WETTER-005.md
+summary: 'Ziel-Repo HEAD 9e31fe7. Teil A: export_tanken_stations.py (taeglich, list.php+Stations-Cache)
+  + export_tanken_prices.py (alle 15 Min, prices.php aus Cache) analog Taschensee/Ostsee-Muster,
+  Key aus SQLite-Credential-DB, kein API-Key im Frontend; 4 systemd-Units + install.sh-Ergaenzung;
+  py_compile OK (Commit 1ab7db7). Teil B: #tanken-view + #tanken-header (analog #regen-view)
+  + js/tanken.js, Sortier-Umschalter E5/E10/Diesel (Default E5 aufsteigend), offen/geschlossen-Badge,
+  Attribution+Zeitstempel; window.showTanken/hideTanken/tankenSetSort global (Commit
+  9e31fe7). Teil C (Header-Button) bewusst NICHT umgesetzt. Browser-Verifikation:
+  lokaler http.server + Playwright/Chromium, lokale Testdatei data/tanken.json (3
+  Fantasiestationen) angelegt, window.showTanken() zeigt Liste, Sortierung E5/Diesel
+  korrekt, Attribution+Stand sichtbar, Konsole ohne JS-Fehler (nur erwartete 404 fuer
+  externe API-Calls ohne Backend); Testdatei danach geloescht, nicht committet.'
+physical_machine: DES11
