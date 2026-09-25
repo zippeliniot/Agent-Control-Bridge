@@ -1,0 +1,43 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0007
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: b276fc91e51a240c52b0633203efc28d61b89cc8
+executor: claude-code
+started_at: '2026-09-25T20:09:59Z'
+ended_at: '2026-09-25T20:11:22Z'
+created_by: claude-code@DES11
+base_head: 5205dbd
+commits:
+- sha: 56a5bfaa24e276729bc3e8facdaa89e068a523d6
+  message: 'Ops: WETTER-0007 task_create (Steuerchat-Aktion via CLI)'
+- sha: 46ebbe7e5bbc2afc63f98dc15a8900eec7b3f6e1
+  message: 'Ops: WETTER-0007 run_start (Steuerchat-Aktion via CLI)'
+- sha: b276fc91e51a240c52b0633203efc28d61b89cc8
+  message: 'WETTER-0007: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0007/RUN-01/heartbeat.json
+- tasks/WETTER-0007/task.yaml
+- work-packages/WETTER-007.md
+summary: 'Ziel-Repo HEAD 0e962db. Teil A: export_tanken_prices.py haengt nach jedem
+  Preis-Update einen Verlaufspunkt an data/tanken_history.json (SFTP-Download+Merge,
+  Trimming aelter als 3 Tage ueber Zeitstempel, Fehler nur geloggt, tanken.json-Update
+  haengt nicht davon ab). Teil B: Zahnrad-Icon im Tanken-Header (analog .settings-btn)
+  mit Panel fuer Stations-/Sortenauswahl (Default alle Stationen, E10+Diesel), Persistenz
+  in localStorage tanken-chart-prefs; neue Preisverlauf-Card mit eigenem 1-Tag/3-Tage-State;
+  getFSConfig() in tanken.js filtert tanken_history.json auf Auswahl+Zeitraum, Leerzustand
+  statt Fehler bei fehlenden Daten; Auto-Refresh alle 5 Min ueber neuen remainingTanken-Zweig
+  im main.js-Tick, nur wenn Ansicht aktiv. Teil C: openFS(''tanken'') minimal ergaenzt.
+  Browser-Verifikation (lokaler http.server + Playwright/Chromium, Testdateien tanken.json+tanken_history.json
+  mit >1 Tag Punkten, danach geloescht/nicht committet): Zahnrad zeigt korrekten Default
+  (alle Stationen, E10+Diesel), Auswahlaenderung + Reload (page.reload()) zeigt exakt
+  persistierte Auswahl aus localStorage, Preisverlauf oeffnet Vollbild-Chart mit nur
+  den gewaehlten Linien (Screenshot bestaetigt: nur Aral E5+E10 sichtbar nach Abwahl
+  von Shell/Diesel), 1-Tag/3-Tage-Umschalter funktioniert, keine PageErrors (nur erwartete
+  404 fuer externe API-Calls ohne Backend).'
+physical_machine: DES11
