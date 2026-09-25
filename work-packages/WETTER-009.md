@@ -42,6 +42,6 @@ Keine weiteren Aenderungen - `window.showTanken` existiert bereits (WETTER-0005/
 ## Abschluss
 `BR run finish WETTER-0009 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Browser-Verifikations-Befund>"`, `git push`.
 Ausgabe NUR: Footer + max. 3 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Browser-Verifikation.
-- [ ] Button ergaenzt, im Ziel-Repo committet und gepusht
-- [ ] Browser-Verifikation bestanden (Button sichtbar, Ansicht oeffnet/schliesst korrekt)
-- [ ] Scope eingehalten (nur index.html)
+- [x] Button ergaenzt, im Ziel-Repo committet und gepusht (453717a)
+- [x] Browser-Verifikation bestanden (Button sichtbar, Ansicht oeffnet/schliesst korrekt)
+- [x] Scope eingehalten (nur index.html)
