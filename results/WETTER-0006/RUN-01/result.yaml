@@ -1,0 +1,37 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0006
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 548690f2a3e83d755a5a5fce1e9a46c7e8b0cf45
+executor: claude-code
+started_at: '2026-09-25T12:39:38Z'
+ended_at: '2026-09-25T12:40:44Z'
+created_by: claude-code@DES11
+base_head: 666b590
+commits:
+- sha: 8d8e589a55236b17c22108f757f547b4012e11cb
+  message: 'Ops: WETTER-0006 task_create (Steuerchat-Aktion via CLI)'
+- sha: 6bc73658f7c8a69160560666abb50d8554e24458
+  message: 'Ops: WETTER-0006 run_start (Steuerchat-Aktion via CLI)'
+- sha: 548690f2a3e83d755a5a5fce1e9a46c7e8b0cf45
+  message: 'WETTER-0006: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0006/RUN-01/heartbeat.json
+- tasks/WETTER-0006/task.yaml
+- work-packages/WETTER-006.md
+summary: 'Ziel-Repo HEAD 64896c9. Fix-Befund: Tankerkoenig liefert bei fehlender Kraftstoffsorte
+  false statt null; fmtPrice(v==null) faengt das nicht ab, false.toFixed(3) wirft
+  TypeError und reisst render() komplett ab. Fix: _num_or_none() in beiden Export-Skripten
+  normalisiert diesel/e5/e10 (bool explizit ausgeschlossen, da Unterklasse von int)
+  auf None; js/tanken.js fmtPrice()+Sortier-Vergleich pruefen jetzt typeof v !== ''number''
+  statt v==null. Browser-Verifikation: lokaler http.server + Playwright/Chromium,
+  Testdatei mit e10:false + e10/e5/diesel:null angelegt, window.showTanken() rendert
+  alle 3 Stationen vollstaendig (Randfall zeigt ''—'' statt Absturz), Sortierung nach
+  E10 funktioniert, keine PageErrors, Konsole nur erwartete 404 fuer externe API-Calls;
+  Testdatei geloescht, nicht committet.'
+physical_machine: DES11
