@@ -28,7 +28,7 @@ model: Claude Sonnet 5
 reasoning_level: MEDIUM
 executor: claude-code
 controller: human
-status: WAITING_FOR_COPY_TO_CONTROL
+status: ARCHIVED
 created_at: '2026-09-26T00:00:00Z'
 created_by: claude-code
 depends_on:
@@ -42,4 +42,4 @@ acceptance_criteria:
 - 'Teil B: Y-Achse 3 Nachkommastellen, dezente Flaechenfuellung, punktabhaengige Marker-Groesse'
 - Browser-Verifikation bestanden
 - Scope eingehalten (nur die 2 genannten Dateien)
-task_version: 7
+task_version: 9
