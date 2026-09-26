@@ -1,0 +1,42 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0011
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 65b097836a01c1de9a44f82f1f47da18d057b2c7
+executor: claude-code
+started_at: '2026-09-26T15:16:08Z'
+ended_at: '2026-09-26T15:42:45Z'
+created_by: claude-code@DES11
+base_head: d7dcc34
+commits:
+- sha: c8253e5290b85c0337edf055558655a9348af5b8
+  message: 'Ops: WETTER-0011 task_create (Steuerchat-Aktion via CLI)'
+- sha: 65b097836a01c1de9a44f82f1f47da18d057b2c7
+  message: 'Ops: WETTER-0011 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0011/RUN-01/heartbeat.json
+- tasks/WETTER-0011/task.yaml
+summary: 'Ziel-Repo HEAD c0ceb80 (Wetter-App, gepusht). Teil A (pi-scripts/export_tanken_prices.py):
+  main() laedt vor dem Aufbau von full_stations per SFTP den aktuell live stehenden
+  data/tanken.json-Stand herunter (_load_old_prices, Fallback {} bei fehlendem Download/erstem
+  Lauf). Fehlt eine Station komplett in der prices.php-Antwort eines Zyklus (p is
+  None), werden diesel/e5/e10/isOpen aus old_prices uebernommen + log.warning mit
+  Stations-ID/Name; sind einzelne Sorten bei vorhandener Station null/false, bleibt
+  das unveraendert (legitimer Dauerzustand). Teil B (js/tanken.js getFSConfig()):
+  Y-Achsen-Ticks jetzt toFixed(3) statt toFixed(2), Linien erhalten dezente Flaechenfuellung
+  (withAlpha 12%, fill:''origin''), pointRadius 0 bei 3-Tage-Range / 2 bei 1-Tag-Range.
+  Browser-Verifikation: lokaler http.server + Playwright/Chromium gegen synthetische
+  data/tanken.json + data/tanken_history.json (eng beieinanderliegende Preise 2.392-2.404,
+  nicht committet, danach geloescht) - Y-Achse zeigt 7 eindeutige 3-Dezimalstellen-Labels
+  ohne Duplikate, backgroundColor mit 12% Alpha sichtbar (Screenshots), pointRadius
+  bei 1 Tag=2 / 3 Tage=0 bestaetigt, Browser-Konsole ohne JS-Fehler (nur erwartete
+  404 auf lokal fehlende, scope-fremde weather-json Dateien wie hours.json/live.json/history.json).
+  Teil A: python3 -m py_compile export_tanken_prices.py OK, echte Live-Verifikation
+  des Fallbacks macht der Steuerchat auf pi5-01. Scope eingehalten: nur pi-scripts/export_tanken_prices.py
+  + js/tanken.js.'
+physical_machine: DES11
