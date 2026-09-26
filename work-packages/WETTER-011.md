@@ -49,7 +49,7 @@ Fuer Teil A (Server-Logik) ist ein lokaler Python-Test ohne echten API-Call nich
 ## Abschluss
 `BR run finish WETTER-0011 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Teil-A/B-Befund, Browser-Verifikations-Befund>"`, `git push`.
 Ausgabe NUR: Footer + max. 4 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Teil-A/B-Befund, Browser-Verifikation.
-- [ ] Teil A: Fallback auf letzten bekannten Preis bei fehlender Station in prices.php-Antwort, Warn-Log, legitime Sorten-Luecken (false/None bei vorhandener Station) bleiben unangetastet
-- [ ] Teil B: Y-Achse 3 Nachkommastellen, dezente Flaechenfuellung, punktabhaengige Marker-Groesse
-- [ ] Browser-Verifikation bestanden
-- [ ] Scope eingehalten (nur die 2 genannten Dateien)
+- [x] Teil A: Fallback auf letzten bekannten Preis bei fehlender Station in prices.php-Antwort, Warn-Log, legitime Sorten-Luecken (false/None bei vorhandener Station) bleiben unangetastet
+- [x] Teil B: Y-Achse 3 Nachkommastellen, dezente Flaechenfuellung, punktabhaengige Marker-Groesse
+- [x] Browser-Verifikation bestanden
+- [x] Scope eingehalten (nur die 2 genannten Dateien)
