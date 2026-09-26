@@ -1,0 +1,39 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0013
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 7038a5df8e8fc915fc8f901dddfc467314f89375
+executor: claude-code
+started_at: '2026-09-26T21:06:22Z'
+ended_at: '2026-09-26T21:12:07Z'
+created_by: claude-code@DES11
+base_head: 65118e9
+commits:
+- sha: bb4d0bc92251f556f3c185d9c8891737ca7ba1fe
+  message: 'Ops: WETTER-0013 task_create (Steuerchat-Aktion via CLI)'
+- sha: 7038a5df8e8fc915fc8f901dddfc467314f89375
+  message: 'Ops: WETTER-0013 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0013/RUN-01/heartbeat.json
+- tasks/WETTER-0013/task.yaml
+summary: 'Ziel-Repo HEAD 5b9179f (Wetter-App, gepusht). Teil A: .header-bar (index.html)
+  erhaelt flex-wrap+row-gap; bei 360px/390px rutscht die rechte Gruppe (1-Tag/3-Tage
+  + Zahnrad) sauber in eine zweite Zeile unter Kein-Regen/Tanken statt zu ueberlappen
+  (Bounding-Box-Check: kein Overlap mehr). Neue Regel im bestehenden @media(max-width:420px)-Block
+  verkleinert NUR .header-bar .range-toggle .range-btn (14.08px->12.8px), .sw-tabs
+  .range-btn bleibt bei 12.8px unveraendert. Teil B: die Kartenkopf-Wertwrapper (#temp-current/#wind-current/#sw-current,
+  #sea-current bekam aus Konsistenzgruenden ebenfalls einen Wrapper) nutzen jetzt
+  die neue Klasse .chart-head-value statt Inline-Style; im 420px-Breakpoint stehen
+  bei allen 4 Karten Titel und Wert+Legende sauber linksbuendig untereinander (per
+  Bounding-Box bestaetigt: titleLeft==valueLeft==headLeft, valueBelowTitle=true),
+  ab 420px/Desktop unveraendert nebeneinander (flexDirection=row, Wert weiterhin rechtsbuendig).
+  Regressionscheck: Taschensee-Tabs (.sw-tabs .range-btn) unveraendert, Desktop-Ansicht
+  (1440px) bei Header und allen 4 Kartenkoepfen optisch identisch zu vorher (Screenshots).
+  Keine JS-Fehler (nur erwartete 404 auf fehlende Test-Datenfiles hours.json/live.json/history.json,
+  ausserhalb Scope). Scope eingehalten: nur index.html.'
+physical_machine: DES11
