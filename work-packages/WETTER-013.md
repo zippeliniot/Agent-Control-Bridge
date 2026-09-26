@@ -62,7 +62,7 @@ Befund (Steuerchat, per Screenshot bestaetigt): `.chart-head` hat bereits `flex-
 ## Abschluss
 `BR run finish WETTER-0013 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Teil-A/B-Befund je Breite, Regressionscheck>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Teil-A-Befund, Teil-B-Befund, Regressionscheck.
-- [ ] Teil A: flex-wrap ergaenzt, kein Ueberlappen mehr bei 360px/390px, Umschalter bei <420px kleiner
-- [ ] Teil B: alle 4 Kartenkoepfe bei <420px sauber linksbuendig gestapelt, Desktop-Ansicht unveraendert
-- [ ] Taschensee-Tabs unveraendert (Regressionscheck)
-- [ ] Scope eingehalten (nur index.html)
+- [x] Teil A: flex-wrap ergaenzt, kein Ueberlappen mehr bei 360px/390px, Umschalter bei <420px kleiner
+- [x] Teil B: alle 4 Kartenkoepfe bei <420px sauber linksbuendig gestapelt, Desktop-Ansicht unveraendert
+- [x] Taschensee-Tabs unveraendert (Regressionscheck)
+- [x] Scope eingehalten (nur index.html)
