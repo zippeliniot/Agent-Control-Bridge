@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0013
+project_id: wetter-app
+title: 'Schmale-Screens-Layout: Header-Ueberlappung + Kartenkopf-Umbruch sauber loesen'
+description: '.header-bar (index.html) ist display:flex ohne flex-wrap - bei drei
+  Buttons links (Kein Regen/Tanken) und Umschalter+Zahnrad rechts passt die Zeile
+  auf schmalen Phones nicht mehr nebeneinander und ueberlappt ("1 Tag" ueberlappt
+  den TANKEN-Button). Fix Teil A: flex-wrap+row-gap auf .header-bar, kleinerer Header-Umschalter
+  bei <420px. Teil B: die vier Kartenkopf-Wrapper (#temp-current, #wind-current, #sw-current,
+  #sea-current) haben identische Inline-Styles, die auf eine gemeinsame Klasse .chart-head-value
+  gehoben werden; bei <420px werden Titel und Werte-Block sauber linksbuendig gestapelt
+  statt unkontrolliert zu springen.'
+task_class: BUGFIX
+repository: wetter-app
+branch: main
+git:
+  expected_head: 17c8717d96247d3b18e0f11290d0209d70f214c9
+  allowed_changed_files:
+  - index.html
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+controller: human
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-26T00:00:00Z'
+created_by: claude-code
+depends_on:
+- WETTER-0012
+stop_conditions:
+- SCOPE_VIOLATION
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Teil A: flex-wrap ergaenzt, kein Ueberlappen mehr bei 360px/390px, Umschalter bei
+  <420px kleiner'
+- 'Teil B: alle 4 Kartenkoepfe bei <420px sauber linksbuendig gestapelt, Desktop-Ansicht
+  unveraendert'
+- Taschensee-Tabs unveraendert (Regressionscheck)
+- Scope eingehalten (nur index.html)
+task_version: 3
