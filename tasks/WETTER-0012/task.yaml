@@ -1,0 +1,46 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0012
+project_id: wetter-app
+title: 'Tanken-Zahnrad-Panel responsiv: eigenes Overlay fuer iPhone/iPad/Desktop'
+description: '#tanken-settings-menu nutzt aktuell die geteilte Klasse .settings-menu
+  (position: absolute; right: 0; min-width: 190px), der Inhalt (5 Stations-Checkboxen
+  mit teils langen Namen + 3 Sorten-Checkboxen) ist deutlich breiter als 190px und
+  hat kein max-width - auf schmalen iPhone-Bildschirmen wird das Panel nach links
+  ueber den Bildschirmrand hinaus abgeschnitten. Fix: eigenes, dediziertes Overlay
+  NUR fuer #tanken-settings-menu mit 3 Breakpoints (Mobil: Bottom-Sheet, Tablet: zentriertes
+  Modal, Desktop: verankerter Dropdown mit max-width+scroll), angelehnt an das bestehende
+  .modal-overlay/.modal-box-Muster. Das geteilte Haupt-Zahnrad-Menue (.settings-menu)
+  bleibt unangetastet.'
+task_class: BUGFIX
+repository: wetter-app
+branch: main
+git:
+  expected_head: c0ceb80507a27734f75c59811d97b6c66c120e02
+  allowed_changed_files:
+  - index.html
+  - js/tanken.js
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+controller: human
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-09-26T00:00:00Z'
+created_by: claude-code
+depends_on:
+- WETTER-0011
+stop_conditions:
+- SCOPE_VIOLATION
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Mobil: Bottom-Sheet vollstaendig sichtbar, Backdrop+Fertig-Button schliessen'
+- 'Tablet: zentriertes Modal vollstaendig sichtbar'
+- 'Desktop: Dropdown vollstaendig sichtbar (max-width+scroll), kein Abschneiden mehr'
+- Haupt-Zahnrad-Menue unveraendert funktionsfaehig (Regressionscheck)
+- Filter-Funktionalitaet (Stationen/Sorten) bei allen 3 Breakpoints unveraendert
+- Scope eingehalten (nur index.html, js/tanken.js; .settings-menu selbst unangetastet)
+task_version: 3
