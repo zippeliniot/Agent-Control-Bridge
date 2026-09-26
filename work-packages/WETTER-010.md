@@ -44,9 +44,9 @@ Die Zahnrad-Auswahl (Stationen/Sorten, `prefs`) wirkt bisher NUR auf `getFSConfi
 ## Abschluss
 `BR run finish WETTER-0010 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Browser-Verifikations-Befund>"`, `git push`.
 Ausgabe NUR: Footer + max. 3 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Browser-Verifikation.
-- [ ] Stationsliste filtert nach ausgewaehlten Stationen
-- [ ] Preiszeilen filtern nach ausgewaehlten Sorten, Sortier-Umschalter blendet nicht ausgewaehlte Sorten aus
-- [ ] Automatischer Sortier-Wechsel bei Abwahl der aktiven Sortier-Sorte funktioniert
-- [ ] Leerzustaende (keine Stationen/keine Sorten ausgewaehlt) sauber abgefangen
-- [ ] Browser-Verifikation bestanden (alle 6 Punkte)
-- [ ] Scope eingehalten (nur js/tanken.js)
+- [x] Stationsliste filtert nach ausgewaehlten Stationen (1fc89b2)
+- [x] Preiszeilen filtern nach ausgewaehlten Sorten, Sortier-Umschalter blendet nicht ausgewaehlte Sorten aus (1fc89b2)
+- [x] Automatischer Sortier-Wechsel bei Abwahl der aktiven Sortier-Sorte funktioniert (1fc89b2)
+- [x] Leerzustaende (keine Stationen/keine Sorten ausgewaehlt) sauber abgefangen (1fc89b2)
+- [x] Browser-Verifikation bestanden (alle 6 Punkte)
+- [x] Scope eingehalten (nur js/tanken.js)
