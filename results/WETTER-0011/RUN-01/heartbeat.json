@@ -1,0 +1,8 @@
+{
+  "actor": "claude-code",
+  "bridge_task_id": "WETTER-0011",
+  "kind": "bridge_heartbeat",
+  "last_seen": "2026-09-26T15:16:08Z",
+  "machine": "DES11",
+  "run_id": "RUN-01"
+}
