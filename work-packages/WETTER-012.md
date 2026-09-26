@@ -49,9 +49,9 @@ Neue, eigene CSS-Klasse (z. B. `tanken-settings-menu`, NICHT `settings-menu` wie
 ## Abschluss
 `BR run finish WETTER-0012 --status COMPLETED --actor claude-code --commit --summary "<HEAD-SHA, Befund je Breakpoint, Regressionscheck Haupt-Zahnrad>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Befund je der 3 Breakpoints, Regressionscheck-Befund.
-- [ ] Mobil: Bottom-Sheet vollstaendig sichtbar, Backdrop+Fertig-Button schliessen
-- [ ] Tablet: zentriertes Modal vollstaendig sichtbar
-- [ ] Desktop: Dropdown vollstaendig sichtbar (max-width+scroll), kein Abschneiden mehr
-- [ ] Haupt-Zahnrad-Menue unveraendert funktionsfaehig (Regressionscheck)
-- [ ] Filter-Funktionalitaet (Stationen/Sorten) bei allen 3 Breakpoints unveraendert
-- [ ] Scope eingehalten (nur index.html, js/tanken.js; .settings-menu selbst unangetastet)
+- [x] Mobil: Bottom-Sheet vollstaendig sichtbar, Backdrop+Fertig-Button schliessen
+- [x] Tablet: zentriertes Modal vollstaendig sichtbar
+- [x] Desktop: Dropdown vollstaendig sichtbar (max-width+scroll), kein Abschneiden mehr
+- [x] Haupt-Zahnrad-Menue unveraendert funktionsfaehig (Regressionscheck)
+- [x] Filter-Funktionalitaet (Stationen/Sorten) bei allen 3 Breakpoints unveraendert
+- [x] Scope eingehalten (nur index.html, js/tanken.js; .settings-menu selbst unangetastet)
