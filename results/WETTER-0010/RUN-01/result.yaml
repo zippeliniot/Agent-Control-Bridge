@@ -1,0 +1,41 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0010
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 8772f630cf1412948e0ef82c189d4b27573baac7
+executor: claude-code
+started_at: '2026-09-26T08:15:34Z'
+ended_at: '2026-09-26T08:52:46Z'
+created_by: claude-code@DES11
+base_head: 01c4843
+commits:
+- sha: 0a9b54b77f6e5daa8fa66b58b867b0c30a978842
+  message: 'Ops: WETTER-0010 task_create (Steuerchat-Aktion via CLI)'
+- sha: 4f4a567072bd977439f0fa6a77212c51f1b087ab
+  message: 'Ops: WETTER-0010 run_start (Steuerchat-Aktion via CLI)'
+- sha: 8772f630cf1412948e0ef82c189d4b27573baac7
+  message: 'WETTER-0010: Akzeptanzkriterien abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0010/RUN-01/heartbeat.json
+- tasks/WETTER-0010/task.yaml
+- work-packages/WETTER-010.md
+summary: 'Ziel-Repo HEAD 1fc89b2. Fix in js/tanken.js: render() filtert Stationsliste
+  jetzt auf isStationChecked() und Preiszeilen auf prefs.fuels; renderSortToggle()
+  blendet Sortier-Buttons fuer abgewaehlte Sorten aus (kompletter Umschalter versteckt,
+  wenn keine Sorte mehr ausgewaehlt); ensureValidSortKey() schaltet sortKey automatisch
+  auf die naechste ausgewaehlte Sorte um (E5->E10->Diesel); eigene Hinweistexte fuer
+  ''keine Stationen ausgewaehlt'' bzw. ''keine Sorte ausgewaehlt'' (getrennt vom bestehenden
+  ''keine Stationen gefunden''); prefsChanged() ruft render() erneut auf; initialer
+  sortKey-Default auf e10 umgestellt. Browser-Verifikation (lokaler http.server +
+  Playwright/Chromium, Testdatei data/tanken.json mit 3 Stationen, danach geloescht/nicht
+  committet) bestand alle 6 Punkte: Stationsabwahl wirkt sofort auf die Liste, Default
+  zeigt korrekt nur E10/Diesel ohne E5-Sortier-Button, komplette Abwahl aller Sorten/Stationen
+  zeigt jeweils den Hinweistext samt ausgeblendetem Umschalter, Abwahl der aktiven
+  Sortier-Sorte E10 schaltet automatisch auf Diesel um, keine PageErrors (nur erwartete
+  404 fuer externe API-Calls ohne Backend).'
+physical_machine: DES11
