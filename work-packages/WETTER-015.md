@@ -65,8 +65,8 @@ Testdatei data/history.json vor dem Commit loeschen, `git status` darf nur js/se
 Im Ziel-Repo committen und pushen (Commit-Message beginnt mit "WETTER-0015:"). Dann im ACB-Repo:
 `BR run finish WETTER-0015 --status COMPLETED --actor claude-code --commit --summary "<Ziel-Repo-HEAD-SHA, Befund Jahresfarben/Luft min-max je Jahr, Befund Ein-/Ausblenden + Standard, Regressionscheck andere Tabs>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Befund Luft min/max je Jahr, Befund Ein-/Ausblenden, Regressionscheck.
-- [ ] Vergleich-Tab zeigt pro Monat Luft max./min. fuer jedes sichtbare Jahr in dessen Jahresfarbe
-- [ ] Wasserlinie und Luftlinien eines Jahres in derselben, stabilen Farbe
-- [ ] Jahre per Button ein-/ausblendbar, Standard letzte 3 Jahre, nie leerer Chart, gilt auch im Vollbild
-- [ ] Tabs Aktuell/Woche/Monat/Jahr unveraendert
-- [ ] Scope eingehalten (nur js/seewasser.js)
+- [x] Vergleich-Tab zeigt pro Monat Luft max./min. fuer jedes sichtbare Jahr in dessen Jahresfarbe
+- [x] Wasserlinie und Luftlinien eines Jahres in derselben, stabilen Farbe
+- [x] Jahre per Button ein-/ausblendbar, Standard letzte 3 Jahre, nie leerer Chart, gilt auch im Vollbild
+- [x] Tabs Aktuell/Woche/Monat/Jahr unveraendert
+- [x] Scope eingehalten (nur js/seewasser.js)
