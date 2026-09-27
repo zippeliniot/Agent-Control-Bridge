@@ -23,7 +23,7 @@ acceptance_criteria:
   ordnet Grid sauber neu
 - Regen-/Tanken-Ansicht bei grossen Screens weiterhin 760px zentriert
 - Scope eingehalten (nur index.html)
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-09-27T00:00:00Z'
 created_by: browser-claude
-task_version: 5
+task_version: 7

@@ -1,0 +1,43 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0014
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 97ec9998fa10377518a058a12aecd2c61f929d24
+executor: claude-code
+started_at: '2026-09-27T09:08:00Z'
+ended_at: '2026-09-27T09:11:19Z'
+created_by: claude-code@DES11
+base_head: ed32999
+commits:
+- sha: b82f3ae23f1d23e88584a8d990b4ffee40f0a02d
+  message: 'Ops: WETTER-0014 task_create (Steuerchat-Aktion via CLI)'
+- sha: 97ec9998fa10377518a058a12aecd2c61f929d24
+  message: 'Ops: WETTER-0014 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- docs/handover/staging-v12/WETTER-0014.yaml
+- results/WETTER-0014/RUN-01/heartbeat.json
+- tasks/WETTER-0014/task.yaml
+summary: 'Ziel-Repo HEAD bcae82b (Wetter-App, gepusht). Phone/iPad-hoch (390px/820px):
+  Layout unveraendert - display:block, .page max-width 760px, kein Grid, kein Overflow
+  (Bounding-Box-Vergleich gegen HEAD 5b9179f identisch). iPad-quer/Desktop (1180px/1366px):
+  #main-view wird 2-spaltiges CSS-Grid (.page 1240px), Temperatur|Wind und Taschensee|Ostsee
+  je in einer Reihe (sameRow bestaetigt), Blitz allein links, 7-Tage-Vorschau (#fc-card)/Controls/Stand-Zeile
+  ueber volle Breite (grid-column:1/-1). Grosse Monitore (1920px/2560px): 3 Spalten
+  (.page 1860px), gleiches Full-Width-Verhalten fuer fc-card/Controls/Stand. Kein
+  horizontaler Overflow bei allen getesteten Breiten (scrollWidth<=innerWidth). Resize-Test
+  (1920->1180->390, gleiche Seite ohne Reload): Chart-Canvas-Breite passt sich live
+  an (587px->547px->340px). Standortwechsel Hamburg bei 1920px: Taschensee/Blitz/Ostsee
+  werden ausgeblendet, Grid ordnet Temperatur+Wind ohne Luecken/Overflow neu; zurueck
+  auf Gronenberg stellt alle Karten wieder her. Regen-/Tanken-Ansicht bleiben bei
+  1920px 760px breit und zentriert (getestet ueber window.showTanken/hideTanken/showRegen/showMain),
+  #main-view.hidden(!important) wirkt weiterhin, nach Rueckkehr wieder display:grid.
+  Vollbild-Chart (openFS) funktioniert bei 1920px unveraendert (fs-modal.open=true).
+  Browser-Konsole: keine neuen Fehler bei allen Checks, nur die erwarteten 404 auf
+  lokal fehlende, scope-fremde hours.json/live.json/history.json. Scope eingehalten:
+  nur index.html (CSS + id=fc-card).'
+physical_machine: DES11
