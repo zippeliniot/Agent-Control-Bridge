@@ -17,11 +17,14 @@ permissions:
 - TEST_EXECUTION
 - GIT_PUSH
 acceptance_criteria:
-- 'Vergleich-Tab zeigt pro Monat Luft max./min. fuer jedes sichtbare Jahr in dessen Jahresfarbe'
-- 'Wasserlinie und Luftlinien eines Jahres in derselben, stabilen Farbe'
-- 'Jahre per Button ein-/ausblendbar, Standard letzte 3 Jahre, nie leerer Chart, gilt auch im Vollbild'
-- 'Tabs Aktuell/Woche/Monat/Jahr unveraendert'
+- Vergleich-Tab zeigt pro Monat Luft max./min. fuer jedes sichtbare Jahr in dessen
+  Jahresfarbe
+- Wasserlinie und Luftlinien eines Jahres in derselben, stabilen Farbe
+- Jahre per Button ein-/ausblendbar, Standard letzte 3 Jahre, nie leerer Chart, gilt
+  auch im Vollbild
+- Tabs Aktuell/Woche/Monat/Jahr unveraendert
 - Scope eingehalten (nur js/seewasser.js)
-status: CREATED
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
 created_at: '2026-09-27T00:00:00Z'
 created_by: browser-claude
+task_version: 3
