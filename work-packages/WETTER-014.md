@@ -65,8 +65,8 @@ Actor = claude-code
 Im Ziel-Repo committen und pushen (Commit-Message beginnt mit "WETTER-0014:"). Dann im ACB-Repo:
 `BR run finish WETTER-0014 --status COMPLETED --actor claude-code --commit --summary "<Ziel-Repo-HEAD-SHA, Befund je Viewport-Gruppe, Regressionscheck Phone/Regen/Tanken>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Befund Phone/iPad hoch, Befund 2-/3-Spalten, Regressionscheck.
-- [ ] Unter 1000px (390/820px) Layout unveraendert
-- [ ] Ab 1000px zwei Spalten, ab 1600px drei Spalten, Vorschau/Controls/Stand volle Breite
-- [ ] Kein horizontaler Ueberlauf, Charts passen sich beim Resize an, Standortwechsel ordnet Grid sauber neu
-- [ ] Regen-/Tanken-Ansicht bei grossen Screens weiterhin 760px zentriert
-- [ ] Scope eingehalten (nur index.html)
+- [x] Unter 1000px (390/820px) Layout unveraendert
+- [x] Ab 1000px zwei Spalten, ab 1600px drei Spalten, Vorschau/Controls/Stand volle Breite
+- [x] Kein horizontaler Ueberlauf, Charts passen sich beim Resize an, Standortwechsel ordnet Grid sauber neu
+- [x] Regen-/Tanken-Ansicht bei grossen Screens weiterhin 760px zentriert
+- [x] Scope eingehalten (nur index.html)
