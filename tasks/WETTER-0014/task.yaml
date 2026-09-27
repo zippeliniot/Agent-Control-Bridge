@@ -2,7 +2,7 @@ schema_version: '1.0'
 kind: bridge_task
 bridge_task_id: WETTER-0014
 project_id: wetter-app
-title: 'Mehrspalten-Grid fuer Tablet-Querformat und grosse Monitore'
+title: Mehrspalten-Grid fuer Tablet-Querformat und grosse Monitore
 description: 'Details: work-packages/WETTER-014.md'
 task_class: FEATURE
 repository: wetter-app
@@ -17,11 +17,13 @@ permissions:
 - TEST_EXECUTION
 - GIT_PUSH
 acceptance_criteria:
-- 'Unter 1000px (390/820px) Layout unveraendert'
-- 'Ab 1000px zwei Spalten, ab 1600px drei Spalten, Vorschau/Controls/Stand volle Breite'
-- 'Kein horizontaler Ueberlauf, Charts passen sich beim Resize an, Standortwechsel ordnet Grid sauber neu'
-- 'Regen-/Tanken-Ansicht bei grossen Screens weiterhin 760px zentriert'
+- Unter 1000px (390/820px) Layout unveraendert
+- Ab 1000px zwei Spalten, ab 1600px drei Spalten, Vorschau/Controls/Stand volle Breite
+- Kein horizontaler Ueberlauf, Charts passen sich beim Resize an, Standortwechsel
+  ordnet Grid sauber neu
+- Regen-/Tanken-Ansicht bei grossen Screens weiterhin 760px zentriert
 - Scope eingehalten (nur index.html)
-status: CREATED
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
 created_at: '2026-09-27T00:00:00Z'
 created_by: browser-claude
+task_version: 3
