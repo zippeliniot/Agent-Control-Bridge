@@ -1,0 +1,47 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0015
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: c44df307ed45cf81b32db0c815f6e04095dc1efc
+executor: claude-code
+started_at: '2026-09-27T16:17:55Z'
+ended_at: '2026-09-27T16:27:16Z'
+created_by: claude-code@DES11
+base_head: c06d2a0
+commits:
+- sha: 201d8520b9f3bf9fc5a98ebe5984024aae0954de
+  message: 'Ops: WETTER-0015 task_create (Steuerchat-Aktion via CLI)'
+- sha: c44df307ed45cf81b32db0c815f6e04095dc1efc
+  message: 'Ops: WETTER-0015 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- docs/handover/staging-v12/WETTER-0015.yaml
+- results/WETTER-0015/RUN-01/heartbeat.json
+- tasks/WETTER-0015/task.yaml
+summary: 'Ziel-Repo HEAD 7df36e7 (Wetter-App, gepusht). Luft min/max je Jahr: Vergleich-Tab
+  zeichnet jetzt fuer jedes sichtbare Jahr eine feste Farbe (Palette bzw. bei >12
+  Jahren gleichmaessig verteilte HSL-Werte, unabhaengig vom gewaehlten Sensor 40cm/Grund)
+  mit Wasserlinie (durchgezogen) + ''Luft max. <Jahr>'' (gestrichelt) + ''Luft min.
+  <Jahr>'' (gepunktet) in derselben Farbe - gegen Live-Daten (data/history.json von
+  wetter.gronenberg.info, Jahre 2023-2026) per Playwright/Chromium bestaetigt: 3 Jahre
+  je 3 Datasets + Referenz, Farben stabil identisch nach Ausblenden/Wiedereinblenden,
+  Farbzuordnung bleibt beim Umschalten 40cm<->Grund erhalten, Tooltip-Daten liefern
+  je sichtbarem Jahr eigene Wasser-/Luft-max-/Luft-min-Werte. Ein-/Ausblenden: neue
+  Jahres-Buttons unter 40cm/Grund (window.swCmpYear), Standard bei 4 verfuegbaren
+  Jahren zeigt die letzten 3 (2024/2025/2026) sichtbar, 2023 gedimmt; Jahr ausblenden
+  entfernt alle 3 Linien, wieder einblenden stellt exakt dieselbe Farbe wieder her;
+  Herunterschalten bis auf 1 sichtbares Jahr (2026) funktioniert, ein weiterer Klick
+  auf das letzte verbleibende Jahr wird ignoriert (Dataset-Anzahl unveraendert) -
+  Chart wird nie leer; Vollbild zeigt nur die gerade sichtbaren Jahre (Datasets identisch
+  zur Kartenansicht). Bei 390px/1366px kein horizontaler Ueberlauf, Jahres-Buttons
+  brechen sauber um. Regressionscheck Aktuell/Woche/Monat/Jahr: Luft-Band unveraendert
+  orange gestrichelt (rgba(255,184,48,0.55), [4,4]), atBand()-Logik nicht angefasst.
+  Browser-Konsole ohne neue Fehler (nur erwartete 404 auf lokal fehlende data/live.json
+  + data/hours.json, ausserhalb Scope). node --check js/seewasser.js OK. Testdatei
+  data/history.json vor Commit geloescht, git status zeigte nur js/seewasser.js. Scope
+  eingehalten: nur js/seewasser.js.'
+physical_machine: DES11
