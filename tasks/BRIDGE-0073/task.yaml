@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0073
+project_id: agent-control-bridge
+title: Abgleich "Steering Continuity"-Konzept gegen Gate/Handover/Entscheidungs-System
+description: 'Details: work-packages/BRIDGE-073.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 3d5ac14f6b60cd068930366ef2f74a4c46c94d55
+model: Claude Opus 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- GIT_PUSH
+depends_on:
+- BRIDGE-0072
+acceptance_criteria:
+- Entscheidungsdatei mit vollstaendiger Objekttabelle (11 Zeilen, Gegenstueck/Deckungsgrad/Option
+  A-B-C je Objekt)
+- Sondervermerk zu Objekten ohne Gegenstueck (Dependency, Collision, Baseline, ChangeRequest)
+- ID-Namensraum-Konflikt ACB-ST-0xx vs. BRIDGE-00NN explizit dokumentiert
+- Generizitaets-Pruefung a-f mit TRAEGT/TRAEGT NICHT/UNKLAR je Punkt, ohne Dorfschaft-Fachwerte
+  oder -Agentenrollen in ACB zu uebernehmen
+- Vermerk zu Codex-Rollenbeschraenkung (geltend) und Multi-Agent-Ausfuehrungsfreigabe
+  (fachlich gesetzt, Ausfuehrung weiterhin offen) als eigener spaeterer Auftrag
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-02T00:00:00Z'
+created_by: browser-claude
+task_version: 3
