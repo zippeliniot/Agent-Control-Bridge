@@ -1,0 +1,46 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0075
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: a0f26ac2726cf2acb7e908184e94258fd0f090cd
+executor: claude-code
+started_at: '2026-10-02T09:11:47Z'
+ended_at: '2026-10-02T09:46:05Z'
+created_by: claude-code@HAM11
+base_head: 73d8eb356a0150c456d2b9114bab095b26d73e07
+commits:
+- sha: bc61e03ba4403b7b3f16eb85ea91440389346e98
+  message: 'Ops: BRIDGE-0075 task_create (Steuerchat-Aktion via CLI)'
+- sha: da64cc1a8d5b295be57d3535d5d7e9dc79d4a441
+  message: 'Ops: BRIDGE-0075 run_start (Steuerchat-Aktion via CLI)'
+- sha: afd1753274d2f4513859a78b226ee673f61f0b9f
+  message: 'BRIDGE-0075 Teil A: OpenIssue-Schema + Store-Methoden'
+- sha: 68d8e8c2734991b419b499596d08a8fe431f8598
+  message: 'BRIDGE-0075 Teil B: CLI-Unterbefehle issue open/close/list'
+- sha: 19fea22198e49e17282cfff666e2627d563a409d
+  message: 'BRIDGE-0075 Teil C: Kurzverweis issue open/close/list in ARBEITSWEISE'
+- sha: a0f26ac2726cf2acb7e908184e94258fd0f090cd
+  message: 'BRIDGE-0075 Abschluss: volle Suite gruen (524/524)'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- results/BRIDGE-0075/RUN-01/heartbeat.json
+- schemas/audit-event.schema.yaml
+- schemas/open-issue.schema.yaml
+- src/bridge/cli.py
+- src/bridge/store.py
+- tasks/BRIDGE-0075/task.yaml
+- tests/test_cli.py
+- tests/test_store.py
+- work-packages/BRIDGE-075.md
+summary: 'Option A aus ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md umgesetzt: neues Schema
+  schemas/open-issue.schema.yaml, Store-Methoden open_issue/close_issue/list_open_issues
+  (store.py) mit Kollisions- und Doppel-Close-Schutz, CLI-Unterbefehle issue open/close/list
+  (cli.py) mit fail-closed Pruefung unbekannter project_id/issue_id, sowie Kurzverweis
+  in ACB-STEUERCHAT-ARBEITSWEISE.md Abschnitt 4. Volle Suite 524/524 gruen, kein Dorfschaft-Bezug
+  in Schema/Code.'
+physical_machine: HAM11
