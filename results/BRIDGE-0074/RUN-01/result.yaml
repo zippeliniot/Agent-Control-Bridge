@@ -1,0 +1,36 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0074
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 2f05387f1b15ffe9cc20e21222beb1ac7e64995f
+executor: claude-code
+started_at: '2026-10-02T08:20:13Z'
+ended_at: '2026-10-02T08:47:16Z'
+created_by: claude-code@HAM11
+base_head: 3d68e77a14a8dbd5a660fcab98857215daea6f49
+commits:
+- sha: 563b17dbbfe23b9f0eddb035342e8f55b14155a4
+  message: 'Ops: BRIDGE-0074 task_create (Steuerchat-Aktion via CLI)'
+- sha: 785d68775072bf36295c154b71ae0bfc7b44a01d
+  message: 'Ops: BRIDGE-0074 run_start (Steuerchat-Aktion via CLI)'
+- sha: 2f05387f1b15ffe9cc20e21222beb1ac7e64995f
+  message: 'BRIDGE-0074 Teil A: Formalisierungsentscheidung OpenIssue (ENTWURF)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md
+- results/BRIDGE-0074/RUN-01/heartbeat.json
+- tasks/BRIDGE-0074/task.yaml
+- work-packages/BRIDGE-074.md
+summary: 'Entscheidungsdatei docs/concepts/ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md
+  (80 Zeilen, Status ENTWURF) angelegt: Ist-Stand, fuenf Anforderungen und drei Formalisierungsoptionen
+  (A eigenes Objekt/Store M, B Erweiterungsfeld S, C Handover-Frontmatter S) je mit
+  Token-, Generizitaets- und Lesecode-Bewertung. Empfehlung Option A, weil nur dort
+  die Leselast nicht mit der Sitzungszahl waechst. Befund: B scheitert strukturell
+  an der Unveraenderlichkeit der Ergebnisdateien (Status kann nicht nachtraeglich
+  geschlossen werden), C traegt die handgetragene Fortschreibung und damit den Verlustgrund
+  weiter.'
+physical_machine: HAM11
