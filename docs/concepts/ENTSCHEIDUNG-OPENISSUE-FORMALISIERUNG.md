@@ -1,6 +1,6 @@
 # Entscheidung: Formalisierung `OpenIssue`
 
-**Status:** ENTWURF — Freigabe durch April ausstehend. BRIDGE-0074, kein Gate.
+**Status:** FREIGEGEBEN (Option A), 02.10.2026. BRIDGE-0074, kein Gate.
 Grundlage: `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md` §2 (`OpenIssue` als einziges Objekt mit
 echtem Kontinuitaetsnutzen). Entscheidungsebene, keine Implementierung. **Projektunabhaengig:**
 Dorfschaft ist nur der bekannte Bedarfsfall (ueber 1000 erwartete Steuerchat-Sitzungen), nicht
