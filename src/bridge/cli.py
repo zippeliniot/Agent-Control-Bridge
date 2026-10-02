@@ -250,6 +250,23 @@ def _build_parser() -> argparse.ArgumentParser:
     psub.add_parser("list", help="bekannte Projekte (project_id + read_only + task_prefix)")
     psub.add_parser("show", help="Kernfelder eines Profils").add_argument("project_id")
     psub.add_parser("validate", help="Profil gegen Schema prüfen").add_argument("path")
+
+    issue = sub.add_parser("issue", help="Offene Punkte ueber Sitzungen hinweg (BRIDGE-0075)")
+    isub = issue.add_subparsers(dest="issue_cmd", required=True)
+    iopen = isub.add_parser("open", help="offenen Punkt anlegen")
+    iopen.add_argument("--project-id", required=True)
+    iopen.add_argument("--summary", required=True)
+    iopen.add_argument("--origin-task-id", required=True)
+    iopen.add_argument("--actor", default="unknown",
+                       help="Audit-Attribution (Standard: unknown)")
+    iclose = isub.add_parser("close", help="offenen Punkt schliessen")
+    iclose.add_argument("issue_id")
+    iclose.add_argument("--project-id", required=True)
+    iclose.add_argument("--actor", required=True)
+    iclose.add_argument("--note")
+    ilist = isub.add_parser("list", help="offene Punkte auflisten")
+    ilist.add_argument("--project-id")
+    ilist.add_argument("--include-closed", action="store_true")
     return parser
 
 
@@ -1171,6 +1188,52 @@ def _cmd_project(args, store) -> int:
     return 2  # vom Parser ausgeschlossen
 
 
+def _next_issue_id(store, project_id: str) -> str:
+    """Naechste freie <project_id>-ISSUE-NNNN (vierstellig, fortlaufend)."""
+    project_dir = store.issues_dir / project_id
+    highest = 0
+    if project_dir.exists():
+        for entry in project_dir.glob(f"{project_id}-ISSUE-*.yaml"):
+            suffix = entry.stem.rsplit("-ISSUE-", 1)[-1]
+            if suffix.isdigit():
+                highest = max(highest, int(suffix))
+    return f"{project_id}-ISSUE-{highest + 1:04d}"
+
+
+def _cmd_issue(args, store) -> int:
+    if args.issue_cmd == "open":
+        # Fail-closed: unbekannte project_id -> ProfileError (StoreError), kein
+        # stiller Erfolg fuer einen offenen Punkt ohne gueltiges Projektprofil.
+        profiles.load_profile(store.root, args.project_id, schema_dir=store.schema_dir)
+        issue_id = _next_issue_id(store, args.project_id)
+        doc = store.open_issue({
+            "schema_version": "1.0",
+            "kind": "open_issue",
+            "issue_id": issue_id,
+            "project_id": args.project_id,
+            "status": "OPEN",
+            "summary": args.summary,
+            "origin_task_id": args.origin_task_id,
+            "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }, actor=args.actor)
+        print(f"OK: {doc['issue_id']} angelegt (project={doc['project_id']})")
+        return 0
+    if args.issue_cmd == "close":
+        profiles.load_profile(store.root, args.project_id, schema_dir=store.schema_dir)
+        doc = store.close_issue(args.issue_id, args.project_id, actor=args.actor, note=args.note)
+        print(f"OK: {doc['issue_id']} geschlossen (status={doc['status']})")
+        return 0
+    if args.issue_cmd == "list":
+        rows = store.list_open_issues(project_id=args.project_id,
+                                      include_closed=args.include_closed)
+        if not rows:
+            print("(keine offenen Punkte)")
+        for row in rows:
+            print(f"{row['issue_id']}\t{row['status']}\t{row['summary']}")
+        return 0
+    return 2  # vom Parser ausgeschlossen
+
+
 # --------------------------------------------------------------------------- #
 # Auto-Pull-Hintergrund-Thread der Web-UI (BRIDGE-038)
 # --------------------------------------------------------------------------- #
@@ -1317,6 +1380,7 @@ _DISPATCH = {
     "run": _cmd_run,
     "draft": _cmd_draft,
     "project": _cmd_project,
+    "issue": _cmd_issue,
 }
 
 

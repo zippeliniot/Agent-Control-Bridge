@@ -47,8 +47,8 @@
    - `issue list [--project-id <id>] [--include-closed]` -> listet, Default nur offene.
 2. Fehlermeldungen fail-closed (fehlendes Pflichtargument, unbekannte `issue_id`, unbekannte `project_id` gegen `projects/<id>/project.yaml` pruefen) - kein Raten, kein stiller Erfolg bei falscher ID.
 **Tests:** CLI-Testdatei gezielt, dann volle Suite EINMAL.
-- [ ] `issue open/close/list` funktionsfaehig (Test je Unterbefehl)
-- [ ] Unbekannte `project_id`/`issue_id` -> klarer Fehler, kein stiller Erfolg (Test)
+- [x] `issue open/close/list` funktionsfaehig (Test je Unterbefehl)
+- [x] Unbekannte `project_id`/`issue_id` -> klarer Fehler, kein stiller Erfolg (Test)
 
 ### Teil C - Dokumentations-Minimalverweis (kein Ablauf-Rewrite)
 

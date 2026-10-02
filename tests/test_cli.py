@@ -1497,5 +1497,102 @@ class CliTaskBriefTests(unittest.TestCase):
         self.assertIn("criterion_1: -", lines)
 
 
+class IssueCliTests(unittest.TestCase):
+    """BRIDGE-0075 Teil B: issue open/close/list."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-cli-issue-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        self.projects_dir = self.tmp / "projects" / "testproj"
+        self.projects_dir.mkdir(parents=True)
+        (self.projects_dir / "project.yaml").write_text(
+            yaml.safe_dump({
+                "schema_version": "1.0",
+                "kind": "bridge_project_profile",
+                "project_id": "testproj",
+                "repository": "Testproj",
+                "default_branch": "main",
+                "task_prefix": "TEST",
+                "read_only": False,
+            }),
+            encoding="utf-8",
+        )
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def cli(self, *args):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = main(["--root", str(self.tmp), "--schema-dir", str(SCHEMA_DIR), *args])
+        return code, out.getvalue(), err.getvalue()
+
+    def test_issue_open_creates_and_prints_id(self):
+        code, out, _ = self.cli(
+            "issue", "open", "--project-id", "testproj",
+            "--summary", "Testbefund", "--origin-task-id", "BRIDGE-0900",
+        )
+        self.assertEqual(code, 0)
+        self.assertIn("testproj-ISSUE-0001", out)
+        path = self.tmp / "open-issues" / "testproj" / "testproj-ISSUE-0001.yaml"
+        self.assertTrue(path.exists())
+
+    def test_issue_open_unknown_project_id_rejected(self):
+        code, _, err = self.cli(
+            "issue", "open", "--project-id", "unbekannt",
+            "--summary", "x", "--origin-task-id", "BRIDGE-0900",
+        )
+        self.assertEqual(code, 1)
+        self.assertTrue(err.strip())
+
+    def test_issue_open_numbers_sequentially(self):
+        self.cli("issue", "open", "--project-id", "testproj",
+                 "--summary", "eins", "--origin-task-id", "BRIDGE-0900")
+        code, out, _ = self.cli(
+            "issue", "open", "--project-id", "testproj",
+            "--summary", "zwei", "--origin-task-id", "BRIDGE-0901",
+        )
+        self.assertEqual(code, 0)
+        self.assertIn("testproj-ISSUE-0002", out)
+
+    def test_issue_close_then_list_excludes_it(self):
+        self.cli("issue", "open", "--project-id", "testproj",
+                 "--summary", "x", "--origin-task-id", "BRIDGE-0900")
+        code, out, _ = self.cli(
+            "issue", "close", "testproj-ISSUE-0001",
+            "--project-id", "testproj", "--actor", "t",
+        )
+        self.assertEqual(code, 0)
+        self.assertIn("status=CLOSED", out)
+        code, out, _ = self.cli("issue", "list", "--project-id", "testproj")
+        self.assertEqual(code, 0)
+        self.assertIn("keine offenen Punkte", out)
+
+    def test_issue_close_unknown_issue_id_rejected(self):
+        code, _, err = self.cli(
+            "issue", "close", "testproj-ISSUE-9999",
+            "--project-id", "testproj", "--actor", "t",
+        )
+        self.assertEqual(code, 1)
+        self.assertTrue(err.strip())
+
+    def test_issue_close_unknown_project_id_rejected(self):
+        code, _, err = self.cli(
+            "issue", "close", "testproj-ISSUE-0001",
+            "--project-id", "unbekannt", "--actor", "t",
+        )
+        self.assertEqual(code, 1)
+        self.assertTrue(err.strip())
+
+    def test_issue_list_default_only_open(self):
+        self.cli("issue", "open", "--project-id", "testproj",
+                 "--summary", "x", "--origin-task-id", "BRIDGE-0900")
+        code, out, _ = self.cli("issue", "list")
+        self.assertEqual(code, 0)
+        self.assertIn("testproj-ISSUE-0001", out)
+        self.assertIn("OPEN", out)
+
+
 if __name__ == "__main__":
     unittest.main()
