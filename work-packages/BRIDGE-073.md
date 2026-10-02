@@ -41,8 +41,8 @@
 
 **Tests:** Keine.
 
-- [ ] Entscheidungsdatei mit vollstaendiger Objekttabelle (11 Zeilen, siehe Punkt 1)
-- [ ] Sondervermerk zu Objekten ohne Gegenstueck (Punkt 2)
-- [ ] ID-Namensraum-Konflikt explizit dokumentiert (Punkt 3)
-- [ ] Generizitaets-Pruefung a-f mit TRAEGT/TRAEGT NICHT/UNKLAR je Punkt (Punkt 4), ohne Dorfschaft-Fachwerte oder -Agentenrollen in ACB zu uebernehmen
-- [ ] Vermerk zu Codex-Rollenbeschraenkung (geltend) und Multi-Agent-Ausfuehrungsfreigabe (fachlich gesetzt, Ausfuehrung weiterhin offen) als eigener spaeterer Auftrag (Punkt 5)
+- [x] Entscheidungsdatei mit vollstaendiger Objekttabelle (11 Zeilen, siehe Punkt 1)
+- [x] Sondervermerk zu Objekten ohne Gegenstueck (Punkt 2)
+- [x] ID-Namensraum-Konflikt explizit dokumentiert (Punkt 3)
+- [x] Generizitaets-Pruefung a-f mit TRAEGT/TRAEGT NICHT/UNKLAR je Punkt (Punkt 4), ohne Dorfschaft-Fachwerte oder -Agentenrollen in ACB zu uebernehmen
+- [x] Vermerk zu Codex-Rollenbeschraenkung (geltend) und Multi-Agent-Ausfuehrungsfreigabe (fachlich gesetzt, Ausfuehrung weiterhin offen) als eigener spaeterer Auftrag (Punkt 5)
