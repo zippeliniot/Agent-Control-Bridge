@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0074
+project_id: agent-control-bridge
+title: Formalisierungsentscheidung OpenIssue (Grundlage token-sparsame Steuerchat-Uebergabe)
+description: 'Details: work-packages/BRIDGE-074.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 3d68e77a14a8dbd5a660fcab98857215daea6f49
+model: Claude Opus 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- GIT_PUSH
+depends_on:
+- BRIDGE-0073
+acceptance_criteria:
+- Ist-Stand/Problem in 3-5 Saetzen benannt (Freitext-Handover, Pflichtlektuere, keine
+  Filterung)
+- Anforderungen (strukturiert, Pflichtfelder je offenem Punkt, generisch, fail-closed-vereinbar)
+  einzeln aufgefuehrt
+- Mindestens zwei Formalisierungsoptionen mit T-Shirt-Groesse, Vor-/Nachteilen und
+  Generizitaets-Check
+- Empfehlung mit Begruendung, Status ENTWURF
+- Keine Dorfschaft-Fachwerte uebernommen, kein Schema/Code geaendert
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-02T00:00:00Z'
+created_by: browser-claude
+task_version: 3
