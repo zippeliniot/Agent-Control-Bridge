@@ -68,6 +68,21 @@ def valid_result(**over):
     return doc
 
 
+def valid_issue(**over):
+    doc = {
+        "schema_version": "1.0",
+        "kind": "open_issue",
+        "issue_id": "agent-control-bridge-ISSUE-0001",
+        "project_id": "agent-control-bridge",
+        "status": "OPEN",
+        "summary": "Testbefund fuer Tests.",
+        "origin_task_id": "BRIDGE-0900",
+        "created_at": TS,
+    }
+    doc.update(over)
+    return doc
+
+
 class StoreTests(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="ccb-store-"))
@@ -713,6 +728,92 @@ class TaskVersionTests(unittest.TestCase):
             with self.assertRaises(SchemaValidationError):
                 self.store.validate(valid_task(task_version=bad))
         self.store.validate(valid_task(task_version=1))
+
+
+class OpenIssueTests(unittest.TestCase):
+    """BRIDGE-0075 Teil A: OpenIssue-Schema und Store-Methoden."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-store-issue-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+        self.store = Store(root=self.tmp, schema_dir=SCHEMA_DIR)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def audit_events(self):
+        f = self.tmp / "audit" / "audit.jsonl"
+        if not f.exists():
+            return []
+        return [json.loads(x) for x in f.read_text(encoding="utf-8").splitlines() if x.strip()]
+
+    def test_open_issue_writes_file_and_audit(self):
+        doc = self.store.open_issue(valid_issue(), actor="t")
+        path = self.tmp / "open-issues" / "agent-control-bridge" / "agent-control-bridge-ISSUE-0001.yaml"
+        self.assertTrue(path.exists())
+        self.assertEqual(doc["status"], "OPEN")
+        events = self.audit_events()
+        self.assertEqual([e["event_type"] for e in events], ["ISSUE_OPENED"])
+        self.assertEqual(events[0]["bridge_task_id"], "BRIDGE-0900")
+
+    def test_open_issue_invalid_schema_rejected(self):
+        with self.assertRaises(SchemaValidationError):
+            self.store.open_issue(valid_issue(summary=""), actor="t")
+
+    def test_open_issue_collision_rejected(self):
+        self.store.open_issue(valid_issue(), actor="t")
+        with self.assertRaises(StoreError):
+            self.store.open_issue(valid_issue(), actor="t")
+
+    def test_close_issue_sets_status_and_writes_audit(self):
+        self.store.open_issue(valid_issue(), actor="t")
+        doc = self.store.close_issue(
+            "agent-control-bridge-ISSUE-0001", "agent-control-bridge",
+            actor="t", note="erledigt",
+        )
+        self.assertEqual(doc["status"], "CLOSED")
+        self.assertIsNotNone(doc["closed_at"])
+        self.assertEqual(doc["closed_by"], "t")
+        self.assertEqual(
+            [e["event_type"] for e in self.audit_events()],
+            ["ISSUE_OPENED", "ISSUE_CLOSED"],
+        )
+
+    def test_close_issue_twice_rejected(self):
+        self.store.open_issue(valid_issue(), actor="t")
+        self.store.close_issue("agent-control-bridge-ISSUE-0001", "agent-control-bridge", actor="t")
+        with self.assertRaises(StoreError):
+            self.store.close_issue("agent-control-bridge-ISSUE-0001", "agent-control-bridge", actor="t")
+
+    def test_close_issue_unknown_rejected(self):
+        with self.assertRaises(StoreError):
+            self.store.close_issue("agent-control-bridge-ISSUE-9999", "agent-control-bridge", actor="t")
+
+    def test_list_open_issues_default_only_open(self):
+        self.store.open_issue(valid_issue(), actor="t")
+        self.store.open_issue(valid_issue(issue_id="agent-control-bridge-ISSUE-0002"), actor="t")
+        self.store.close_issue("agent-control-bridge-ISSUE-0002", "agent-control-bridge", actor="t")
+        open_ids = [d["issue_id"] for d in self.store.list_open_issues()]
+        self.assertEqual(open_ids, ["agent-control-bridge-ISSUE-0001"])
+
+    def test_list_open_issues_include_closed(self):
+        self.store.open_issue(valid_issue(), actor="t")
+        self.store.close_issue("agent-control-bridge-ISSUE-0001", "agent-control-bridge", actor="t")
+        all_ids = [d["issue_id"] for d in self.store.list_open_issues(include_closed=True)]
+        self.assertEqual(all_ids, ["agent-control-bridge-ISSUE-0001"])
+
+    def test_list_open_issues_filtered_by_project(self):
+        self.store.open_issue(valid_issue(), actor="t")
+        self.store.open_issue(
+            valid_issue(issue_id="wetter-app-ISSUE-0001", project_id="wetter-app"),
+            actor="t",
+        )
+        ids = [d["issue_id"] for d in self.store.list_open_issues(project_id="wetter-app")]
+        self.assertEqual(ids, ["wetter-app-ISSUE-0001"])
+
+    def test_list_open_issues_empty_without_dir(self):
+        self.assertEqual(self.store.list_open_issues(), [])
 
 
 if __name__ == "__main__":

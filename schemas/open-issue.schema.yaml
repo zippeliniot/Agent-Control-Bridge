@@ -1,0 +1,82 @@
+# Agent Control Bridge - OpenIssue-Schema
+# BRIDGE-0075 . Entscheidung: docs/concepts/ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md (Option A)
+#
+# Strukturierter, projektunabhaengiger offener Punkt fuer die Weitergabe
+# zwischen Steuerchat-Sitzungen, als Ersatz fuer die handgetragene
+# Fortschreibung in docs/handover/ACB-UEBERGABE-v<N>.md.
+# JSON Schema (Draft 2020-12) in YAML-Form, additionalProperties: false (fail-closed).
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/open-issue.schema.yaml"
+title: "Agent Control Bridge Open Issue"
+description: "Strukturiert gefuehrter offener Punkt, projektunabhaengig."
+type: object
+additionalProperties: false
+
+required:
+  - schema_version
+  - kind
+  - issue_id
+  - project_id
+  - status
+  - summary
+  - origin_task_id
+  - created_at
+
+properties:
+  schema_version:
+    description: "Version dieses Schemas, fuer sichere Weiterentwicklung."
+    type: string
+    pattern: "^[0-9]+\\.[0-9]+$"
+
+  kind:
+    description: "Fester Diskriminator. Schuetzt fail-closed vor Fehlinterpretation fremder Dateien."
+    const: "open_issue"
+
+  issue_id:
+    description: "Systemweit eindeutige ID, <project_id>-ISSUE-NNNN."
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*-ISSUE-[0-9]{4}$"
+
+  project_id:
+    description: "Projektkennung, z. B. agent-control-bridge oder dorfschaft."
+    type: string
+    minLength: 1
+
+  status:
+    description: "Lebenszyklus des offenen Punkts."
+    type: string
+    enum: [OPEN, CLOSED]
+
+  summary:
+    description: "Kurzbezug, maschinell und von Menschen lesbar."
+    type: string
+    minLength: 1
+
+  origin_task_id:
+    description: >-
+      Entstehungsauftrag: bridge_task_id bei ACB-eigenen Auftraegen, bei
+      Fremdprojekten das Pendant ueber deren task_prefix (schemas/project.schema.yaml).
+    type: string
+    minLength: 1
+
+  created_at:
+    description: "Entstehungszeitpunkt (ISO 8601 / RFC 3339)."
+    type: string
+    format: date-time
+
+  closed_at:
+    description: "Abschlusszeitpunkt, null solange OPEN."
+    type: ["string", "null"]
+    format: date-time
+    default: null
+
+  closed_by:
+    description: "Akteur, der den Punkt geschlossen hat, null solange OPEN."
+    type: ["string", "null"]
+    default: null
+
+  note:
+    description: "Optionale Zusatznotiz (z. B. Begruendung beim Schliessen)."
+    type: ["string", "null"]
+    default: null

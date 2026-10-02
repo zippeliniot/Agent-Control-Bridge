@@ -81,10 +81,12 @@ def _utc_now() -> str:
 _ID_RE = re.compile(r"^[A-Z]{1,8}-[0-9]{4}(-R[0-9]+)?$")
 _REVIEW_SUFFIX_RE = re.compile(r"^(?P<base>[A-Z]{1,8}-[0-9]{4})-R[0-9]+$")
 _RUN_RE = re.compile(r"^RUN-[0-9]{2,}$")
+_ISSUE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*-ISSUE-[0-9]{4}$")
 _KIND_TO_SCHEMA = {
     "bridge_task": "task.schema.yaml",
     "bridge_result": "result.schema.yaml",
     "bridge_draft": "draft.schema.yaml",
+    "open_issue": "open-issue.schema.yaml",
 }
 
 
@@ -149,6 +151,7 @@ class Store:
         self.tasks_dir = self.root / "tasks"
         self.results_dir = self.root / "results"
         self.drafts_dir = self.root / "drafts"
+        self.issues_dir = self.root / "open-issues"
         self.audit_dir = self.root / "audit"
         self.audit_file = self.audit_dir / "audit.jsonl"
 
@@ -217,6 +220,16 @@ class Store:
 
     def _task_path(self, task_id: str) -> Path:
         return self.tasks_dir / self._check_id(task_id) / "task.yaml"
+
+    def _check_issue_id(self, issue_id) -> str:
+        if not isinstance(issue_id, str) or not _ISSUE_ID_RE.match(issue_id):
+            raise StoreError(f"Unzulässige issue_id: {issue_id!r}")
+        return issue_id
+
+    def _issue_path(self, project_id: str, issue_id: str) -> Path:
+        if not isinstance(project_id, str) or not project_id:
+            raise StoreError(f"Unzulässige project_id: {project_id!r}")
+        return self.issues_dir / project_id / f"{self._check_issue_id(issue_id)}.yaml"
 
     def _check_readonly_consistency(self, doc: dict) -> None:
         """Fail-closed Geschäftsregel (BRIDGE-032), aus create_task() und
@@ -496,6 +509,81 @@ class Store:
         if not isinstance(doc, dict):
             raise StoreError(f"Draftdatei unbrauchbar: {path}")
         return doc
+
+    # ----- OpenIssue (BRIDGE-0075) ------------------------------------------
+
+    @_writes
+    def open_issue(self, issue, actor):
+        """Legt einen neuen offenen Punkt an (open-issues/<project_id>/<issue_id>.yaml).
+
+        Fail-closed: Schema-Verstoss, kollidierende issue_id oder status != OPEN
+        werfen StoreError, nichts wird geschrieben.
+        """
+        doc = self.validate(self._as_doc(issue))
+        if doc["kind"] != "open_issue":
+            raise SchemaValidationError("open_issue erwartet kind=open_issue.")
+        if doc["status"] != "OPEN":
+            raise StoreError("open_issue erwartet status=OPEN bei Anlage.")
+        path = self._issue_path(doc["project_id"], doc["issue_id"])
+        self._write_new(path, self._dump_yaml(doc))
+        self.append_audit(self._event(
+            "ISSUE_OPENED", doc["origin_task_id"],
+            actor=actor, reason=f"{doc['issue_id']}: {doc['summary']}",
+        ))
+        return doc
+
+    def load_issue(self, project_id, issue_id):
+        path = self._in_root(self._issue_path(project_id, issue_id))
+        if not path.exists():
+            raise StoreError(f"Offener Punkt nicht gefunden: {issue_id} ({project_id})")
+        doc = _load_yaml(path)
+        if not isinstance(doc, dict):
+            raise StoreError(f"Issue-Datei unbrauchbar: {path}")
+        return doc
+
+    @_writes
+    def close_issue(self, issue_id, project_id, actor, note=None):
+        """Schliesst einen offenen Punkt (einzige erlaubte Aenderung an einer
+        bestehenden open-issue.yaml). Bereits geschlossene Punkte lehnt
+        close_issue fail-closed ab (kein stiller Erfolg)."""
+        doc = self.load_issue(project_id, issue_id)
+        if doc.get("status") != "OPEN":
+            raise StoreError(f"Punkt {issue_id!r} ist bereits CLOSED.")
+        doc = dict(doc)
+        doc["status"] = "CLOSED"
+        doc["closed_at"] = _utc_now()
+        doc["closed_by"] = actor
+        if note is not None:
+            doc["note"] = note
+        doc = self.validate(doc)
+        path = self._in_root(self._issue_path(project_id, issue_id))
+        _atomic_write(path, self._dump_yaml(doc))
+        self.append_audit(self._event(
+            "ISSUE_CLOSED", doc["origin_task_id"],
+            actor=actor, reason=f"{issue_id}: {note}" if note else issue_id,
+        ))
+        return doc
+
+    def list_open_issues(self, project_id=None, include_closed=False):
+        """Listet offene Punkte, optional nach project_id gefiltert.
+
+        Default: nur status=OPEN. include_closed=True liefert auch CLOSED.
+        """
+        base = self._in_root(self.issues_dir)
+        if not base.exists():
+            return []
+        results = []
+        project_dirs = [base / project_id] if project_id else sorted(base.iterdir())
+        for project_dir in project_dirs:
+            if not project_dir.is_dir():
+                continue
+            for entry in sorted(project_dir.glob("*.yaml")):
+                doc = _load_yaml(entry)
+                if not isinstance(doc, dict):
+                    continue
+                if include_closed or doc.get("status") == "OPEN":
+                    results.append(doc)
+        return results
 
     def last_transition_at(self, task_id, new_state) -> str | None:
         """Letzter Zeitpunkt (ISO-Timestamp), zu dem ``task_id`` in

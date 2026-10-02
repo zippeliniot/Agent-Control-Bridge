@@ -32,10 +32,10 @@
 2. Store-Methoden in `store.py` analog zu `write_result`/`task show`-Mustern: `open_issue(...)` legt `open-issues/<project_id>/<issue_id>.yaml` an (neu, `_write_new`, Audit-Ereignis `ISSUE_OPENED`); `close_issue(issue_id, project_id, ...)` aendert `status` auf `CLOSED` plus `closed_at`/`closed_by` (einzige erlaubte Aenderung an einer bestehenden `open-issue.yaml`, unter Writer-Lock, Audit-Ereignis `ISSUE_CLOSED`); `list_open_issues(project_id=None)` liest alle Dateien unter `open-issues/` (optional nach `project_id` gefiltert), gibt nur `status: OPEN` zurueck sofern nicht `include_closed=True` uebergeben wird.
 3. `issue_id`-Eindeutigkeit je `project_id` serverseitig erzwingen (Kollision -> `StoreError`), analog zu `_check_id` fuer `bridge_task_id`.
 **Tests:** `python -m unittest tests.test_store`, dann volle Suite EINMAL.
-- [ ] Schema vorhanden, `additionalProperties: false`
-- [ ] `open_issue`/`close_issue`/`list_open_issues` implementiert und getestet
-- [ ] Kollidierende `issue_id` abgelehnt (Test)
-- [ ] `close_issue` auf bereits geschlossenem Issue -> Fehler, kein stiller Erfolg (Test)
+- [x] Schema vorhanden, `additionalProperties: false`
+- [x] `open_issue`/`close_issue`/`list_open_issues` implementiert und getestet
+- [x] Kollidierende `issue_id` abgelehnt (Test)
+- [x] `close_issue` auf bereits geschlossenem Issue -> Fehler, kein stiller Erfolg (Test)
 
 ### Teil B - CLI-Unterbefehle
 

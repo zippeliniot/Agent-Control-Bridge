@@ -41,6 +41,8 @@ properties:
       - COMMIT_CREATED
       - PUSH_COMPLETED
       - PRIORITY_CHANGED
+      - ISSUE_OPENED
+      - ISSUE_CLOSED
 
   timestamp:
     description: "Zeitpunkt des Ereignisses (ISO 8601 / RFC 3339)."
