@@ -1,0 +1,38 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0073
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 7476929dfb3d9151f252f92679b2f22bb394b9d8
+executor: claude-code
+started_at: '2026-10-02T07:44:56Z'
+ended_at: '2026-10-02T07:58:50Z'
+created_by: claude-code@HAM11
+base_head: 3d5ac14f6b60cd068930366ef2f74a4c46c94d55
+commits:
+- sha: e1d8eccd8555c8d7af56d72d347910640d7855f5
+  message: 'BRIDGE-0073: Work-Package (Steering-Continuity-Abgleich)'
+- sha: b7a768b7922f2a0f9b29caec6ba8d7febe261f16
+  message: 'Ops: BRIDGE-0073 task_create (Steuerchat-Aktion via CLI)'
+- sha: 28f595560f465dd5b7e7bb001cfa653178ef1556
+  message: 'Ops: BRIDGE-0073 run_start (Steuerchat-Aktion via CLI)'
+- sha: 7476929dfb3d9151f252f92679b2f22bb394b9d8
+  message: 'BRIDGE-0073 Teil A: Entscheidungsdatei Steering-Continuity-Abgleich'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md
+- results/BRIDGE-0073/RUN-01/heartbeat.json
+- tasks/BRIDGE-0073/task.yaml
+- work-packages/BRIDGE-073.md
+summary: 'Entscheidungsdatei docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md
+  (73 Zeilen) angelegt: 11 vorgeschlagene Objekte je mit Repo-Gegenstueck, Deckungsgrad
+  und Option A/B/C; Sondervermerk, ID-Namensraum-Konflikt und Generizitaets-Pruefung
+  a-f. Befunde: Dependency hat entgegen der Auftragsannahme ein Gegenstueck (task.schema
+  depends_on), und die Annahme eines freien Rolle-Feldes trifft nicht zu (review_roles
+  ist geschlossenes Enum) - fuenf von sechs Generizitaetspunkten TRAEGT NICHT, Ursache
+  durchgaengig fail-closed Schemas. Kein Code, kein Schema geaendert; G5 und MULTI-AGENT
+  unberuehrt.'
+physical_machine: HAM11
