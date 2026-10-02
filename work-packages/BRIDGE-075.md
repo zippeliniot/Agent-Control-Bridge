@@ -62,4 +62,4 @@
 
 1. Volle Suite EINMAL, nur die letzten 3 Zeilen zeigen.
 2. `git status` sauber, dann Abschluss wie im Slash-Befehl.
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
