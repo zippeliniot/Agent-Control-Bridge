@@ -135,6 +135,10 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
   enthält den HEAD-SHA zum Zeitpunkt der Auftragsanlage und sichert, dass
   `changed_files` in `result.yaml` den **gesamten Lauf** abdeckt
   (Bugfix für BRIDGE-023/024).
+- **`issue open/close/list` (ab BRIDGE-0075):** strukturiertes Register für
+  offene Punkte über beliebig viele Sitzungen hinweg, als Ersatz für die
+  handgetragene Fortschreibung in der Übergabedatei — Details:
+  `docs/concepts/ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md`.
 
 ---
 

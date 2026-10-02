@@ -56,7 +56,7 @@
 
 1. In Abschnitt 4 einen neuen Punkt ergaenzen: `issue open/close/list` als Mechanismus fuer offene Punkte ueber Sitzungen hinweg nennen (ein bis zwei Saetze, kein Ablauf-Rewrite, kein Verweis auf ein konkretes Projekt).
 **Tests:** keine (reine Doku-Ergaenzung).
-- [ ] Ein neuer, kurzer Verweis in Abschnitt 4, sonst keine Aenderung an der Datei
+- [x] Ein neuer, kurzer Verweis in Abschnitt 4, sonst keine Aenderung an der Datei
 
 ## Abschluss
 
