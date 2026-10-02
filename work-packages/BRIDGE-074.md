@@ -38,8 +38,8 @@
 
 **Tests:** Keine.
 
-- [ ] Ist-Stand/Problem in 3-5 Saetzen benannt
-- [ ] Anforderungen (strukturiert, Pflichtfelder, generisch, fail-closed-vereinbar) einzeln aufgefuehrt
-- [ ] Mindestens zwei Formalisierungsoptionen mit T-Shirt-Groesse, Vor-/Nachteilen und Generizitaets-Check
-- [ ] Empfehlung mit Begruendung, Status ENTWURF
-- [ ] Keine Dorfschaft-Fachwerte, kein Schema/Code geaendert
+- [x] Ist-Stand/Problem in 3-5 Saetzen benannt
+- [x] Anforderungen (strukturiert, Pflichtfelder, generisch, fail-closed-vereinbar) einzeln aufgefuehrt
+- [x] Mindestens zwei Formalisierungsoptionen mit T-Shirt-Groesse, Vor-/Nachteilen und Generizitaets-Check
+- [x] Empfehlung mit Begruendung, Status ENTWURF
+- [x] Keine Dorfschaft-Fachwerte, kein Schema/Code geaendert
