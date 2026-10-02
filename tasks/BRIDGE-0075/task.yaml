@@ -26,7 +26,7 @@ acceptance_criteria:
 - 'Teil C: kurzer Verweis in ACB-STEUERCHAT-ARBEITSWEISE.md Abschnitt 4, keine weiteren
   Doku-Aenderungen'
 - Volle Suite gruen
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-10-02T00:00:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 8
