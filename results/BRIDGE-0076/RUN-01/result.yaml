@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0076
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: d07309bb479cc17dacd5e2b4ecc3480e0aaf7910
+executor: claude-code
+started_at: '2026-10-06T11:22:50Z'
+ended_at: '2026-10-06T11:35:25Z'
+created_by: claude-code@HAM11
+base_head: c973506cdd2193bb31a55dfd59f9083e825266e6
+commits:
+- sha: 43bff2062514eb7e85c0f9643c8ea7ae3a477aa4
+  message: 'Ops: BRIDGE-0076 task_create (Steuerchat-Aktion via CLI)'
+- sha: b8d2f0f902fdc2dffb428e8a4b15ae8352fd8613
+  message: 'Ops: BRIDGE-0076 run_start (Steuerchat-Aktion via CLI)'
+- sha: d07309bb479cc17dacd5e2b4ecc3480e0aaf7910
+  message: 'BRIDGE-0076 Teil A: Entscheidung MULTI-AGENT-Ausfuehrung (ENTWURF)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-MULTI-AGENT-AUSFUEHRUNG.md
+- results/BRIDGE-0076/RUN-01/heartbeat.json
+- tasks/BRIDGE-0076/task.yaml
+- work-packages/BRIDGE-076.md
+summary: 'Entscheidungsdatei docs/concepts/ENTSCHEIDUNG-MULTI-AGENT-AUSFUEHRUNG.md
+  (80 Zeilen, Status ENTWURF) angelegt: Ist-Stand/Risiko mit Codebelegen, drei Optionen
+  (A Artefaktebene M, B A plus Positivliste L, C unveraendert S) je mit Risiken sowie
+  Fail-Closed- und Generizitaets-Check. Empfehlung Option C, MULTI-AGENT in ACB bleibt
+  NEIN. Sicherheitsbefund: die Ressourcenregel wirkt nur klonintern (claim.json nie
+  versioniert, Writer-Lock je root) und deckt Arbeitsdateien ausserhalb des Stores
+  nicht ab - klonuebergreifende Parallelitaet ist heute schon ungeschuetzt moeglich.'
+physical_machine: HAM11
