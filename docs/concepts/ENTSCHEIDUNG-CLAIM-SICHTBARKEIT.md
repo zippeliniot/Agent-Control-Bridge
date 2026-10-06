@@ -1,6 +1,6 @@
 # Entscheidung: klonuebergreifende Claim-Sichtbarkeit
 
-**Status:** ENTWURF — Freigabe durch April ausstehend. BRIDGE-0077, kein Gate.
+**Status:** FREIGEGEBEN (Option B, Push-Race-Rollback als Freigabebedingung), 06.10.2026. BRIDGE-0077, kein Gate.
 Fortsetzung der in `ENTSCHEIDUNG-MULTI-AGENT-AUSFUEHRUNG.md` §1 festgestellten Luecke, unabhaengig
 von der MULTI-AGENT-Frage (dort Option C, NEIN — hier der taegliche Zwei-Maschinen-Betrieb). Keine
 Implementierung, keine Aenderung an `claim.py`/`gitops.py`, keine Projekt-Fachwerte.
