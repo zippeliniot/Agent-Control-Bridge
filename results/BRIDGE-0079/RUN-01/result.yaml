@@ -1,0 +1,33 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0079
+project_id: agent-control-bridge
+run_id: RUN-01
+status: BLOCKED
+repository: agent-control-bridge
+branch: main
+head: 4dee1a551e559c6d164746c9cab31a91231e523d
+executor: claude-code
+started_at: '2026-10-06T21:13:42Z'
+ended_at: '2026-10-06T21:46:31Z'
+created_by: claude-code@HAM11
+base_head: 3db05559f00184ffd0ae9b1a1a50acf3a65acd58
+commits:
+- sha: 27b76e7fc4298073dcfbd13a4bc347efe0447086
+  message: 'Ops: BRIDGE-0079 task_create (Steuerchat-Aktion via CLI)'
+- sha: 4dee1a551e559c6d164746c9cab31a91231e523d
+  message: 'Ops: BRIDGE-0079 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0079/RUN-01/heartbeat.json
+- tasks/BRIDGE-0079/task.yaml
+summary: 'CONCEPT_CONFLICT: Konsolidierung claim.py auf gitops.git_commit(kind=claim,
+  autostash=True) verworfen. Gegenbeweis-Experiment (echtes Bare-Repo, BRIDGE-0078-Szenario
+  nachgebaut) fand zwei unabhaengige Blockaden: (1) gitops.git_commit Whitelist-Pruefung
+  (Schritt 3) scannt den gesamten Arbeitsbaum und bricht bei jeder Datei ausserhalb
+  der Whitelist vor Schritt 6b (Rebase) ab; (2) git rebase verlangt auch mit scope-begrenztem
+  Status-Scan einen sauberen Gesamtbaum, autostash alleine reicht nicht. Beide Fixes
+  zusammen wuerden die als nicht verhandelbar dokumentierte Ganzbaum-Pruefung (BRIDGE-024)
+  aendern. Keine Code-Aenderung vorgenommen, Baum sauber. Offene Entscheidung fuer
+  Steuerchat: siehe docs/handover/ACB-UEBERGABE-v15.md Abschnitt 6 Punkt 1.'
+physical_machine: HAM11
