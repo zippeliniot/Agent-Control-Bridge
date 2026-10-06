@@ -24,7 +24,7 @@ acceptance_criteria:
 - Fail-Closed-, Generizitaets- und Kosten-Check je Option
 - Empfehlung mit Begruendung, Status ENTWURF
 - Kein Code/Schema geaendert
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: RUNNING
 created_at: '2026-10-06T00:00:00Z'
 created_by: browser-claude
-task_version: 3
+task_version: 5
