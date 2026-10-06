@@ -1,0 +1,39 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0079
+project_id: agent-control-bridge
+title: Claim-Commit-Pfad auf gitops.git_commit konsolidieren (autostash)
+description: 'Teile A, B. Details: work-packages/BRIDGE-079.md'
+task_class: REFACTOR
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 3db05559f00184ffd0ae9b1a1a50acf3a65acd58
+  allowed_changed_files:
+  - src/bridge/gitops.py
+  - src/bridge/claim.py
+  - tests/test_gitops.py
+  - tests/test_claim.py
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0078
+acceptance_criteria:
+- 'Teil A: autostash-Parameter implementiert, Default-Verhalten fuer bestehende Aufrufer
+  unveraendert'
+- 'Teil A: Autostash-Testfall (dirty tree + NFF) gruen'
+- 'Teil B: claim/renew/release rufen gitops.git_commit(..., kind="claim", autostash=True)
+  auf'
+- 'Teil B: _sync_claim_commit, _push_with_retry entfernt, keine toten Referenzen'
+- 'Teil B: Push-Race-Tests aus BRIDGE-0078 weiterhin gruen'
+- Gesamte Testsuite gruen, Testanzahl >= 536
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-06T00:00:00Z'
+created_by: browser-claude
+task_version: 3
