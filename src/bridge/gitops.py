@@ -16,6 +16,9 @@ Oeffentliches API:
                source='Web-UI') -> dict``
 - ``git_pull(repo_root) -> dict`` (BRIDGE-038, periodischer Auto-Pull der
   Web-UI: einfacher Fast-Forward-Pull, fail-soft, kein Retry/Rebase.)
+- ``git_fetch(repo_root) -> dict`` (BRIDGE-0078: reines Fetch von
+  ``origin/main`` ohne Merge, Grundlage der klonuebergreifenden
+  Claim-Sichtbarkeit in ``claim.py``.)
 
 Push-Retry (BRIDGE-029):
 - Schlaegt ``git push`` mit einem Non-Fast-Forward-Fehler fehl (Muster in
@@ -95,6 +98,11 @@ def expected_git_files(kind: str, task_id: str,
     if kind == "draft_write":
         # BRIDGE-0053: Executor-Draft - ausschliesslich die Draft-Datei.
         return [f"drafts/{task_id}/{run_id}/draft.yaml"] if run_id else []
+
+    if kind == "claim":
+        # BRIDGE-0078: claim/renew/release beruehren ausschliesslich die
+        # eigene claim.json - exakter Pfad, kein Praefix-Match.
+        return [f"results/{task_id}/claim.json"]
 
     base = [f"tasks/{task_id}/task.yaml", "audit/audit.jsonl"]
 
@@ -328,3 +336,35 @@ def git_pull(repo_root) -> dict:
 
     return {"pulled": True, "updated": before_head != after_head,
             "stdout": stdout, "stderr": stderr, "error": None}
+
+
+def git_fetch(repo_root) -> dict:
+    """Aktualisiert ``origin/main`` lokal, ohne die Arbeitskopie zu veraendern
+    (BRIDGE-0078, klonuebergreifende Claim-Sichtbarkeit).
+
+    Reines ``git fetch origin main`` - anders als ``git_pull`` kein Merge/
+    Fast-Forward. Der Aufrufer liest den geholten Stand anschliessend ueber
+    ``git show origin/main:<pfad>``, ohne den eigenen Arbeitsbaum anzutasten.
+
+    Fail-soft im Rueckgabewert (wie ``git_pull``): wirft nie, jeder Fehler
+    (Netzwerk, Timeout, kein Remote) landet in ``error``, niemals als
+    Exception - "fail-closed" heisst hier: kein stiller Erfolg bei einem
+    Fehler, nicht dass diese Funktion selbst abbricht. Der Aufrufer
+    (``claim.py``) entscheidet, ob ein gesetztes ``error`` die Aktion
+    fail-closed abbricht.
+    """
+    root = Path(repo_root)
+    try:
+        r = subprocess.run(
+            ["git", "fetch", "origin", "main"],
+            cwd=root, capture_output=True, text=True,
+            timeout=_GIT_PUSH_TIMEOUT, encoding="utf-8",
+        )
+    except Exception as exc:  # Timeout, OSError o.ae. duerfen nie durchschlagen
+        return {"fetched": False, "error": f"git fetch fehlgeschlagen (Exception): {exc}"}
+
+    if r.returncode != 0:
+        err_text = (r.stderr or r.stdout).strip()
+        return {"fetched": False, "error": f"git fetch fehlgeschlagen: {err_text}"}
+
+    return {"fetched": True, "error": None}

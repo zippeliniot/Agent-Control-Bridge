@@ -31,8 +31,8 @@
 1. Neue Funktion `git_fetch(repo_root) -> dict` analog zu `git_pull` (`gitops.py:281`): `git -C <root> fetch origin <branch>`, Fehler fail-closed (kein stiller Erfolg bei Netzwerkfehler).
 2. `expected_git_files` (`gitops.py:81ff`) um einen neuen `kind` erweitern (Vorschlag: `"claim"`, gemeinsam fuer `claim`/`renew`/`release`, da alle drei ausschliesslich `results/<task_id>/claim.json` beruehren) - exakter Pfad, kein Praefix-Match.
 **Tests:** `python -m unittest tests.test_gitops`, dann volle Suite EINMAL.
-- [ ] `git_fetch` implementiert, Fehlerfall getestet
-- [ ] Neuer `kind` fuer Claim-Aktionen in `expected_git_files`, genau `results/<task_id>/claim.json` als erlaubter Pfad
+- [x] `git_fetch` implementiert, Fehlerfall getestet
+- [x] Neuer `kind` fuer Claim-Aktionen in `expected_git_files`, genau `results/<task_id>/claim.json` als erlaubter Pfad
 
 ### Teil B - Commit/Push im Claim-Pfad + Push-Race-Rollback
 

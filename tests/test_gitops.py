@@ -106,6 +106,12 @@ class ExpectedGitFilesTests(unittest.TestCase):
         self.assertIn("tasks/BRIDGE-0005/task.yaml", files)
         self.assertIn("audit/audit.jsonl", files)
 
+    def test_claim_exact_path_only(self):
+        # BRIDGE-0078: claim/renew/release duerfen ausschliesslich die
+        # eigene claim.json beruehren - exakter Pfad, kein task.yaml/audit.
+        files = gitops.expected_git_files("claim", "BRIDGE-0006")
+        self.assertEqual(files, ["results/BRIDGE-0006/claim.json"])
+
 
 # --------------------------------------------------------------------------- #
 # _workpackage_filename (BRIDGE-033)
@@ -644,6 +650,59 @@ class GitPullTests(unittest.TestCase):
         _git("remote", "set-url", "origin", "/nonexistent/nowhere", cwd=self.other)
         result = gitops.git_pull(self.other)  # darf nicht werfen
         self.assertFalse(result["pulled"])
+        self.assertIsNotNone(result["error"])
+
+
+class GitFetchTests(unittest.TestCase):
+    """git_fetch() (BRIDGE-0078): reines Fetch von origin/main, kein Merge.
+
+    Infrastruktur analog GitPullTests: self.tmp pusht, self.other holt per
+    git_fetch - die Arbeitskopie von self.other bleibt dabei unveraendert,
+    nur das Remote-Tracking origin/main aktualisiert sich.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-fetch-"))
+        self.bare = Path(tempfile.mkdtemp(prefix="ccb-fetch-bare-"))
+        _setup_git_repo(self.tmp)
+        _git("clone", "--bare", str(self.tmp), str(self.bare), cwd=self.tmp)
+        _git("remote", "add", "origin", str(self.bare), cwd=self.tmp)
+        _git("push", "--set-upstream", "origin", "main", cwd=self.tmp)
+        self.other = Path(tempfile.mkdtemp(prefix="ccb-fetch-other-"))
+        _git("clone", str(self.bare), str(self.other), cwd=self.tmp)
+        _git("config", "user.email", "test@example.com", cwd=self.other)
+        _git("config", "user.name", "Test", cwd=self.other)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+        shutil.rmtree(self.bare, ignore_errors=True)
+        shutil.rmtree(self.other, ignore_errors=True)
+
+    def test_already_up_to_date(self):
+        result = gitops.git_fetch(self.other)
+        self.assertTrue(result["fetched"])
+        self.assertIsNone(result["error"])
+
+    def test_fetch_makes_remote_commit_readable_without_touching_worktree(self):
+        (self.tmp / "new.txt").write_text("x\n", encoding="utf-8")
+        _git("add", "new.txt", cwd=self.tmp)
+        _git("commit", "-m", "second", cwd=self.tmp)
+        _git("push", cwd=self.tmp)
+
+        head_before = _git("rev-parse", "HEAD", cwd=self.other)
+        result = gitops.git_fetch(self.other)
+        self.assertTrue(result["fetched"])
+        self.assertIsNone(result["error"])
+        # Arbeitskopie/HEAD von 'other' unveraendert ...
+        self.assertEqual(_git("rev-parse", "HEAD", cwd=self.other), head_before)
+        # ... aber origin/main zeigt den neuen Commit, lesbar ohne Checkout.
+        self.assertEqual(_git("rev-parse", "origin/main", cwd=self.other),
+                         _git("rev-parse", "HEAD", cwd=self.tmp))
+
+    def test_unreachable_remote_fails_fail_soft_no_crash(self):
+        _git("remote", "set-url", "origin", "/nonexistent/nowhere", cwd=self.other)
+        result = gitops.git_fetch(self.other)  # darf nicht werfen
+        self.assertFalse(result["fetched"])
         self.assertIsNotNone(result["error"])
 
 
