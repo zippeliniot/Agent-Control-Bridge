@@ -43,9 +43,9 @@
 3. **Push-Race-Rollback (Pflicht):** schlaegt der Push fehl (non-fast-forward oder sonstiger Git-Fehler), wird die soeben lokal geschriebene `claim.json` entfernt (bei `claim`: komplett geloescht; bei `renew`: auf den vorherigen Stand zurueckgesetzt, falls rekonstruierbar, sonst ebenfalls harter Fehler ohne Teilzustand) und `ClaimError` mit `RESOURCE_CONFLICT` geworfen - kein stiller Erfolg, kein haengender lokaler Claim ohne Entsprechung im Repo.
 4. `release` bei Pushfehler: lokale Freigabe ebenfalls zurueckrollen (alten `claim.json`-Inhalt wiederherstellen) statt inkonsistenten Zustand zu hinterlassen.
 **Tests:** gezielte Push-Race-Simulation (z. B. zweiter lokaler Klon/Remote-Vorsprung erzeugen, Push bewusst scheitern lassen, Rollback + Fehlercode pruefen) fuer `claim`, `renew`, `release` je einzeln. Dann `python -m unittest tests.test_claim tests.test_cli`, dann volle Suite EINMAL.
-- [ ] `claim`/`renew`/`release` committen und pushen nach lokalem Erfolg
-- [ ] Push-Race-Simulation je Aktion: Rollback + `RESOURCE_CONFLICT`, kein haengender Zustand (Test)
-- [ ] Cross-Klon-Sichtbarkeit nachgewiesen (zwei Store-Instanzen, zweiter `claim` auf denselben `_resource_key` nach gepushtem ersten Claim schlaegt fehl)
+- [x] `claim`/`renew`/`release` committen und pushen nach lokalem Erfolg
+- [x] Push-Race-Simulation je Aktion: Rollback + `RESOURCE_CONFLICT`, kein haengender Zustand (Test)
+- [x] Cross-Klon-Sichtbarkeit nachgewiesen (zwei Store-Instanzen, zweiter `claim` auf denselben `_resource_key` nach gepushtem ersten Claim schlaegt fehl)
 
 ### Teil C - Dokumentations-Minimalverweis
 
