@@ -35,8 +35,8 @@
 
 **Tests:** Keine.
 
-- [ ] Ist-Stand/Risiko mit Fundstellen benannt
-- [ ] Mindestens zwei Haertungsoptionen (A, B, ggf. weitere) mit T-Shirt-Groesse, Vor-/Nachteilen, Risiken
-- [ ] Fail-Closed-, Generizitaets- und Kosten-Check je Option
-- [ ] Empfehlung mit Begruendung, Status ENTWURF
-- [ ] Kein Code/Schema geaendert
+- [x] Ist-Stand/Risiko mit Fundstellen benannt
+- [x] Mindestens zwei Haertungsoptionen (A, B, ggf. weitere) mit T-Shirt-Groesse, Vor-/Nachteilen, Risiken
+- [x] Fail-Closed-, Generizitaets- und Kosten-Check je Option
+- [x] Empfehlung mit Begruendung, Status ENTWURF
+- [x] Kein Code/Schema geaendert
