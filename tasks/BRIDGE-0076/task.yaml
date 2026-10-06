@@ -24,7 +24,7 @@ acceptance_criteria:
 - Fail-Closed- und Generizitaets-Check je Option
 - Empfehlung mit Begruendung, Status ENTWURF
 - Kein Code/Schema geaendert, keine Dorfschaft-Fachwerte uebernommen
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-10-02T00:00:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 8
