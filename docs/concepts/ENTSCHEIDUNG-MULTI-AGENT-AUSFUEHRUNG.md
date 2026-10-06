@@ -1,6 +1,6 @@
 # Entscheidung: MULTI-AGENT-Ausfuehrungsfreigabe (Schreibkonfliktvermeidung)
 
-**Status:** ENTWURF — Freigabe durch April ausstehend. BRIDGE-0076, kein Gate.
+**Status:** FREIGEGEBEN (Option C, MULTI-AGENT bleibt NEIN), 06.10.2026. BRIDGE-0076, kein Gate.
 Getrennt von der fachlichen Festlegung aus BRIDGE-0073 Punkt 4f: dort ist der **Bedarf** an
 paralleler Mehrfachbearbeitung bestaetigt, hier geht es allein um die **Ausfuehrungsfreigabe**.
 Keine Implementierung, keine Aenderung an `claim.py`/`ENTSCHEIDUNG-RESSOURCENREGEL.md`, keine Projekt-Fachwerte.
