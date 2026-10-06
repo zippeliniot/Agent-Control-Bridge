@@ -1,0 +1,50 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0078
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 44db7d2944a14920805c21fb7e7b470e1ab9568e
+executor: claude-code
+started_at: '2026-10-06T13:27:01Z'
+ended_at: '2026-10-06T14:28:32Z'
+created_by: claude-code@HAM11
+base_head: 8fc64bab24cbe4a9fe8de1f1227ab5fc631d81eb
+commits:
+- sha: 59d8444baf179ccb6e44d324ec57bf13aa57ebe0
+  message: 'Ops: BRIDGE-0078 task_create (Steuerchat-Aktion via CLI)'
+- sha: 98e24e9df384d352197f5563af044215d7064c9b
+  message: 'Ops: BRIDGE-0078 run_start (Steuerchat-Aktion via CLI)'
+- sha: 0d48aa98ac48779b58204b5ceaacf44f32c0b5c6
+  message: 'BRIDGE-0078 Teil A: git_fetch + Whitelist-kind claim'
+- sha: dbff73c30229cc25591d2285ac3f6038d69a1328
+  message: 'BRIDGE-0078 Teil B: claim/renew/release committen+pushen, Push-Race-Rollback'
+- sha: 87b571ee7fe34c0fe53ee2ea80ad73c1f15a590e
+  message: 'BRIDGE-0078 Teil C: Doku-Minimalverweis Claim-Netzwerkzugriff'
+- sha: 44db7d2944a14920805c21fb7e7b470e1ab9568e
+  message: 'BRIDGE-0078 Abschluss: volle Suite gruen (536/536)'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- results/BRIDGE-0078/RUN-01/heartbeat.json
+- src/bridge/claim.py
+- src/bridge/gitops.py
+- tasks/BRIDGE-0078/task.yaml
+- tests/test_claim.py
+- tests/test_gitops.py
+- work-packages/BRIDGE-078.md
+summary: 'Option B aus ENTSCHEIDUNG-CLAIM-SICHTBARKEIT.md umgesetzt: git_fetch + Whitelist-kind
+  claim (Teil A); claim/renew/release committen+pushen jetzt selbst mit Push-Race-Rollback
+  (git reset --hard bei Pushfehler, RESOURCE_CONFLICT, kein haengender Zustand) und
+  klonuebergreifender Pruefung ueber origin/main (Teil B); Doku-Kurzverweise in claim.py
+  und ARBEITSWEISE.md (Teil C). Zwei waehrend der Umsetzung entdeckte Korrekturen
+  gegenueber der WP-Annahme: (1) claim.json-Commits werden bewusst isoliert von audit.jsonl
+  gehalten (eigene git add/commit-Sequenz statt gitops.git_commit, sonst blockiert
+  ein unabhaengig anstehender Audit-Eintrag jeden Claim-Push); (2) die Entscheidungslogik
+  (_synced_claim) bevorzugt den origin/main-Stand vor dem lokalen, mit Fast-Forward-Catch-up
+  vor dem eigenen Schreiben, sonst waere ein fremder, bereits gepushter Claim auf
+  denselben Auftrag lokal unsichtbar geblieben. Volle Suite 536/536 gruen (nach einem
+  bekannten isolierten Git-Subprozess-Ausreisser, per Wiederholung bestaetigt gruen).'
+physical_machine: HAM11
