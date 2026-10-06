@@ -35,8 +35,8 @@
 
 **Tests:** Keine.
 
-- [ ] Ist-Stand/Risiko in 3-5 Saetzen benannt
-- [ ] Mindestens zwei Granularitaets-/Sicherheitsoptionen mit T-Shirt-Groesse, Vor-/Nachteilen, Risiken
-- [ ] Fail-Closed- und Generizitaets-Check je Option
-- [ ] Empfehlung mit Begruendung, Status ENTWURF
-- [ ] Kein Code/Schema geaendert, keine Dorfschaft-Fachwerte uebernommen
+- [x] Ist-Stand/Risiko in 3-5 Saetzen benannt
+- [x] Mindestens zwei Granularitaets-/Sicherheitsoptionen mit T-Shirt-Groesse, Vor-/Nachteilen, Risiken
+- [x] Fail-Closed- und Generizitaets-Check je Option
+- [x] Empfehlung mit Begruendung, Status ENTWURF
+- [x] Kein Code/Schema geaendert, keine Dorfschaft-Fachwerte uebernommen
