@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0078
+project_id: agent-control-bridge
+title: Implementierung klonuebergreifende Claim-Sichtbarkeit (Option B)
+description: 'Details: work-packages/BRIDGE-078.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge
+branch: main
+git:
+  expected_head: 8fc64bab24cbe4a9fe8de1f1227ab5fc631d81eb
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+depends_on:
+- BRIDGE-0077
+acceptance_criteria:
+- 'Teil A: git_fetch implementiert, neuer Whitelist-kind fuer claim/renew/release
+  (nur results/<id>/claim.json)'
+- 'Teil B: claim/renew/release committen+pushen, Push-Race-Rollback (RESOURCE_CONFLICT,
+  kein haengender Zustand), Cross-Klon-Sichtbarkeit nachgewiesen'
+- 'Teil C: kurze Doku-Ergaenzung (claim.py Docstring, ARBEITSWEISE.md Abschnitt 4),
+  sonst keine Aenderung'
+- Volle Suite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-06T00:00:00Z'
+created_by: browser-claude
+task_version: 3
