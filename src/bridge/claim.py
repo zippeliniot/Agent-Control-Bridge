@@ -17,6 +17,9 @@ Schreibzugriffe laufen unter dem Writer-Lock (``bridge.lock``).
 Audit: ``claim`` (neu und Uebernahme) schreibt ``TASK_CLAIMED`` mit ``reason``
 (ohne Zustandswechsel des Auftrags). ``renew``/``release`` schreiben kein Audit.
 Zeiten sind UTC im Format ``%Y-%m-%dT%H:%M:%SZ``; ``now`` ist fuer Tests injizierbar.
+
+Seit BRIDGE-0078 ist ``claim.json`` versioniert und damit klonuebergreifend
+wirksam (vorher nur klonlokal sichtbar, siehe ``ENTSCHEIDUNG-CLAIM-SICHTBARKEIT.md``).
 """
 
 from __future__ import annotations

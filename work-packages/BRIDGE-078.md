@@ -54,8 +54,8 @@
 1. Docstring von `claim.py` um einen Satz ergaenzen: `claim.json` ist seit BRIDGE-0078 versioniert und cross-klon wirksam (vorher klonlokal, siehe `ENTSCHEIDUNG-CLAIM-SICHTBARKEIT.md`).
 2. In `ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 4: ein bis zwei Saetze, dass `claim`/`renew`/`release` jetzt Netzwerkzugriff brauchen (offline kein Claim moeglich).
 **Tests:** keine.
-- [ ] Docstring-Ergaenzung in `claim.py`
-- [ ] Kurzer Verweis in `ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 4, sonst keine Aenderung
+- [x] Docstring-Ergaenzung in `claim.py`
+- [x] Kurzer Verweis in `ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 4, sonst keine Aenderung
 
 ## Abschluss
 

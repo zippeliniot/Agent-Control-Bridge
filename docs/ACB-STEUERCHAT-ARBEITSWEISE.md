@@ -139,6 +139,10 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
   offene Punkte über beliebig viele Sitzungen hinweg, als Ersatz für die
   handgetragene Fortschreibung in der Übergabedatei — Details:
   `docs/concepts/ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md`.
+- **`claim`/`renew`/`release` brauchen seit BRIDGE-0078 Netzwerkzugriff**
+  (committen+pushen `claim.json` selbst, klonübergreifend wirksam) — offline
+  ist kein Claim möglich, das ist beabsichtigt (siehe
+  `docs/concepts/ENTSCHEIDUNG-CLAIM-SICHTBARKEIT.md`).
 
 ---
 
