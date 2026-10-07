@@ -58,7 +58,7 @@ liefert Teil B/C-Sync dort nur "kein Repo am Pfad" zurueck (fail-soft, kein Abst
    - `all_ok`: `True` nur wenn alle drei Pruefungen erfolgreich.
    - Nie werfen (gleiches Fail-soft-Muster wie `gitops.git_pull`/`rag_index_sync`).
 2. Kein Installationsversuch, keine Seiteneffekte - reine Erkennung.
-- [ ] Implementiert + getestet (alles vorhanden, Ollama nicht erreichbar, Modell fehlt,
+- [x] Implementiert + getestet (alles vorhanden, Ollama nicht erreichbar, Modell fehlt,
       Index-Klon fehlt, alle drei Kombinationen gemischt)
 
 ### Teil C - Verdrahtung in `run start` (Anzeige, kein Block) + GitHub-Dokumentation
