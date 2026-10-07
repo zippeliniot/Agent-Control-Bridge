@@ -18,6 +18,7 @@ Checkout mehr — siehe Ausführungsmodell unten.
 | `E:\_DEV\Agent-Control-Bridge\claude` | Ausschließlich Produkt-/Projektarbeit mit Claude Code, **keine** ACB-Entwicklung | Claude Code |
 | `E:\_DEV\Agent-Control-Bridge\projects\<projekt-id>` | Produkt-/Projektarbeit fuer ein von ACB gesteuertes Fremdprojekt (z. B. `projects\wetter-app`, `projects\dorfschaft`). Ein Klon pro Projekt, beliebig viele parallel. Ersetzt `claude\` fuer neue Auftraege (2026-09-22). | Claude Code / Codex je nach Profil |
 | `E:\_DEV\Agent-Control-Bridge\codex` | Codex-Checkout (Windows-nativ oder WSL, je nach Auftrag) | Codex |
+| `E:\_DEV\Agent-Control-Bridge\rag-index` | Lokaler Klon von `zippeliniot/acb-rag-index` (RAG-Vektorindex, Git LFS) für Steering Continuity (BRIDGE-0082/0083). Wird bei Maschinenwechsel + aktiviertem `rag_enabled` automatisch per `git pull`/`git lfs pull` synchronisiert, sofern am Pfad vorhanden - kein automatisches Anlegen des Klons selbst. | Claude Code (Sync bei Bedarf) |
 
 | Physische Maschine | Logische Umgebung | OS | Stand |
 |--------------------|-------------------|----|-------|

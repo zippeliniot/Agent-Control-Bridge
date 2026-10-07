@@ -190,8 +190,12 @@ def maybe_sync_rag_index(store, task_id, machine) -> dict | None:
     Rückgabe: ``None`` wenn kein Sync ausgelöst wurde (kein RAG, kein
     Maschinenwechsel); sonst das dict von ``gitops.rag_index_sync``.
 
-    Annahme zum lokalen Index-Pfad (nicht verifiziert, siehe BRIDGE-082-WP):
-    Geschwisterverzeichnis zum ACB-Checkout, ``<store.root>/../../acb-rag-index``.
+    Lokaler Index-Pfad (BRIDGE-0083, Korrektur von BRIDGE-0082): ``rag-index``
+    als fünfter Geschwisterklon neben ``board``/``dev``/``claude``/``codex``
+    (siehe ``docs/architecture/machines.md``) - eine Ebene über ``store.root``,
+    NICHT zwei. Die ursprüngliche BRIDGE-0082-Annahme (zwei Ebenen hoch) lag
+    außerhalb des gesamten ACB-Wurzelverzeichnisses und widersprach damit der
+    bestehenden Vier-Wege-Topologie.
     """
     try:
         project_id = store.load_task(task_id).get("project_id")
@@ -204,8 +208,14 @@ def maybe_sync_rag_index(store, task_id, machine) -> dict | None:
     last_machine = store.last_machine_for_project(project_id)
     if last_machine == machine:
         return None
-    index_path = Path(store.root).resolve().parent.parent / "acb-rag-index"
-    return gitops.rag_index_sync(index_path)
+    return gitops.rag_index_sync(rag_index_clone_path(store))
+
+
+def rag_index_clone_path(store) -> Path:
+    """Lokaler Klonpfad von ``acb-rag-index`` als Geschwister von
+    ``dev``/``board``/``claude``/``codex`` (BRIDGE-0083, siehe
+    ``docs/architecture/machines.md``)."""
+    return Path(store.root).resolve().parent / "rag-index"
 
 
 def resume(store, task_id, actor, machine=None, *, now=None) -> str:

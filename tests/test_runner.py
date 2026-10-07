@@ -179,6 +179,22 @@ class MaybeSyncRagIndexTests(Base):
         run_id = runner.start(self.store, "BRIDGE-0900", "a", machine="HAM11", now=T0)
         self.assertEqual(run_id, "RUN-01")
 
+    def test_index_path_is_sibling_not_grandparent(self):
+        """BRIDGE-0083: rag-index ist Geschwister von store.root (eine Ebene
+        hoch), NICHT zwei Ebenen hoch wie die urspruengliche BRIDGE-0082-
+        Annahme - passend zur Vier-Wege-Topologie (board/dev/claude/codex)."""
+        path = runner.rag_index_clone_path(self.store)
+        self.assertEqual(path, Path(self.store.root).resolve().parent / "rag-index")
+        self.assertNotEqual(path, Path(self.store.root).resolve().parent.parent / "rag-index")
+
+    def test_sync_uses_sibling_path(self):
+        self._write_profile(rag_enabled=True)
+        expected = runner.rag_index_clone_path(self.store)
+        with mock.patch("bridge.runner.gitops.rag_index_sync",
+                       return_value={"pulled": True, "lfs_pulled": True, "error": None}) as m:
+            runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "DES11")
+        m.assert_called_once_with(expected)
+
 
 class BeatTests(Base):
     def test_beat_updates_last_seen_of_current_run(self):

@@ -33,8 +33,8 @@ eines passenden fuenften Geschwisterklons. Das wird hier korrigiert, bevor Teil 
 2. `docs/architecture/machines.md`: neue Zeile im Klon-Register fuer `rag-index`
    (`E:\_DEV\Agent-Control-Bridge\rag-index`, Zweck: lokaler Klon von `zippeliniot/acb-rag-index`
    fuer RAG-Steering-Continuity, Betrieb durch Claude Code bei Bedarf/Sync).
-- [ ] `index_path` zeigt auf Geschwisterverzeichnis (Test: `tmp_path`-Fixture, keine Mock-Pfade)
-- [ ] `machines.md`-Registerzeile ergaenzt, bestehende Tabelle sonst unveraendert
+- [x] `index_path` zeigt auf Geschwisterverzeichnis (Test: `tmp_path`-Fixture, keine Mock-Pfade)
+- [x] `machines.md`-Registerzeile ergaenzt, bestehende Tabelle sonst unveraendert
 
 **Offene Bestaetigung an April (bleibt auch nach Teil A offen):** der Klonname `rag-index` ist mein
 Vorschlag passend zur bestehenden Rollen-Namenskonvention (`board`/`dev`/`claude`/`codex`) - bitte
