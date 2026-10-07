@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0085
+project_id: agent-control-bridge
+title: 'OLLAMA_MODELS auf E: + Installations-/Modell-Inventar-Skript'
+description: 'Teile A, B. Details: work-packages/BRIDGE-085.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 12d2c6d8c1c8bc0fd48ee4d25a47e269506e81c1
+  allowed_changed_files:
+  - scripts/rag-setup.ps1
+  - scripts/rag-ollama-inventory.ps1
+  - docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0084
+acceptance_criteria:
+- 'Teil A: OLLAMA_MODELS vor Install auf E: setzen, nur wenn leer'
+- 'Teil B: rag-ollama-inventory.ps1, Aufraeumen nur nach Bestaetigung'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T11:05:00Z'
+created_by: browser-claude
+task_version: 3
