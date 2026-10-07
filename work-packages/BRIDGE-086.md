@@ -62,7 +62,7 @@
 ## Abschluss
 1. Volle Suite EINMAL (keine neuen Python-Tests - reines PowerShell-Skript), letzte 3 Zeilen zeigen.
 2. `git status` sauber.
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
 
 **Hinweis (wie bei BRIDGE-0084/0085):** kein `pwsh` in dieser Sitzung - Review statt Ausfuehrungstest.
 Bitte auf HAM11 oder DES11 einmal pruefen, idealerweise mit Ollama-Dienst bewusst beendet vor dem Lauf.
