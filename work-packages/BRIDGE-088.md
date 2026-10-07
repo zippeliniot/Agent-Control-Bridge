@@ -43,10 +43,10 @@ Jeder der folgenden Begriffe wird mit **Definition, Feldtyp/Ort und Bezug zum re
 
 **Ausdruecklich referenzieren, nicht voraussetzen:** Ein Abschnitt haelt fest, dass eine formalisierte Decision-Struktur (`supersedes`/`applies_to`/`affects`/`implemented_by`/`verified_by`, siehe Teil B) die Quellenabdeckung praeziser machen *wuerde*, markiert aber ausdruecklich jeden darauf aufbauenden Punkt als **entscheidungsabhaengig** (Kennzeichnung im Text: "[entscheidungsabhaengig, siehe ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2]"). Die Spezifikation muss ohne diese Struktur vollstaendig und umsetzbar bleiben.
 
-- [ ] Alle neun Begriffe mit Definition, Feldort und Code-Bezug dokumentiert
-- [ ] `rag_used_since`-Frage (Punkt 2) explizit beantwortet, nicht offengelassen
-- [ ] Entscheidungsabhaengige Abschnitte eindeutig gekennzeichnet, Spezifikation ohne sie vollstaendig lesbar
-- [ ] Explizit "Spezifikation, keine Implementierung" im Dateikopf vermerkt
+- [x] Alle neun Begriffe mit Definition, Feldort und Code-Bezug dokumentiert
+- [x] `rag_used_since`-Frage (Punkt 2) explizit beantwortet, nicht offengelassen
+- [x] Entscheidungsabhaengige Abschnitte eindeutig gekennzeichnet, Spezifikation ohne sie vollstaendig lesbar
+- [x] Explizit "Spezifikation, keine Implementierung" im Dateikopf vermerkt
 
 ### Teil B - Entscheidungsvorlage V2 (Verweis)
 
