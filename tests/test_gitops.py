@@ -659,6 +659,55 @@ class GitPullTests(unittest.TestCase):
         self.assertIsNotNone(result["error"])
 
 
+class RagIndexSyncTests(unittest.TestCase):
+    """rag_index_sync() (BRIDGE-0082): git_pull() + git lfs pull, fail-soft.
+
+    Infrastruktur identisch zu GitPullTests - rag_index_sync ruft git_pull
+    direkt auf, hier wird nur der zusaetzliche lfs-Schritt + die
+    Fail-soft-Kette geprueft.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-rag-"))
+        self.bare = Path(tempfile.mkdtemp(prefix="ccb-rag-bare-"))
+        _setup_git_repo(self.tmp)
+        _git("clone", "--bare", str(self.tmp), str(self.bare), cwd=self.tmp)
+        _git("remote", "add", "origin", str(self.bare), cwd=self.tmp)
+        _git("push", "--set-upstream", "origin", "main", cwd=self.tmp)
+        self.other = Path(tempfile.mkdtemp(prefix="ccb-rag-other-"))
+        _git("clone", str(self.bare), str(self.other), cwd=self.tmp)
+        _git("config", "user.email", "test@example.com", cwd=self.other)
+        _git("config", "user.name", "Test", cwd=self.other)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+        shutil.rmtree(self.bare, ignore_errors=True)
+        shutil.rmtree(self.other, ignore_errors=True)
+
+    def test_success_pulls_and_lfs_pulls(self):
+        result = gitops.rag_index_sync(self.other)
+        self.assertTrue(result["pulled"], result["error"])
+        self.assertTrue(result["lfs_pulled"], result["error"])
+        self.assertIsNone(result["error"])
+
+    def test_no_repo_at_path_fails_fail_soft(self):
+        empty = Path(tempfile.mkdtemp(prefix="ccb-rag-empty-"))
+        try:
+            result = gitops.rag_index_sync(empty)  # darf nicht werfen
+            self.assertFalse(result["pulled"])
+            self.assertFalse(result["lfs_pulled"])
+            self.assertIsNotNone(result["error"])
+        finally:
+            shutil.rmtree(empty, ignore_errors=True)
+
+    def test_unreachable_remote_fails_fail_soft_no_crash(self):
+        _git("remote", "set-url", "origin", "/nonexistent/nowhere", cwd=self.other)
+        result = gitops.rag_index_sync(self.other)  # darf nicht werfen
+        self.assertFalse(result["pulled"])
+        self.assertFalse(result["lfs_pulled"])
+        self.assertIsNotNone(result["error"])
+
+
 class GitFetchTests(unittest.TestCase):
     """git_fetch() (BRIDGE-0078): reines Fetch von origin/main, kein Merge.
 

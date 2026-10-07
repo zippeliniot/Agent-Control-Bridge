@@ -375,3 +375,40 @@ def git_fetch(repo_root) -> dict:
         return {"fetched": False, "error": f"git fetch fehlgeschlagen: {err_text}"}
 
     return {"fetched": True, "error": None}
+
+
+def rag_index_sync(repo_root) -> dict:
+    """Synchronisiert einen lokalen Klon des RAG-Vektor-Index-Repos
+    (BRIDGE-0082) - reiner Lese-/Sync-Vorgang, keine Installation.
+
+    Ruft ``git_pull(repo_root)`` auf; bei Erfolg zusaetzlich ``git lfs pull``
+    (die LFS-Objekte des Index). Fail-soft wie ``git_pull``/``git_fetch``:
+    wirft nie - fehlt das Repo am Pfad, fehlt ``git-lfs``, oder schlaegt die
+    Netzwerkoperation fehl, landet das in ``error``, niemals als Exception.
+    Der Aufrufer (``runner.start``) entscheidet; ein Sync-Fehler blockiert
+    den eigentlichen Auftragslauf nicht (BRIDGE-0082 Teil C).
+
+    Gibt immer ein dict zurueck:
+        ``{"pulled": bool, "lfs_pulled": bool, "error": str | None}``
+    """
+    pull = git_pull(repo_root)
+    if not pull["pulled"]:
+        return {"pulled": False, "lfs_pulled": False, "error": pull["error"]}
+
+    root = Path(repo_root)
+    try:
+        r = subprocess.run(
+            ["git", "lfs", "pull"],
+            cwd=root, capture_output=True, text=True,
+            timeout=_GIT_PUSH_TIMEOUT, encoding="utf-8",
+        )
+    except Exception as exc:  # fehlendes git-lfs, Timeout o.ae. - nie durchschlagen
+        return {"pulled": True, "lfs_pulled": False,
+                "error": f"git lfs pull fehlgeschlagen (Exception): {exc}"}
+
+    if r.returncode != 0:
+        err_text = (r.stderr or r.stdout).strip()
+        return {"pulled": True, "lfs_pulled": False,
+                "error": f"git lfs pull fehlgeschlagen: {err_text}"}
+
+    return {"pulled": True, "lfs_pulled": True, "error": None}

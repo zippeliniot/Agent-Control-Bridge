@@ -33,7 +33,7 @@ Geschwisterverzeichnis zum ACB-Checkout angenommen (`<E:\_DEV>/acb-rag-index`, e
 1. Neue Funktion `rag_index_sync(repo_root) -> dict`: ruft `git_pull(repo_root)` auf; bei Erfolg
    zusaetzlich `git lfs pull` (fail-soft, eigenes `error`-Feld, kein Block wenn `git-lfs` fehlt).
    Nie werfen (gleiches Muster wie `git_pull`/`git_fetch`).
-- [ ] Implementiert + getestet (Erfolg, kein Repo am Pfad -> Fehler im Rueckgabewert, nie Exception)
+- [x] Implementiert + getestet (Erfolg, kein Repo am Pfad -> Fehler im Rueckgabewert, nie Exception)
 
 ### Teil C - Verdrahtung in `run start`
 
