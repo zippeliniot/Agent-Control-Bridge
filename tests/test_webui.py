@@ -400,6 +400,18 @@ class WebUiReadTests(WebUiBase):
         self.assertEqual(len(other), 1)
         self.assertEqual(other[0]["projekt"], "BRIDGE")
 
+    def test_api_board_other_row_has_rag_used_since_null(self):
+        """board-Payload 'other': rag_used_since-Feld vorhanden, null ohne
+        Retrieval-Pipeline (BRIDGE-0081 Teil A)."""
+        self.make_task("BRIDGE-0905", "RUNNING")
+        self.start()
+        code, body = self.get("/api/board")
+        data = json.loads(body)
+        other = [r for r in data["other"] if r["bridge_task_id"] == "BRIDGE-0905"]
+        self.assertEqual(len(other), 1)
+        self.assertIn("rag_used_since", other[0])
+        self.assertIsNone(other[0]["rag_used_since"])
+
     def test_api_board_other_row_failsoft_without_profile(self):
         """board-Payload 'other': Fail-soft auf rohe project_id bleibt erhalten,
         wenn kein Profil existiert (bestehendes Verhalten, BRIDGE-0080 darf es

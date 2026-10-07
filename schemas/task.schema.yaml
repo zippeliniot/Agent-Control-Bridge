@@ -155,6 +155,16 @@ properties:
     enum: [LOW, MEDIUM, HIGH, null]
     default: null
 
+  rag_used_since:
+    description: >-
+      BRIDGE-0081. Zeitpunkt, seit dem dieser Auftrag RAG-Kontext bezieht.
+      Wird ausschliesslich vom Backend gesetzt (kuenftige Retrieval-Pipeline,
+      noch nicht Teil von BRIDGE-0081), niemals manuell. Null = bisher kein
+      RAG-Kontext bezogen.
+    type: ["string", "null"]
+    format: date-time
+    default: null
+
   executor:
     description: >-
       Auftragsspezifischer Override der Ausfuehrungsinstanz. Null = vom

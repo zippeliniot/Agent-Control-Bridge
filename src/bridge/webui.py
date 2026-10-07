@@ -159,6 +159,7 @@ def board_payload(store) -> dict:
             "wartet_seit": _wait_since(store, task_id, status, now),
             "actions": _row_actions(status),
             "machine": machine,
+            "rag_used_since": task.get("rag_used_since"),
         })
     other.sort(key=lambda r: r["bridge_task_id"])
 

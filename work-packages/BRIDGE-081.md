@@ -19,9 +19,11 @@
 1. `task.schema.yaml`: neues Feld `rag_used_since` (`["string","null"]`, RFC3339-Pattern wie `started_at`,
    default `null`). Backend-gesetzt durch eine künftige Retrieval-Pipeline, nicht manuell setzbar -
    Doku-Hinweis im Feld-Kommentar.
-2. `webui.py`: Feld in `board_payload()` (board + other) durchreichen, analog `machine`.
-- [ ] Schema-Feld ergänzt, rückwärtskompatibel (fehlt -> `null`)
-- [ ] `rag_used_since` in Board- und Other-Zeilen sichtbar (Test: Feld vorhanden, Wert `null` ohne Pipeline)
+2. `webui.py`: Feld in `board_payload()`'s `other`-Liste durchreichen (nicht `board` - dessen Zeilen
+   kommen aus `cli.py::_board_rows()`, feste Tupel-Signatur, ausserhalb des deklarierten Scopes dieses
+   Auftrags; separat zu erweitern, falls gewuenscht).
+- [x] Schema-Feld ergänzt, rückwärtskompatibel (fehlt -> `null`)
+- [x] `rag_used_since` in Other-Zeilen sichtbar (Test: Feld vorhanden, Wert `null` ohne Pipeline)
 
 ### Teil B - Projekt-Flag `rag_enabled` + Einstellungsseite
 
