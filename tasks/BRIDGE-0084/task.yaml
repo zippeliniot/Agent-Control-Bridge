@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0084
+project_id: agent-control-bridge
+title: RAG-Setup-Skript (Mensch-bestaetigter Install-Klick)
+description: 'Teile A, B. Details: work-packages/BRIDGE-084.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 1924b71c06ac279f9fa1ed6cbd890d56dfd335bb
+  allowed_changed_files:
+  - scripts/rag-setup.ps1
+  - docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0083
+acceptance_criteria:
+- 'Teil A: scripts/rag-setup.ps1, Bestaetigungsabfrage zwingend'
+- 'Teil B: Dokumentation aktualisiert'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T10:22:00Z'
+created_by: browser-claude
+task_version: 3
