@@ -32,7 +32,7 @@ acceptance_criteria:
 - 'Teil B: rag_prereqs.check (Ollama/Modell/Index-Klon), reine Erkennung'
 - 'Teil C: Verdrahtung run start + GitHub-Dokumentation'
 - Gesamte Testsuite gruen
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: RUNNING
 created_at: '2026-10-07T09:10:00Z'
 created_by: browser-claude
-task_version: 3
+task_version: 5
