@@ -67,4 +67,4 @@
 ## Abschluss
 1. Volle Suite EINMAL, nur die letzten 3 Zeilen zeigen.
 2. `git status` sauber.
-- [ ] Volle Suite gruen (575/575 erwartet - ein Test entfernt, keiner neu)
+- [x] Volle Suite gruen (575/575 erwartet - ein Test entfernt, keiner neu)
