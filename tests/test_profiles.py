@@ -335,6 +335,30 @@ class CliProjectTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertNotIn("Traceback", err)
 
+    # -- write_profile (BRIDGE-0081) ----------------------------------
+
+    def test_write_profile_updates_rag_enabled(self):
+        self.write_profile("demo", valid_profile(project_id="demo"))
+        merged = profiles.write_profile(self.tmp, "demo", {"rag_enabled": True},
+                                        schema_dir=SCHEMA_DIR)
+        self.assertIs(merged["rag_enabled"], True)
+        reloaded = profiles.load_profile(self.tmp, "demo", schema_dir=SCHEMA_DIR)
+        self.assertIs(reloaded["rag_enabled"], True)
+
+    def test_write_profile_rejects_invalid_update_no_partial_write(self):
+        self.write_profile("demo", valid_profile(project_id="demo"))
+        before = (self.tmp / "projects" / "demo" / "project.yaml").read_text(encoding="utf-8")
+        with self.assertRaises(profiles.ProfileError):
+            profiles.write_profile(self.tmp, "demo", {"rag_enabled": "ja"},
+                                   schema_dir=SCHEMA_DIR)   # kein bool -> Schemafehler
+        after = (self.tmp / "projects" / "demo" / "project.yaml").read_text(encoding="utf-8")
+        self.assertEqual(before, after)   # kein Teilschreiben
+
+    def test_write_profile_missing_profile_fails_closed(self):
+        with self.assertRaises(profiles.ProfileError):
+            profiles.write_profile(self.tmp, "nope", {"rag_enabled": True},
+                                   schema_dir=SCHEMA_DIR)
+
 
 if __name__ == "__main__":
     unittest.main()

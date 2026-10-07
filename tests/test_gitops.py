@@ -112,6 +112,12 @@ class ExpectedGitFilesTests(unittest.TestCase):
         files = gitops.expected_git_files("claim", "BRIDGE-0006")
         self.assertEqual(files, ["results/BRIDGE-0006/claim.json"])
 
+    def test_project_settings_exact_path_only(self):
+        # BRIDGE-0081: project_settings (Web-UI rag_enabled-Formular) darf
+        # ausschliesslich die eigene Profildatei beruehren.
+        files = gitops.expected_git_files("project_settings", "agent-control-bridge")
+        self.assertEqual(files, ["projects/agent-control-bridge/project.yaml"])
+
 
 # --------------------------------------------------------------------------- #
 # _workpackage_filename (BRIDGE-033)

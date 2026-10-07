@@ -104,6 +104,13 @@ def expected_git_files(kind: str, task_id: str,
         # eigene claim.json - exakter Pfad, kein Praefix-Match.
         return [f"results/{task_id}/claim.json"]
 
+    if kind == "project_settings":
+        # BRIDGE-0081: Projekt-Einstellungsformular (z. B. rag_enabled)
+        # beruehrt ausschliesslich das eigene Profil - exakter Pfad, kein
+        # Praefix-Match. ``task_id`` ist hier die project_id (gleicher
+        # Funktionsparameter, andere Semantik je kind - siehe claim/renew).
+        return [f"projects/{task_id}/project.yaml"]
+
     base = [f"tasks/{task_id}/task.yaml", "audit/audit.jsonl"]
 
     if kind in ("finish", "run_finish"):

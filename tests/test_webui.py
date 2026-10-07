@@ -572,6 +572,54 @@ class WebUiActionTests(WebUiBase):
         self.assertIn("WAITING_FOR_COPY_TO_CONTROL", data["error"])
         self.assertEqual(self.status_of("BRIDGE-0901"), "RUNNING")
 
+    # -- POST/GET /api/project/<id>/settings (BRIDGE-0081) -----------
+
+    def _write_demo_profile(self, rag_enabled=False):
+        pdir = self.tmp / "projects" / "demo-proj"
+        pdir.mkdir(parents=True)
+        (pdir / "project.yaml").write_text(yaml.safe_dump({
+            "schema_version": "1.0", "kind": "bridge_project_profile",
+            "project_id": "demo-proj", "repository": "Demo", "default_branch": "main",
+            "task_prefix": "DEMO", "read_only": False, "rag_enabled": rag_enabled,
+        }), encoding="utf-8")
+
+    def test_project_settings_get_returns_rag_enabled(self):
+        self._write_demo_profile(rag_enabled=True)
+        self.start()
+        code, body = self.get("/api/project/demo-proj")
+        data = json.loads(body)
+        self.assertEqual(code, 200)
+        self.assertIs(data["rag_enabled"], True)
+
+    def test_project_settings_get_missing_profile_404(self):
+        self.start()
+        code, body = self.get("/api/project/voellig-unbekannt")
+        self.assertEqual(code, 404)
+
+    def test_project_settings_post_sets_rag_enabled(self):
+        self._write_demo_profile(rag_enabled=False)
+        self.start()
+        code, data = self.post_json("/api/project/demo-proj/settings",
+                                    {"actor": "april", "confirm": True, "rag_enabled": True})
+        self.assertEqual(code, 200)
+        self.assertTrue(data.get("ok"))
+        reloaded = yaml.safe_load(
+            (self.tmp / "projects" / "demo-proj" / "project.yaml").read_text(encoding="utf-8"))
+        self.assertIs(reloaded["rag_enabled"], True)
+
+    def test_project_settings_post_requires_bool(self):
+        self._write_demo_profile()
+        self.start()
+        code, data = self.post_json("/api/project/demo-proj/settings",
+                                    {"actor": "april", "confirm": True, "rag_enabled": "ja"})
+        self.assertEqual(code, 400)
+
+    def test_project_settings_post_missing_profile_400(self):
+        self.start()
+        code, data = self.post_json("/api/project/voellig-unbekannt/settings",
+                                    {"actor": "april", "confirm": True, "rag_enabled": True})
+        self.assertEqual(code, 400)
+
     def test_archive_success(self):
         self.make_task("BRIDGE-0901", "REVIEW_REQUIRED")
         self.start()
@@ -850,13 +898,15 @@ class WebUiFrontendTests(unittest.TestCase):
         self.assertIn("filterState", render)
 
     def test_no_new_server_route(self):
-        # POST-Routen: task und run (BRIDGE-028 fuegt priority hinzu, run unveraendert).
-        self.assertEqual(set(webui._Handler._POST_ROUTES), {"task", "run"})
+        # POST-Routen: task, run, project (BRIDGE-0081 fuegt project/settings hinzu).
+        self.assertEqual(set(webui._Handler._POST_ROUTES), {"task", "run", "project"})
         # BRIDGE-028: priority-Route hinzugefuegt (kein Git-Commit/Push, nur Store-Feld)
         self.assertIn("copied", webui._Handler._POST_ROUTES["task"])
         self.assertIn("archive", webui._Handler._POST_ROUTES["task"])
         self.assertIn("priority", webui._Handler._POST_ROUTES["task"])
         self.assertEqual(webui._Handler._POST_ROUTES["run"], {"finish": "finish"})
+        # BRIDGE-0081: project/settings -> rag_enabled, committet+pusht (project_settings-kind)
+        self.assertEqual(webui._Handler._POST_ROUTES["project"], {"settings": "project_settings"})
 
     # -- seiteneffektfreie Logik per node ------------------------
 

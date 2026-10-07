@@ -44,7 +44,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bridge import gitops, importer, registry, runner, state_machine
+from bridge import gitops, importer, profiles, registry, runner, state_machine
 # Dieselben Funktionen wie `bridge board` / `bridge task copied` /
 # `bridge task archive` - garantiert keine zweite, abweichende Implementierung.
 from bridge.cli import (
@@ -277,6 +277,21 @@ def _apply_action_locked(store, kind: str, task_id: str, body: dict) -> dict:
                 "event_type": event["event_type"],
                 "git": git}
 
+    if kind == "project_settings":
+        # BRIDGE-0081: projekt-weites rag_enabled - NUR dieses eine Feld,
+        # kein beliebiges Profil-Update ueber den Web-Endpunkt.
+        rag_enabled = body.get("rag_enabled")
+        if not isinstance(rag_enabled, bool):
+            raise _BadRequest("Feld 'rag_enabled' fehlt oder ist kein bool.")
+        try:
+            profiles.write_profile(store.root, task_id, {"rag_enabled": rag_enabled},
+                                   schema_dir=store.schema_dir)
+        except profiles.ProfileError as exc:
+            raise _BadRequest(str(exc)) from exc
+        git = _git_commit_and_push(store.root, kind, task_id, actor)
+        return {"ok": True, "project_id": task_id, "rag_enabled": rag_enabled,
+                "git": git}
+
     if kind == "priority":
         priority = _require(body, "priority")
         if priority not in ("LOW", "MEDIUM", "HIGH"):
@@ -414,6 +429,16 @@ _PAGE = r"""<!doctype html>
   <th data-sort-col="last_activity_ts" data-label="Aktiv vor">Aktiv vor</th>
   <th data-sort-col="fuehrung" data-label="F&uuml;hrung/Pr&uuml;fung">F&uuml;hrung/Pr&uuml;fung</th>
 </tr></thead><tbody></tbody></table>
+
+<h2>Projekt-Einstellungen</h2>
+<div class="bar" id="proj-settings">
+  <label for="ps-projekt">Projekt-ID:</label>
+  <input id="ps-projekt" size="24" autocomplete="off">
+  <button type="button" id="ps-load">Laden</button>
+  <label><input type="checkbox" id="ps-rag"> RAG aktiviert</label>
+  <button type="button" id="ps-save">Speichern</button>
+  <span id="ps-status" class="note"></span>
+</div>
 
 <script>
 %PURE_JS%
@@ -756,6 +781,49 @@ document.addEventListener("change", async ev => {
     addLog("priority", id, false, "Netzwerkfehler: " + e.message);
   }
 });
+// BRIDGE-0081: Projekt-Einstellungen (rag_enabled) - eigenstaendiger Block,
+// kein Teil von refresh()/lastData (kein periodisches Neuladen noetig).
+document.getElementById("ps-load").addEventListener("click", async () => {
+  const pid = document.getElementById("ps-projekt").value.trim();
+  const statusEl = document.getElementById("ps-status");
+  if (!pid) { statusEl.textContent = "Projekt-ID fehlt."; return; }
+  try {
+    const res = await fetch("/api/project/" + encodeURIComponent(pid));
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      statusEl.textContent = "Fehler: " + (data.error || "HTTP " + res.status);
+      return;
+    }
+    document.getElementById("ps-rag").checked = !!data.rag_enabled;
+    statusEl.textContent = "Geladen.";
+  } catch(e) {
+    statusEl.textContent = "Netzwerkfehler: " + e.message;
+  }
+});
+document.getElementById("ps-save").addEventListener("click", async () => {
+  const pid = document.getElementById("ps-projekt").value.trim();
+  const actor = document.getElementById("actor").value.trim();
+  const statusEl = document.getElementById("ps-status");
+  if (!pid) { statusEl.textContent = "Projekt-ID fehlt."; return; }
+  if (!actor) { statusEl.textContent = "Bitte zuerst einen Akteur (actor) eintragen."; return; }
+  const ragEnabled = document.getElementById("ps-rag").checked;
+  try {
+    const res = await fetch("/api/project/" + encodeURIComponent(pid) + "/settings", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({actor: actor, confirm: true, rag_enabled: ragEnabled})
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      statusEl.textContent = "Fehler: " + (data.error || "HTTP " + res.status);
+      return;
+    }
+    statusEl.textContent = "Gespeichert und gepusht.";
+  } catch(e) {
+    statusEl.textContent = "Netzwerkfehler: " + e.message;
+  }
+});
+
 refresh();
 setInterval(refresh, REFRESH_MS);
 </script>
@@ -817,6 +885,20 @@ class _Handler(BaseHTTPRequestHandler):
                 return
             self._json(200, payload)
             return
+        if route.startswith("/api/project/"):
+            # BRIDGE-0081: GET /api/project/<id> - Profil lesen (nur die fuer
+            # die Einstellungsseite relevanten Felder, kein Komplettdump).
+            project_id = route[len("/api/project/"):]
+            try:
+                profile = profiles.load_profile(self.server.store.root, project_id,
+                                                schema_dir=self.server.store.schema_dir)
+            except profiles.ProfileError as exc:
+                self._json(404, {"error": str(exc)})
+                return
+            self._json(200, {"project_id": project_id,
+                             "rag_enabled": profile.get("rag_enabled", False),
+                             "rag_index_repo": profile.get("rag_index_repo")})
+            return
         self._json(404, {"error": f"nicht gefunden: {route}"})
 
     do_HEAD = do_GET
@@ -849,6 +931,7 @@ class _Handler(BaseHTTPRequestHandler):
     _POST_ROUTES = {
         "task": {"copied": "copied", "archive": "archive", "priority": "priority"},
         "run": {"finish": "finish"},
+        "project": {"settings": "project_settings"},
     }
 
     def _match_post(self):

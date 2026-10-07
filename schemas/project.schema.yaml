@@ -58,6 +58,23 @@ properties:
     items:
       type: string
     default: []
+
+  rag_enabled:
+    description: >-
+      BRIDGE-0081. Ob dieses Projekt RAG-Kontext (Vektor-Index) nutzt. Nur von
+      April ueber das Web-UI-Einstellungsformular gesetzt, nicht von Codex/
+      Claude Code. Default false - Opt-in, kein stiller Automatismus.
+    type: boolean
+    default: false
+
+  rag_index_repo:
+    description: >-
+      BRIDGE-0081. GitHub-Slug des privaten Vektor-Index-Repos (z. B.
+      "zippeliniot/acb-rag-index"), falls rag_enabled. Null = keiner
+      hinterlegt.
+    type: ["string", "null"]
+    pattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    default: null
   model_policy:
     type: ["object", "null"]
     additionalProperties: false

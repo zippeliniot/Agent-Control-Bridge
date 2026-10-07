@@ -101,6 +101,27 @@ def load_profile(root, project_id: str, schema_dir=None) -> dict:
     return doc
 
 
+def write_profile(root, project_id: str, updates: dict, schema_dir=None) -> dict:
+    """Schreibt ein bestehendes Projektprofil atomar zurueck (BRIDGE-0081).
+
+    Laedt das aktuelle Profil, merged ``updates`` hinein (flache Keys, kein
+    Deep-Merge noetig - alle bisherigen Felder sind skalar/Liste), validiert
+    das Ergebnis gegen das Schema und schreibt NUR bei Erfolg. Kein
+    Teilschreiben: schlaegt die Validierung fehl, bleibt die Datei auf der
+    Platte unveraendert (``ProfileError``, fail-closed).
+    """
+    path = profile_path(root, project_id)
+    current = load_profile(root, project_id, schema_dir=schema_dir)
+    merged = dict(current)
+    merged.update(updates)
+    sd = Path(schema_dir) if schema_dir is not None else Path(root).resolve() / "schemas"
+    validate_profile(merged, sd)   # wirft ProfileError vor jedem Schreiben
+    tmp = path.with_suffix(".yaml.tmp")
+    tmp.write_text(yaml.safe_dump(merged, sort_keys=False), encoding="utf-8")
+    tmp.replace(path)
+    return merged
+
+
 def list_profiles(root) -> list[str]:
     """Alle realen Profile (``projects/<id>/project.yaml``), sortiert.
     ``projects/examples/`` wird NICHT als echtes Profil gezählt."""

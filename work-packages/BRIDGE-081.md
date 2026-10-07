@@ -41,10 +41,10 @@
    `{"rag_enabled": bool}`, nur dieses Feld), committet+gepusht über `_git_commit_and_push(..., kind=
    "project_settings", task_id=project_id)`. Minimale HTML-Sektion: Projekt-Auswahl + Checkbox, kein
    neues Seiten-Layout.
-- [ ] Schema-Felder ergänzt
-- [ ] `write_profile` implementiert + getestet (gültiges Update, Schema-Verstoss -> Fehler ohne Teilschreiben)
-- [ ] `project_settings`-Whitelist exakt auf die eine Profildatei begrenzt (Test)
-- [ ] Web-Endpunkt + minimale UI, Checkbox-Toggle committet+pusht automatisch
+- [x] Schema-Felder ergänzt
+- [x] `write_profile` implementiert + getestet (gültiges Update, Schema-Verstoss -> Fehler ohne Teilschreiben)
+- [x] `project_settings`-Whitelist exakt auf die eine Profildatei begrenzt (Test)
+- [x] Web-Endpunkt + minimale UI, Checkbox-Toggle committet+pusht automatisch
 
 ## Abschluss
 1. Volle Suite EINMAL, letzte 3 Zeilen zeigen.
