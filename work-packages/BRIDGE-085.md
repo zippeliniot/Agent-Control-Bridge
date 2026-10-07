@@ -71,7 +71,7 @@
 ## Abschluss
 1. Volle Suite EINMAL (keine neuen Python-Tests - reine PowerShell-Skripte), letzte 3 Zeilen zeigen.
 2. `git status` sauber.
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
 
 **Offene Bestaetigung an April:** bitte `rag-ollama-inventory.ps1` zuerst nur lesend laufen
 lassen (die Abfrage am Ende mit "nein" beantworten), die Ausgabe pruefen, und erst danach -
