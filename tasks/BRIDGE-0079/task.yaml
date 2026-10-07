@@ -33,7 +33,7 @@ acceptance_criteria:
 - 'Teil B: _sync_claim_commit, _push_with_retry entfernt, keine toten Referenzen'
 - 'Teil B: Push-Race-Tests aus BRIDGE-0078 weiterhin gruen'
 - Gesamte Testsuite gruen, Testanzahl >= 536
-status: BLOCKED
+status: ARCHIVED
 created_at: '2026-10-06T00:00:00Z'
 created_by: browser-claude
-task_version: 6
+task_version: 7
