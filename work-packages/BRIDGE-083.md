@@ -79,12 +79,12 @@ neues `docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md`.
    GitHub (April: "dokumentieren was gemacht werden muss in github beschreibung"). Ausdruecklich
    **kein** automatisches Installationsskript hier; das bleibt BRIDGE-0084
    ("Skript bereit, Mensch bestaetigt Klick" - Installation selbst, nicht nur Erkennung).
-- [ ] Wechsel/Fehlen erkannt -> Hinweis ausgegeben (Test mit gemocktem `rag_prereqs.check`)
-- [ ] Kein `rag_enabled` -> keine Pruefung/Ausgabe (Test)
-- [ ] Pruef-Fehler blockiert `run start` nicht (Test: Lauf startet trotzdem)
-- [ ] Doku-Datei committet und lesbar (keine Platzhalter, konkrete Schritte je Komponente)
+- [x] Wechsel/Fehlen erkannt -> Hinweis ausgegeben (Test mit gemocktem `rag_prereqs.check`)
+- [x] Kein `rag_enabled` -> keine Pruefung/Ausgabe (Test)
+- [x] Pruef-Fehler blockiert `run start` nicht (Test: Lauf startet trotzdem)
+- [x] Doku-Datei committet und lesbar (keine Platzhalter, konkrete Schritte je Komponente)
 
 ## Abschluss
 1. Volle Suite EINMAL, letzte 3 Zeilen zeigen.
 2. `git status` sauber.
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen

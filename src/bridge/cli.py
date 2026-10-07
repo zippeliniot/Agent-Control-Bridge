@@ -1068,6 +1068,15 @@ def _cmd_run(args, store) -> int:
                 print(f"RAG-Index-Sync: Fehler ({sync['error']})", file=sys.stderr)
             else:
                 print("RAG-Index-Sync: OK")
+        # BRIDGE-0083: Infrastruktur-Erkennung (Ollama/Modell/Index-Klon) -
+        # rein informativ, blockiert den Lauf nie (prereqs is None, wenn
+        # RAG nicht aktiv).
+        prereqs = runner.maybe_check_rag_prereqs(store, args.task_id)
+        if prereqs is not None and not prereqs.get("all_ok"):
+            missing = ", ".join(prereqs.get("missing", []))
+            print(f"RAG-Infrastruktur unvollstaendig: fehlt {missing} "
+                  f"(siehe docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md)",
+                  file=sys.stderr)
         if getattr(args, "commit", False):
             rc = _do_commit(args, store, "run_start", args.task_id, args.actor,
                             run_id=run_id)

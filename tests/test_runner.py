@@ -196,6 +196,64 @@ class MaybeSyncRagIndexTests(Base):
         m.assert_called_once_with(expected)
 
 
+class MaybeCheckRagPrereqsTests(Base):
+    """maybe_check_rag_prereqs() (BRIDGE-0083): reine Infrastruktur-Erkennung,
+    fail-soft, nie Teil von start()s Rueckgabewert."""
+
+    def _write_profile(self, rag_enabled):
+        pdir = self.tmp / "projects" / "codex-control-bridge"
+        pdir.mkdir(parents=True, exist_ok=True)
+        (pdir / "project.yaml").write_text(yaml.safe_dump({
+            "schema_version": "1.0", "kind": "bridge_project_profile",
+            "project_id": "codex-control-bridge", "repository": "Codex-Control-Bridge",
+            "default_branch": "main", "task_prefix": "BRIDGE", "read_only": False,
+            "rag_enabled": rag_enabled,
+        }), encoding="utf-8")
+
+    def test_rag_disabled_no_check(self):
+        self._write_profile(rag_enabled=False)
+        with mock.patch("bridge.runner.rag_prereqs.check") as m:
+            result = runner.maybe_check_rag_prereqs(self.store, "BRIDGE-0900")
+        self.assertIsNone(result)
+        m.assert_not_called()
+
+    def test_no_profile_no_check(self):
+        with mock.patch("bridge.runner.rag_prereqs.check") as m:
+            result = runner.maybe_check_rag_prereqs(self.store, "BRIDGE-0900")
+        self.assertIsNone(result)
+        m.assert_not_called()
+
+    def test_missing_prereqs_reported(self):
+        self._write_profile(rag_enabled=True)
+        with mock.patch(
+            "bridge.runner.rag_prereqs.check",
+            return_value={"ollama_reachable": False, "embed_model_present": False,
+                          "index_clone_exists": False,
+                          "missing": ["ollama", "embed_model:nomic-embed-text",
+                                      "index_clone"],
+                          "all_ok": False},
+        ):
+            result = runner.maybe_check_rag_prereqs(self.store, "BRIDGE-0900")
+        self.assertIsNotNone(result)
+        self.assertFalse(result["all_ok"])
+
+    def test_check_error_does_not_raise(self):
+        self._write_profile(rag_enabled=True)
+        with mock.patch("bridge.runner.rag_prereqs.check",
+                       side_effect=RuntimeError("sollte nie passieren, check() ist fail-soft")):
+            with self.assertRaises(RuntimeError):
+                runner.maybe_check_rag_prereqs(self.store, "BRIDGE-0900")
+            # Dokumentiert bewusst: rag_prereqs.check() selbst ist fail-soft
+            # (siehe test_rag_prereqs.py) und wirft nie - diese Funktion
+            # fuegt keine zusaetzliche Absicherung hinzu, braucht keine.
+
+    def test_start_itself_unaffected_by_prereq_check(self):
+        """start() liefert weiterhin nur den run_id-String."""
+        self._write_profile(rag_enabled=True)
+        run_id = runner.start(self.store, "BRIDGE-0900", "a", machine="HAM11", now=T0)
+        self.assertEqual(run_id, "RUN-01")
+
+
 class BeatTests(Base):
     def test_beat_updates_last_seen_of_current_run(self):
         runner.start(self.store, "BRIDGE-0900", "a", now=T0)
@@ -392,6 +450,33 @@ class CliRunTests(Base):
     def test_run_start_requires_actor(self):
         code, _, err = self.cli("run", "start", "BRIDGE-0900")
         self.assertEqual(code, 2)
+
+    def test_run_start_reports_missing_rag_prereqs(self):
+        pdir = self.tmp / "projects" / "codex-control-bridge"
+        pdir.mkdir(parents=True, exist_ok=True)
+        (pdir / "project.yaml").write_text(yaml.safe_dump({
+            "schema_version": "1.0", "kind": "bridge_project_profile",
+            "project_id": "codex-control-bridge", "repository": "Codex-Control-Bridge",
+            "default_branch": "main", "task_prefix": "BRIDGE", "read_only": False,
+            "rag_enabled": True,
+        }), encoding="utf-8")
+        with mock.patch(
+            "bridge.runner.rag_prereqs.check",
+            return_value={"ollama_reachable": False, "embed_model_present": False,
+                          "index_clone_exists": False,
+                          "missing": ["ollama", "embed_model:nomic-embed-text",
+                                      "index_clone"],
+                          "all_ok": False},
+        ):
+            code, _, err = self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        self.assertEqual(code, 0)
+        self.assertIn("RAG-Infrastruktur unvollstaendig", err)
+        self.assertIn("ollama", err)
+
+    def test_run_start_no_rag_message_when_disabled(self):
+        code, _, err = self.cli("run", "start", "BRIDGE-0900", "--actor", "a")
+        self.assertEqual(code, 0)
+        self.assertNotIn("RAG-Infrastruktur", err)
         self.assertNotIn("Traceback", err)
 
     def test_run_beat_requires_actor(self):

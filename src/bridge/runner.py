@@ -26,7 +26,7 @@ if __package__ in (None, ""):
 
 import yaml
 
-from bridge import gitops, heartbeat, importer, profiles, state_machine
+from bridge import gitops, heartbeat, importer, profiles, rag_prereqs, state_machine
 from bridge.store import StoreError
 
 _RUN_RE = re.compile(r"^RUN-[0-9]{2,}$")
@@ -216,6 +216,30 @@ def rag_index_clone_path(store) -> Path:
     ``dev``/``board``/``claude``/``codex`` (BRIDGE-0083, siehe
     ``docs/architecture/machines.md``)."""
     return Path(store.root).resolve().parent / "rag-index"
+
+
+def maybe_check_rag_prereqs(store, task_id) -> dict | None:
+    """Prüft bei Auftragsstart, ob die RAG-Infrastruktur (Ollama, Embedding-
+    Modell, Index-Klon) auf dieser Maschine vorhanden ist (BRIDGE-0083).
+
+    Reine Erkennung, kein Installationsversuch (siehe ``rag_prereqs.check``).
+    Fail-soft: fehlendes/ungültiges Projektprofil oder ``rag_enabled: false``
+    -> ``None``, kein Fehler. Nie Teil von ``start()``s Rückgabewert, gleiches
+    Verdrahtungsmuster wie ``maybe_sync_rag_index`` (BRIDGE-0082) - der
+    Aufrufer (CLI ``run start``) ruft diese Funktion zusätzlich auf.
+
+    Rückgabe: ``None`` wenn RAG nicht aktiv ist; sonst das dict von
+    ``rag_prereqs.check``.
+    """
+    try:
+        project_id = store.load_task(task_id).get("project_id")
+        profile = profiles.load_profile(store.root, project_id,
+                                        schema_dir=store.schema_dir)
+    except StoreError:
+        return None
+    if not profile.get("rag_enabled"):
+        return None
+    return rag_prereqs.check(rag_index_clone_path(store))
 
 
 def resume(store, task_id, actor, machine=None, *, now=None) -> str:
