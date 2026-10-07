@@ -1,8 +1,10 @@
 #!/usr/bin/env pwsh
 #
-# rag-setup.ps1 - RAG-Infrastruktur-Setup der Agent Control Bridge (BRIDGE-0084).
+# rag-setup.ps1 - RAG-Infrastruktur-Setup der Agent Control Bridge (BRIDGE-0084/0085).
 # Erkennt fehlende Voraussetzungen (Ollama, Embedding-Modell, Index-Klon) und
 # installiert sie NUR nach ausdruecklicher Bestaetigung - niemals automatisch.
+# BRIDGE-0085: setzt OLLAMA_MODELS vor einer Ollama-Neuinstallation auf E:,
+# damit Modelle nicht auf C: landen (zu wenig Platz) - nur wenn noch nicht gesetzt.
 # Siehe docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md.
 #
 # Grundsatz (CLAUDE.md, auf RAG uebertragen): Erkennung ist automatisch, die
@@ -13,9 +15,10 @@
 
 $ErrorActionPreference = "Stop"
 
-$OllamaUrl   = "http://localhost:11434"
-$EmbedModel  = "nomic-embed-text"
-$IndexRepo   = "https://github.com/zippeliniot/acb-rag-index.git"
+$OllamaUrl        = "http://localhost:11434"
+$EmbedModel       = "nomic-embed-text"
+$IndexRepo        = "https://github.com/zippeliniot/acb-rag-index.git"
+$DefaultOllamaModelsPath = "E:\_DEV\ollama-models"
 
 # rag-index ist Geschwister von dev/board/claude/codex (BRIDGE-0083, siehe
 # docs/architecture/machines.md) - eine Ebene ueber dem Repo-Wurzelverzeichnis
@@ -61,6 +64,12 @@ else { Missing "Embedding-Modell '$EmbedModel' nicht vorhanden" }
 if ($indexCloneExists) { Ok "Index-Klon vorhanden ($IndexPath)" }
 else { Missing "Index-Klon nicht vorhanden ($IndexPath)" }
 
+# BRIDGE-0085: nur anzeigen, nicht hier schon setzen - Ollama-Modelle landen
+# sonst auf C: statt E: (zu wenig Platz, HAM11-Erfahrung 07.10.2026).
+$currentOllamaModels = [Environment]::GetEnvironmentVariable("OLLAMA_MODELS", "User")
+if ($currentOllamaModels) { Ok "OLLAMA_MODELS gesetzt auf $currentOllamaModels" }
+else { Missing "OLLAMA_MODELS nicht gesetzt (Standard: `$env:USERPROFILE\.ollama\models auf C:)" }
+
 Write-Host ""
 
 if ($ollamaReachable -and $embedModelPresent -and $indexCloneExists) {
@@ -93,6 +102,17 @@ if ($answer -notin @("ja", "j", "yes", "y")) {
 # --- Installation (nur nach Bestaetigung, jeder Schritt einzeln geprueft) --
 
 if (-not $ollamaReachable) {
+    # BRIDGE-0085: OLLAMA_MODELS VOR der Installation auf E: vorbelegen, damit
+    # Ollama von Anfang an dort statt auf C: ablegt - nur wenn noch nichts
+    # gesetzt ist (ein bestehender bewusster Wert wird nie ueberschrieben).
+    if (-not $currentOllamaModels) {
+        Write-Host "Setze OLLAMA_MODELS auf $DefaultOllamaModelsPath (vorher nicht gesetzt) ..."
+        [Environment]::SetEnvironmentVariable("OLLAMA_MODELS", $DefaultOllamaModelsPath, "User")
+        Write-Host "[ OK ] OLLAMA_MODELS gesetzt. Gilt fuer neue Shells/Prozesse - dieser " `
+                  "Ollama-Dienst muss nach der Installation damit (neu) gestartet werden."
+    } else {
+        Write-Host "OLLAMA_MODELS bereits gesetzt auf $currentOllamaModels - unveraendert."
+    }
     Write-Host "Installiere Ollama ..."
     winget install -e --id Ollama.Ollama
     if ($LASTEXITCODE -ne 0) {

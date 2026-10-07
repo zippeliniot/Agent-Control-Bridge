@@ -34,9 +34,9 @@
    Hinweis auf `OLLAMA_MODELS` erweitern - warum (Modelle sind gross, `E:` statt `C:`), wie
    (Env-Var, Neustart des Diensts nötig), und dass `rag-setup.ps1` das seit diesem Auftrag
    automatisch vorbelegt, wenn noch nichts gesetzt ist.
-- [ ] `OLLAMA_MODELS` wird nur gesetzt, wenn noch leer; bestehender Wert bleibt unberuehrt
-- [ ] Status-Uebersicht zeigt aktuellen `OLLAMA_MODELS`-Wert an
-- [ ] Doku aktualisiert
+- [x] `OLLAMA_MODELS` wird nur gesetzt, wenn noch leer; bestehender Wert bleibt unberuehrt
+- [x] Status-Uebersicht zeigt aktuellen `OLLAMA_MODELS`-Wert an
+- [x] Doku aktualisiert
 
 ### Teil B - `scripts/rag-ollama-inventory.ps1`: Installations- und Modell-Inventar
 

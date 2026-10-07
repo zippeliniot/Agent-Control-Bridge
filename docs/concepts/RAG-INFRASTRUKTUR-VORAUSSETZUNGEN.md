@@ -23,6 +23,25 @@ RAG braucht einen lokal laufenden Ollama-Dienst, erreichbar unter `http://localh
   `curl http://localhost:11434/api/tags` sollte ein JSON-Objekt mit `models` liefern (ggf.
   leere Liste, wenn noch kein Modell geladen ist).
 
+**Wichtig - Modell-Speicherort (BRIDGE-0085, Lehre aus HAM11 07.10.2026):** Ollama legt
+heruntergeladene Modelle standardmaessig unter `%USERPROFILE%\.ollama\models` ab - das liegt
+auf `C:` und kann dort schnell eng werden. Ollama liest dafuer die Umgebungsvariable
+`OLLAMA_MODELS` und nutzt stattdessen deren Pfad, wenn gesetzt:
+
+```powershell
+[System.Environment]::SetEnvironmentVariable("OLLAMA_MODELS", "E:\_DEV\ollama-models", "User")
+```
+
+Danach den Ollama-Dienst neu starten (beenden + erneut starten, oder Rechner neu starten),
+damit die Variable greift. `scripts/rag-setup.ps1` setzt das seit BRIDGE-0085 automatisch auf
+`E:\_DEV\ollama-models`, **bevor** es eine fehlende Ollama-Installation nachzieht - aber nur,
+wenn die Variable vorher leer war; ein bestehender bewusster Wert wird nie ueberschrieben. Bei
+einer bereits laufenden Installation (wie auf HAM11) muss das nachtraeglich manuell gesetzt
+und der Dienst neu gestartet werden; vorhandene Modelle unter dem alten Pfad entweder
+verschieben oder per `ollama pull` am neuen Ort neu laden - siehe auch
+`scripts/rag-ollama-inventory.ps1` (Abschnitt 4) zum Auffinden und Aufraeumen doppelter
+Installationen/Modellablagen.
+
 ## 2. Embedding-Modell `nomic-embed-text`
 
 RAG nutzt `nomic-embed-text` fuer die Vektorisierung (Entscheidung aus dem RAG-Konzept, siehe
