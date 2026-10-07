@@ -60,9 +60,9 @@
    mehr).
 3. `test_project_settings_exact_path_only` (direkt danach im selben Testfile) bleibt unveraendert -
    nicht verwechseln, nicht mit entfernen.
-- [ ] `test_claim_exact_path_only` entfernt
-- [ ] Kurzer erklaerender Kommentar an der Stelle, mit Verweis auf BRIDGE-0087
-- [ ] `test_project_settings_exact_path_only` unveraendert vorhanden
+- [x] `test_claim_exact_path_only` entfernt
+- [x] Kurzer erklaerender Kommentar an der Stelle, mit Verweis auf BRIDGE-0087
+- [x] `test_project_settings_exact_path_only` unveraendert vorhanden
 
 ## Abschluss
 1. Volle Suite EINMAL, nur die letzten 3 Zeilen zeigen.

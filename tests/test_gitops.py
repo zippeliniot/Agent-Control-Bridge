@@ -106,11 +106,11 @@ class ExpectedGitFilesTests(unittest.TestCase):
         self.assertIn("tasks/BRIDGE-0005/task.yaml", files)
         self.assertIn("audit/audit.jsonl", files)
 
-    def test_claim_exact_path_only(self):
-        # BRIDGE-0078: claim/renew/release duerfen ausschliesslich die
-        # eigene claim.json beruehren - exakter Pfad, kein task.yaml/audit.
-        files = gitops.expected_git_files("claim", "BRIDGE-0006")
-        self.assertEqual(files, ["results/BRIDGE-0006/claim.json"])
+    # BRIDGE-0087: Kein Test mehr fuer kind="claim" hier. Der Zweig wurde aus
+    # expected_git_files() entfernt (BRIDGE-0079-Entscheidung: claim.py bleibt
+    # bewusst isoliert in _sync_claim_commit(), uebergibt nie kind="claim" an
+    # gitops.git_commit/expected_git_files) - kind="claim" ist kein gueltiger
+    # Whitelist-Typ mehr und faellt auf das generische base-Verhalten zurueck.
 
     def test_project_settings_exact_path_only(self):
         # BRIDGE-0081: project_settings (Web-UI rag_enabled-Formular) darf
