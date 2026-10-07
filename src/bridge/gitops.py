@@ -99,11 +99,6 @@ def expected_git_files(kind: str, task_id: str,
         # BRIDGE-0053: Executor-Draft - ausschliesslich die Draft-Datei.
         return [f"drafts/{task_id}/{run_id}/draft.yaml"] if run_id else []
 
-    if kind == "claim":
-        # BRIDGE-0078: claim/renew/release beruehren ausschliesslich die
-        # eigene claim.json - exakter Pfad, kein Praefix-Match.
-        return [f"results/{task_id}/claim.json"]
-
     if kind == "project_settings":
         # BRIDGE-0081: Projekt-Einstellungsformular (z. B. rag_enabled)
         # beruehrt ausschliesslich das eigene Profil - exakter Pfad, kein

@@ -44,8 +44,8 @@
    Ergaenzung) - das ist fuer einen Wert ohne Produktions-Aufrufer folgenlos, siehe Befund oben.
 3. Docstring von `expected_git_files()` (Zeilen ~91-96, "Web-UI-Arten" / "CLI-Arten") listet `claim`
    ohnehin nicht auf - keine Aenderung dort noetig, nur pruefen, dass das weiterhin stimmt.
-- [ ] `if kind == "claim": ...`-Block vollstaendig entfernt, keine Restspuren (Kommentar/Code)
-- [ ] `expected_git_files("claim", "BRIDGE-xxxx")` liefert danach `["tasks/BRIDGE-xxxx/task.yaml", "audit/audit.jsonl"]`
+- [x] `if kind == "claim": ...`-Block vollstaendig entfernt, keine Restspuren (Kommentar/Code)
+- [x] `expected_git_files("claim", "BRIDGE-xxxx")` liefert danach `["tasks/BRIDGE-xxxx/task.yaml", "audit/audit.jsonl"]`
 
 ### Teil B - Test nachziehen
 
