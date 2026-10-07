@@ -1,0 +1,38 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0083
+project_id: agent-control-bridge
+title: Pfadkorrektur Vier-Wege-Topologie + RAG-Infrastruktur-Erkennung
+description: 'Teile A, B, C. Details: work-packages/BRIDGE-083.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: fcb0a77fc56b526184850f1905587714db9aa42e
+  allowed_changed_files:
+  - src/bridge/runner.py
+  - src/bridge/cli.py
+  - src/bridge/rag_prereqs.py
+  - tests/test_runner.py
+  - tests/test_rag_prereqs.py
+  - docs/architecture/machines.md
+  - docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0082
+acceptance_criteria:
+- 'Teil A: Pfadkorrektur rag-index Geschwisterklon + machines.md-Register'
+- 'Teil B: rag_prereqs.check (Ollama/Modell/Index-Klon), reine Erkennung'
+- 'Teil C: Verdrahtung run start + GitHub-Dokumentation'
+- Gesamte Testsuite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T09:10:00Z'
+created_by: browser-claude
+task_version: 3
