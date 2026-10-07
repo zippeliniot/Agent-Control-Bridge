@@ -70,7 +70,7 @@ keine stille Annahme von "funktioniert".
 1. Volle Suite EINMAL (Python-Tests unveraendert, da reines PowerShell-Skript - keine
    neuen Python-Tests in diesem Auftrag), letzte 3 Zeilen zeigen.
 2. `git status` sauber.
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
 
 **Offene Bestaetigung an April:** bitte `scripts/rag-setup.ps1` einmal real auf HAM11 oder DES11
 ausfuehren (zunaechst ruhig mit "nein" bei der Bestaetigungsfrage antworten, nur um die
