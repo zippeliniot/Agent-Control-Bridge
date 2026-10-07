@@ -54,9 +54,9 @@ Jeder der folgenden Begriffe wird mit **Definition, Feldtyp/Ort und Bezug zum re
 
 Inhalt wie im Steuerchat vom 07.10. vorbereitet und als eigenes Dokument mitgeliefert (siehe Lieferung). Claude Code uebernimmt die gelieferte Fassung unveraendert in den Commit, prueft nur Format (max. 80 Zeilen wie V1, Tabellenform) und dass `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md` (V1) dabei nicht angefasst wird.
 
-- [ ] `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md` liegt unveraendert gegenueber der gelieferten Fassung im Repo
-- [ ] V1-Datei unangetastet (`git diff` zeigt keine Aenderung an `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md`)
-- [ ] Status-Zeile "ENTWURF - ENTSCHEIDUNG AUSSTEHEND" vorhanden
+- [x] `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md` liegt unveraendert gegenueber der gelieferten Fassung im Repo
+- [x] V1-Datei unangetastet (`git diff` zeigt keine Aenderung an `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md`)
+- [x] Status-Zeile "ENTWURF - ENTSCHEIDUNG AUSSTEHEND" vorhanden
 
 ## Abschluss
 
