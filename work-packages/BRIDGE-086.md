@@ -38,9 +38,9 @@
      Verhalten von BRIDGE-0084/0085).
 3. Statusuebersicht am Anfang um eine Zeile ergaenzen: "Ollama installiert: ja/nein"
    (unabhaengig von "erreichbar").
-- [ ] `$ollamaInstalled` korrekt erkannt (Test mit vorhandenem/fehlendem winget-Treffer)
-- [ ] Bereits installiert + nicht erreichbar -> Dienst-Start-Versuch, kein `winget install`
-- [ ] Weder installiert noch erreichbar -> weiterhin `winget install` (unveraendert)
+- [x] `$ollamaInstalled` korrekt erkannt (Test mit vorhandenem/fehlendem winget-Treffer)
+- [x] Bereits installiert + nicht erreichbar -> Dienst-Start-Versuch, kein `winget install`
+- [x] Weder installiert noch erreichbar -> weiterhin `winget install` (unveraendert)
 
 ### Teil B - Modell-Pull nur nach frischer Pruefung (kein doppelter Download)
 
@@ -56,8 +56,8 @@
    `ollama pull`-Aufruf.
 2. Gleiches Prinzip fuer den Index-Klon ist nicht nötig (Dateisystem-Pruefung `Test-Path` ist
    nicht von einem Dienststart abhaengig, bleibt unveraendert).
-- [ ] Frische `ollama list`-Pruefung direkt vor dem Pull-Schritt
-- [ ] Modell bereits vorhanden -> kein `ollama pull`-Aufruf, nur Meldung
+- [x] Frische `ollama list`-Pruefung direkt vor dem Pull-Schritt
+- [x] Modell bereits vorhanden -> kein `ollama pull`-Aufruf, nur Meldung
 
 ## Abschluss
 1. Volle Suite EINMAL (keine neuen Python-Tests - reines PowerShell-Skript), letzte 3 Zeilen zeigen.
