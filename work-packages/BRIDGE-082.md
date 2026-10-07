@@ -24,7 +24,7 @@ Geschwisterverzeichnis zum ACB-Checkout angenommen (`<E:\_DEV>/acb-rag-index`, e
    rueckwaerts (neuester Eintrag zuerst), fuer jeden Eintrag mit `machine`-Feld wird `bridge_task_id`
    gegen sein `project_id` aufgeloest (`load_task`, Cache je Scan), erster Treffer mit passendem
    `project_id` gewinnt. `None` wenn keiner gefunden.
-- [ ] Implementiert + getestet (Treffer, kein Treffer, mehrere Projekte gemischt im Audit)
+- [x] Implementiert + getestet (Treffer, kein Treffer, mehrere Projekte gemischt im Audit)
 
 ### Teil B - RAG-Index-Sync (reiner Git-Vorgang)
 

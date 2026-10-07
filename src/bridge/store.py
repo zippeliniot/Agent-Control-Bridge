@@ -607,6 +607,39 @@ class Store:
                 found = event.get("timestamp")
         return found
 
+    def last_machine_for_project(self, project_id) -> str | None:
+        """Letzte Maschine, die einen Auftrag dieses ``project_id`` berührt hat
+        (BRIDGE-0082). Liest ``audit.jsonl`` rückwärts (neuester Eintrag
+        zuerst); für jeden Eintrag mit ``machine``-Feld wird dessen
+        ``bridge_task_id`` einmalig gegen sein ``project_id`` aufgelöst
+        (``load_task``, pro Scan gecacht - Auftrags-Zugehörigkeit ändert sich
+        nicht). Erster Treffer mit passendem ``project_id`` gewinnt; ``None``
+        wenn keiner gefunden wird (z. B. allererster Lauf für dieses Projekt)."""
+        path = self._in_root(self.audit_file)
+        if not path.exists():
+            return None
+        cache: dict[str, str | None] = {}
+        for line in reversed(path.read_text(encoding="utf-8").splitlines()):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                event = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            machine = event.get("machine")
+            task_id = event.get("bridge_task_id")
+            if not machine or not task_id:
+                continue
+            if task_id not in cache:
+                try:
+                    cache[task_id] = self.load_task(task_id).get("project_id")
+                except StoreError:
+                    cache[task_id] = None
+            if cache[task_id] == project_id:
+                return machine
+        return None
+
     # ----- Audit --------------------------------------------------------
 
     @staticmethod

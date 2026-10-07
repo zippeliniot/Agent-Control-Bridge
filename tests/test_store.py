@@ -240,6 +240,32 @@ class StoreTests(unittest.TestCase):
         self.assertIsNone(self.store.last_transition_at("BRIDGE-0900", "ARCHIVED"))
         self.assertIsNone(self.store.last_transition_at("BRIDGE-9999", "READY"))
 
+    # -- last_machine_for_project (BRIDGE-0082) -----------------------
+
+    def test_last_machine_for_project_finds_newest(self):
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0900",
+                                          project_id="proj-a"))
+        self.store.set_status("BRIDGE-0900", "READY", actor="x", machine="HAM11")
+        self.store.set_status("BRIDGE-0900", "WAITING_FOR_HANDOFF_TO_EXECUTOR",
+                              actor="x", machine="HAM11")
+        self.store.set_status("BRIDGE-0900", "CLAIMED", actor="x", machine="DES11")
+        self.assertEqual(self.store.last_machine_for_project("proj-a"), "DES11")
+
+    def test_last_machine_for_project_ignores_other_projects(self):
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0900",
+                                          project_id="proj-a"))
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0901",
+                                          project_id="proj-b"))
+        self.store.set_status("BRIDGE-0900", "READY", actor="x", machine="HAM11")
+        self.store.set_status("BRIDGE-0901", "READY", actor="x", machine="DES11")
+        self.assertEqual(self.store.last_machine_for_project("proj-a"), "HAM11")
+        self.assertEqual(self.store.last_machine_for_project("proj-b"), "DES11")
+
+    def test_last_machine_for_project_none_without_match(self):
+        self.store.create_task(valid_task(bridge_task_id="BRIDGE-0900",
+                                          project_id="proj-a"))
+        self.assertIsNone(self.store.last_machine_for_project("proj-nichts"))
+
     def test_path_escaping_rejected(self):
         with self.assertRaises(StoreError):
             self.store.load_task("../../evil")
