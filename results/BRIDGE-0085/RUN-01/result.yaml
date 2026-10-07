@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0085
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: agent-control-bridge
+branch: main
+head: 733dd4b11d777fc439b239be893a913ea7b2c7dd
+executor: claude-code
+started_at: '2026-10-07T11:03:43Z'
+ended_at: '2026-10-07T11:09:09Z'
+created_by: claude-code@HAM11
+base_head: 12d2c6d8c1c8bc0fd48ee4d25a47e269506e81c1
+commits:
+- sha: 93eb28fbf84a53034b0fd949f05abbf43575f21f
+  message: 'Ops: BRIDGE-0085 task_create (Steuerchat-Aktion via CLI)'
+- sha: 6318f81334f73d03887ef576cd1454ba16d9f33d
+  message: 'Ops: BRIDGE-0085 run_start (Steuerchat-Aktion via CLI)'
+- sha: b614eed9acb5a0821fb0560997b144541c3d6857
+  message: 'BRIDGE-0085 Teil A: OLLAMA_MODELS vor Installation auf E: vorbelegen'
+- sha: 0614b3e05808af28dfda17fe0cdfe05bd1aa28d3
+  message: 'BRIDGE-0085 Teil B: rag-ollama-inventory.ps1 (Erkennung + bestaetigtes
+    Aufraeumen)'
+- sha: 733dd4b11d777fc439b239be893a913ea7b2c7dd
+  message: 'BRIDGE-0085: Abschluss-Haken (volle Suite gruen)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+- results/BRIDGE-0085/RUN-01/heartbeat.json
+- scripts/rag-ollama-inventory.ps1
+- scripts/rag-setup.ps1
+- tasks/BRIDGE-0085/task.yaml
+- work-packages/BRIDGE-085.md
+summary: 'Teil A: rag-setup.ps1 setzt OLLAMA_MODELS vor einer Ollama-Installation
+  auf E:\_DEV\ollama-models, nur wenn vorher nicht gesetzt (nie Ueberschreiben), Status-Uebersicht
+  zeigt aktuellen Wert. Teil B: neues scripts/rag-ollama-inventory.ps1 - listet Installationen
+  (winget, bekannte Pfade), beide moegliche Modellablagen (C: Standard + OLLAMA_MODELS-Ziel)
+  mit Groesse/Blob-Anzahl, warnt bei doppeltem Inhalt, zeigt ''ollama list''; optionales
+  Aufraeumen nur nach expliziter Ja/Nein-Bestaetigung je Fund, OLLAMA_MODELS-Zielpfad
+  wird nie zur Loeschung angeboten. Doku (RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md) um
+  beide Themen ergaenzt. Keine neuen Python-Tests (reine PowerShell-Skripte, pwsh
+  in dieser Sitzung weiterhin nicht verfuegbar). Volle Suite 576 Tests gruen (unveraendert).'
+physical_machine: HAM11

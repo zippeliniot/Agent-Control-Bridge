@@ -26,7 +26,7 @@ depends_on:
 acceptance_criteria:
 - 'Teil A: OLLAMA_MODELS vor Install auf E: setzen, nur wenn leer'
 - 'Teil B: rag-ollama-inventory.ps1, Aufraeumen nur nach Bestaetigung'
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-10-07T11:05:00Z'
 created_by: browser-claude
-task_version: 5
+task_version: 7
