@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0088
+project_id: agent-control-bridge
+title: RAG-Retrieval-/Injection-Pipeline spezifizieren + Entscheidungsvorlage V2 fuer
+  Decision-Formalisierung
+description: 'Details: work-packages/BRIDGE-088.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 2380737254b868c6a7e6c0db63c82c075e0fb1ed
+  allowed_changed_files:
+  - docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+  - docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0087
+allowed_paths:
+- docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+stop_conditions:
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Teil A: docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md neu, max. 150 Zeilen,
+  definiert structured_coverage, migration_status, archive_fallback_policy, context_sources_used,
+  Quellenprioritaet, Revisionsbindung, Pflichtkontext, Blocker bei fehlenden Quellen,
+  Herkunftsnachweis - jeweils gegen rag_enabled/rag_index_repo (project.yaml) und
+  rag_used_since (task.yaml) abgeglichen'
+- 'Teil A: entscheidungsabhaengige Abschnitte (Decision-Struktur) eindeutig gekennzeichnet,
+  Spezifikation ohne sie vollstaendig lesbar'
+- 'Teil B: docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md neu, Status
+  ENTWURF - ENTSCHEIDUNG AUSSTEHEND, V1-Datei unveraendert'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T20:52:24Z'
+created_by: browser-claude
+task_version: 3
