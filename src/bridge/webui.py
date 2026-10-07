@@ -48,7 +48,7 @@ from bridge import gitops, importer, registry, runner, state_machine
 # Dieselben Funktionen wie `bridge board` / `bridge task copied` /
 # `bridge task archive` - garantiert keine zweite, abweichende Implementierung.
 from bridge.cli import (
-    _BOARD_STATES, _board_rows, _fmt_wait, _list_task_docs,
+    _BOARD_STATES, _board_project, _board_rows, _fmt_wait, _list_task_docs,
     _overview_rows, _overview_audit_scan, _overview_task_info,
     _OVERVIEW_INACTIVE_THRESHOLD_MINUTES,
     task_archive, task_copied, task_set_priority,
@@ -154,7 +154,7 @@ def board_payload(store) -> dict:
         machine, _, _ = _overview_task_info(store, task, task_audit, now)
         other.append({
             "bridge_task_id": task_id,
-            "projekt": task.get("project_id", "?"),
+            "projekt": _board_project(store, task),
             "status": status,
             "wartet_seit": _wait_since(store, task_id, status, now),
             "actions": _row_actions(status),

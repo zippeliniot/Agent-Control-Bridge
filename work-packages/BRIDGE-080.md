@@ -40,8 +40,8 @@ Fail-soft-Verhalten wie in der Board-Ansicht, keine neue Logik.
    `GET /api/board` -> `data["other"]` statt gegen `bridge board`-Textausgabe.
 
 **Tests:** `python -m unittest tests.test_webui`, dann volle Suite EINMAL, nur letzte 3 Zeilen zeigen.
-- [ ] `_board_project` importiert und in `webui.py:157` verwendet
-- [ ] Test belegt: `other`-Zeile zeigt `task_prefix` (z. B. `BRIDGE`) statt roher `project_id`, wenn Profil
+- [x] `_board_project` importiert und in `webui.py:157` verwendet
+- [x] Test belegt: `other`-Zeile zeigt `task_prefix` (z. B. `BRIDGE`) statt roher `project_id`, wenn Profil
       vorhanden; Fail-soft auf rohe `project_id` bleibt erhalten, wenn kein Profil existiert (bestehendes
       Verhalten, nicht neu zu testen, nur nicht brechen)
 

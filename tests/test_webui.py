@@ -375,6 +375,43 @@ class WebUiReadTests(WebUiBase):
         self.assertEqual(len(other), 1)
         self.assertIn("machine", other[0])
 
+    def test_api_board_other_row_uses_task_prefix_when_profile_present(self):
+        """board-Payload 'other': Projekt-Spalte zeigt task_prefix statt roher
+        project_id, wenn ein Profil existiert (BRIDGE-0080, analog zur bereits
+        bestehenden Board-Liste via _board_project/cli.py:601)."""
+        pdir = self.tmp / "projects" / "agent-control-bridge"
+        pdir.mkdir(parents=True)
+        (pdir / "project.yaml").write_text(yaml.safe_dump({
+            "schema_version": "1.0", "kind": "bridge_project_profile",
+            "project_id": "agent-control-bridge", "repository": "Agent-Control-Bridge/dev",
+            "default_branch": "main", "task_prefix": "BRIDGE", "read_only": False,
+        }), encoding="utf-8")
+        path = self.tmp / "BRIDGE-0903.yaml"
+        path.write_text(yaml.safe_dump(task_doc(
+            bridge_task_id="BRIDGE-0903", project_id="agent-control-bridge")),
+            encoding="utf-8")
+        self.cli("task", "create", str(path))
+        for state in _walk("RUNNING"):
+            self.cli("task", "set-status", "BRIDGE-0903", state, "--actor", "x")
+        self.start()
+        code, body = self.get("/api/board")
+        data = json.loads(body)
+        other = [r for r in data["other"] if r["bridge_task_id"] == "BRIDGE-0903"]
+        self.assertEqual(len(other), 1)
+        self.assertEqual(other[0]["projekt"], "BRIDGE")
+
+    def test_api_board_other_row_failsoft_without_profile(self):
+        """board-Payload 'other': Fail-soft auf rohe project_id bleibt erhalten,
+        wenn kein Profil existiert (bestehendes Verhalten, BRIDGE-0080 darf es
+        nicht brechen)."""
+        self.make_task("BRIDGE-0904", "RUNNING")
+        self.start()
+        code, body = self.get("/api/board")
+        data = json.loads(body)
+        other = [r for r in data["other"] if r["bridge_task_id"] == "BRIDGE-0904"]
+        self.assertEqual(len(other), 1)
+        self.assertEqual(other[0]["projekt"], "codex-control-bridge")
+
     def test_api_overview_last_activity_ts_field_present(self):
         """overview-Payload: last_activity_ts-Feld ist vorhanden (None oder float)."""
         self.make_task("BRIDGE-0901")
