@@ -1,0 +1,33 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0080
+project_id: agent-control-bridge
+title: Web-UI Projekt-Spalte vereinheitlichen (task_prefix statt roher project_id)
+description: 'Teil A. Details: work-packages/BRIDGE-080.md'
+task_class: BUGFIX
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: d32343f1a9dfe93f96b32cc5f9bca056beb252da
+  allowed_changed_files:
+  - src/bridge/webui.py
+  - tests/test_webui.py
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0079
+acceptance_criteria:
+- _board_project importiert und in webui.py:157 verwendet
+- Test belegt task_prefix in other-Liste bei vorhandenem Profil, Fail-soft bei fehlendem
+  Profil bleibt erhalten
+- Gesamte Testsuite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T06:41:00Z'
+created_by: browser-claude
+task_version: 3
