@@ -1,0 +1,42 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0082
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: agent-control-bridge
+branch: main
+head: 41db4be8373ad0b0bb1258ec034b90c0d052cdae
+executor: claude-code
+started_at: '2026-10-07T08:21:52Z'
+ended_at: '2026-10-07T08:41:42Z'
+created_by: claude-code@HAM11
+base_head: cf82d34944c7422a3c0aa2919bce4ce15b46162b
+commits:
+- sha: cb4f473ef391eabf2d33ca1ec337d592c05773d4
+  message: 'Ops: BRIDGE-0082 task_create (Steuerchat-Aktion via CLI)'
+- sha: 602a5143ab2653f17ef887f40187636aae76ad53
+  message: 'Ops: BRIDGE-0082 run_start (Steuerchat-Aktion via CLI)'
+- sha: 19071049fce4144bb01db35942c184422d1d5a3e
+  message: 'BRIDGE-0082 Teil A: last_machine_for_project'
+- sha: abe63b50981d78af48d4d6901b69c3b1f683ea40
+  message: 'BRIDGE-0082 Teil B: rag_index_sync (git_pull + git lfs pull, fail-soft)'
+- sha: 41db4be8373ad0b0bb1258ec034b90c0d052cdae
+  message: 'BRIDGE-0082 Teil C: Verdrahtung run start (maybe_sync_rag_index, fail-soft)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0082/RUN-01/heartbeat.json
+- src/bridge/cli.py
+- src/bridge/gitops.py
+- src/bridge/runner.py
+- src/bridge/store.py
+- tasks/BRIDGE-0082/task.yaml
+- tests/test_gitops.py
+- tests/test_runner.py
+- tests/test_store.py
+- work-packages/BRIDGE-082.md
+summary: 'Maschinenwechsel-Erkennung (Store.last_machine_for_project) + RAG-Index-Sync
+  (gitops.rag_index_sync: git_pull + git lfs pull, fail-soft) + Verdrahtung in run
+  start (runner.maybe_sync_rag_index, start()-Signatur unveraendert). Volle Suite
+  561 Tests gruen.'
+physical_machine: HAM11
