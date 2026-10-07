@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0081
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: agent-control-bridge
+branch: main
+head: e73a1e8ff2df0d62798b699c17a2d00ff65ad8ed
+executor: claude-code
+started_at: '2026-10-07T07:35:01Z'
+ended_at: '2026-10-07T08:04:20Z'
+created_by: claude-code@HAM11
+base_head: 51f6f611db2ca8096d5e1b32286d9950b9f5a343
+commits:
+- sha: a71f2a3feff843b6d4b3605b1f594fab79634b58
+  message: 'Ops: BRIDGE-0081 task_create (Steuerchat-Aktion via CLI)'
+- sha: 7a26096120ed5628dfff7088362d7b714dbe4311
+  message: 'Ops: BRIDGE-0081 run_start (Steuerchat-Aktion via CLI)'
+- sha: 485e21f8fbc10770b88cad69d52b675d2c9e8e12
+  message: 'BRIDGE-0081 Teil A: rag_used_since Schema + Anzeige in other-Liste'
+- sha: e73a1e8ff2df0d62798b699c17a2d00ff65ad8ed
+  message: 'BRIDGE-0081 Teil B: rag_enabled Schema + write_profile + project_settings
+    Whitelist + Web-Endpunkt/UI'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0081/RUN-01/heartbeat.json
+- schemas/project.schema.yaml
+- schemas/task.schema.yaml
+- src/bridge/gitops.py
+- src/bridge/profiles.py
+- src/bridge/webui.py
+- tasks/BRIDGE-0081/task.yaml
+- tests/test_gitops.py
+- tests/test_profiles.py
+- tests/test_webui.py
+- work-packages/BRIDGE-081.md
+summary: 'Teil A: rag_used_since-Feld (task.schema.yaml) + Anzeige in webui.py other-Liste.
+  Teil B: rag_enabled/rag_index_repo (project.schema.yaml), profiles.write_profile
+  (atomar, fail-closed, kein Teilschreiben), gitops kind=project_settings (Whitelist
+  exakt auf projects/<id>/project.yaml), Web-Endpunkte GET/POST /api/project/<id>(/settings)
+  + minimale UI-Sektion (Projekt-ID, RAG-Checkbox). Retrieval-/Injection-Pipeline
+  bewusst nicht Teil dieses Auftrags. Volle Suite 548/548 gruen.'
+physical_machine: HAM11
