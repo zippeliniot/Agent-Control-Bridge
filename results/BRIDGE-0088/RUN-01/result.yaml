@@ -1,0 +1,40 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0088
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 8ee25d8602fef079790683792bfdebf90236d4d7
+executor: claude-code
+started_at: '2026-10-07T20:59:16Z'
+ended_at: '2026-10-07T21:17:48Z'
+created_by: claude-code@HAM11
+base_head: 2380737254b868c6a7e6c0db63c82c075e0fb1ed
+commits:
+- sha: 8db4e517c5e6ca8c5edd069f0d8621f016e5644d
+  message: 'BRIDGE-0088: task create (Store-Aktion via CLI)'
+- sha: f8701a48baa8118c5bd1d3a57876e3af97798b64
+  message: 'Ops: BRIDGE-0088 run_start (Steuerchat-Aktion via CLI)'
+- sha: ee5a2c1c0b3e2266f28eb2b5229901e80e94266f
+  message: 'BRIDGE-0088 Teil A: RAG-Retrieval-/Injection-Pipeline-Spezifikation'
+- sha: b18dca10b9e841e465c8b7c2377af7948762d235
+  message: 'BRIDGE-0088 Teil B: Format-Pruefung V2 (bereits geliefert) bestaetigt,
+    Haken gesetzt'
+- sha: 8ee25d8602fef079790683792bfdebf90236d4d7
+  message: 'BRIDGE-0088: Abschluss-Haken (volle Suite gruen, 575/575)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+- docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+- results/BRIDGE-0088/RUN-01/heartbeat.json
+- tasks/BRIDGE-0088/task.yaml
+- work-packages/BRIDGE-088.md
+summary: 'Neue Spezifikation docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+  (Teil A): neun Begriffe der Retrieval-/Injection-Pipeline gegen rag_enabled/rag_index_repo/rag_used_since
+  und result.schema.yaml (head/base_head/task_hash) abgeglichen, rag_used_since-Frage
+  explizit beantwortet. Teil B: bereits gelieferte ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+  (Vorschlag, keine Entscheidung) unveraendert uebernommen, Format und Status-Zeile
+  geprueft, V1 unangetastet. Volle Suite 575/575 gruen, kein Code/Schema geaendert.'
+physical_machine: HAM11
