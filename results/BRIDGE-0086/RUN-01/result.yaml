@@ -1,0 +1,42 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0086
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: agent-control-bridge
+branch: main
+head: b78f5f4a9346df91cceec390ecde1f859962a2bc
+executor: claude-code
+started_at: '2026-10-07T11:23:24Z'
+ended_at: '2026-10-07T11:27:51Z'
+created_by: claude-code@HAM11
+base_head: d7045e97632d6313b33375dccc466ad2476c4b96
+commits:
+- sha: 9403b06c241563f52fd20f92dda72f45ff965ee8
+  message: 'Ops: BRIDGE-0086 task_create (Steuerchat-Aktion via CLI)'
+- sha: 136163f6cf0e51107c732e9fc049bc7c64f3b942
+  message: 'Ops: BRIDGE-0086 run_start (Steuerchat-Aktion via CLI)'
+- sha: d3f2d025ceee0cd33068acca84362bc65888b989
+  message: 'BRIDGE-0086 Teil A+B: installiert-vs-erreichbar unterscheiden, kein doppelter
+    Modell-Download'
+- sha: b78f5f4a9346df91cceec390ecde1f859962a2bc
+  message: 'BRIDGE-0086: Abschluss-Haken (volle Suite gruen)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0086/RUN-01/heartbeat.json
+- scripts/rag-setup.ps1
+- tasks/BRIDGE-0086/task.yaml
+- work-packages/BRIDGE-086.md
+summary: 'Teil A: rag-setup.ps1 unterscheidet jetzt ''Ollama installiert'' (winget
+  list + bekannte Installationspfade) von ''Ollama erreichbar'' - ist Ollama bereits
+  installiert, aber der Dienst antwortet gerade nicht, wird NICHT neu installiert,
+  sondern nur ein Start versucht (bis zu 5x mit 2s-Pause erneut geprueft), Abbruch
+  ohne Reinstall-Fallback falls das scheitert. Teil B: vor dem Modell-Pull erfolgt
+  eine frische ''ollama list''-Pruefung (CLI statt HTTP, zuverlaessig direkt nach
+  einem Dienststart) - ist das Modell dort schon sichtbar, wird ''ollama pull'' uebersprungen
+  statt es erneut herunterzuladen. Anlass: HAM11 hat durch die alte Logik (nur HTTP-Erreichbarkeit)
+  eine bereits installierte, nur gerade nicht laufende Ollama-Instanz faelschlich
+  neu durchinstalliert. Keine neuen Python-Tests (reines PowerShell-Skript, pwsh weiterhin
+  nicht verfuegbar in dieser Sitzung). Volle Suite 576 Tests gruen (unveraendert).'
+physical_machine: HAM11
