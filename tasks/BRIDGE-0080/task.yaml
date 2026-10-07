@@ -27,7 +27,7 @@ acceptance_criteria:
 - Test belegt task_prefix in other-Liste bei vorhandenem Profil, Fail-soft bei fehlendem
   Profil bleibt erhalten
 - Gesamte Testsuite gruen
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-10-07T06:41:00Z'
 created_by: browser-claude
-task_version: 5
+task_version: 7

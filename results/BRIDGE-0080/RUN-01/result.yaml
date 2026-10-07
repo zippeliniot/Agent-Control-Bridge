@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0080
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: agent-control-bridge
+branch: main
+head: df71df01cff3173db4e3993f0db0f2601abcdb9f
+executor: claude-code
+started_at: '2026-10-07T06:45:17Z'
+ended_at: '2026-10-07T07:26:12Z'
+created_by: claude-code@HAM11
+base_head: d32343f1a9dfe93f96b32cc5f9bca056beb252da
+commits:
+- sha: fe82d1ee18243951fa4c6e3e19be287d61266fda
+  message: 'BRIDGE-0080: Work-Package (Web-UI Projekt-Spalte vereinheitlichen)'
+- sha: a56892649ab93b209d5db6df691fb56e48e82818
+  message: 'Ops: BRIDGE-0080 task_create (Steuerchat-Aktion via CLI)'
+- sha: 8da377efdae4b94d513f7159397e0913fd57d97e
+  message: 'Ops: BRIDGE-0080 run_start (Steuerchat-Aktion via CLI)'
+- sha: df71df01cff3173db4e3993f0db0f2601abcdb9f
+  message: 'BRIDGE-0080 Teil A: Projekt-Spalte in board_payload() other-Liste vereinheitlicht'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0080/RUN-01/heartbeat.json
+- src/bridge/webui.py
+- tasks/BRIDGE-0080/task.yaml
+- tests/test_webui.py
+- work-packages/BRIDGE-080.md
+summary: 'Teil A umgesetzt: webui.py::board_payload() other-Liste nutzt jetzt _board_project(store,
+  task) statt roher project_id (Zeile 157), identisch zur bestehenden Board-Liste.
+  Zwei neue Tests: task_prefix-Aufloesung bei vorhandenem Profil, Fail-soft-Erhalt
+  bei fehlendem Profil. Volle Suite 538/538 gruen.'
+physical_machine: HAM11
