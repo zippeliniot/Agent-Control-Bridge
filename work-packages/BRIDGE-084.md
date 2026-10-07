@@ -52,8 +52,8 @@ keine stille Annahme von "funktioniert".
    naechsten Schritte unbeaufsichtigt weiter aus.
 5. Kein `--yes`/`--force`-Parameter zum Ueberspringen der Abfrage - die Bestaetigung ist
    zwingend, nicht optional (sonst waere es wieder unbeaufsichtigte Installation).
-- [ ] Skript geschrieben, Review auf Syntax/Logik (kein Ausfuehrungstest moeglich, siehe oben)
-- [ ] Bestaetigungsabfrage zwingend, Default = Abbruch, kein Bypass-Parameter
+- [x] Skript geschrieben, Review auf Syntax/Logik (kein Ausfuehrungstest moeglich, siehe oben)
+- [x] Bestaetigungsabfrage zwingend, Default = Abbruch, kein Bypass-Parameter
 
 ### Teil B - Dokumentation aktualisieren
 
@@ -64,7 +64,7 @@ keine stille Annahme von "funktioniert".
    `scripts/rag-setup.ps1`, nur nach Bestaetigung".
 2. Nutzungsabschnitt ergaenzen: `pwsh scripts\rag-setup.ps1` auf HAM11/DES11 ausfuehren, Ablauf
    (Erkennung -> Liste -> Bestaetigungsfrage -> Installation) kurz beschreiben.
-- [ ] Doku aktualisiert, keine veraltete "reserviert"-Aussage mehr stehen
+- [x] Doku aktualisiert, keine veraltete "reserviert"-Aussage mehr stehen
 
 ## Abschluss
 1. Volle Suite EINMAL (Python-Tests unveraendert, da reines PowerShell-Skript - keine

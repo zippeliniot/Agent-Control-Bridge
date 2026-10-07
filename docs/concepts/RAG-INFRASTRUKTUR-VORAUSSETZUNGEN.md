@@ -1,11 +1,11 @@
 # RAG-Infrastruktur-Voraussetzungen (manuell herzustellen)
 
-Stand BRIDGE-0083. Reine Nachschlage-Beschreibung, **kein** Installationsskript - ACB
-erkennt nur, was fehlt (`src/bridge/rag_prereqs.py`, aufgerufen bei jedem `run start` eines
-Auftrags mit `rag_enabled: true`), installiert aber nichts selbst (CLAUDE.md-Grundsatz
-"fail-closed: anhalten und melden, nicht selbst installieren", hier auf RAG uebertragen). Ein
-Mensch-bestaetigtes Installationsskript ("Skript bereit, Klick bestaetigt Installation") ist
-BRIDGE-0084 und noch nicht gebaut.
+Stand BRIDGE-0084. ACB erkennt bei jedem `run start` eines Auftrags mit `rag_enabled: true`
+automatisch, was fehlt (`src/bridge/rag_prereqs.py`), installiert aber nichts selbst
+unbeaufsichtigt (CLAUDE.md-Grundsatz "fail-closed: anhalten und melden, nicht selbst
+installieren", hier auf RAG uebertragen). Das Beheben fehlender Voraussetzungen laeuft ueber
+`scripts/rag-setup.ps1` - und zwar **nur nach einer expliziten Bestaetigung durch den
+Menschen** (BRIDGE-0084, "Skript bereit, Klick bestaetigt Installation"), niemals automatisch.
 
 Betroffen sind die Maschinen, auf denen ein Auftrag mit aktiviertem `rag_enabled`
 (`projects/<id>/project.yaml`) tatsaechlich laeuft - heute potenziell `HAM11` und `DES11`
@@ -43,30 +43,41 @@ Korrektur der urspruenglichen BRIDGE-0082-Annahme) - siehe `docs/architecture/ma
 E:\_DEV\Agent-Control-Bridge\rag-index
 ```
 
-- Einrichten (einmalig, manuell):
-  ```
-  cd E:\_DEV\Agent-Control-Bridge
-  git clone https://github.com/zippeliniot/acb-rag-index.git rag-index
-  cd rag-index
-  git lfs pull
-  ```
+- Einrichten: manuell (siehe oben) **oder** per `scripts/rag-setup.ps1` (siehe Abschnitt 4) -
+  beides fuehrt zum selben Ergebnis, das Skript fragt vor dem `git clone` ausdruecklich nach.
 - Git LFS muss installiert sein (`git lfs install`, einmalig je Maschine) - sonst bleiben die
   grossen Indexdateien als Platzhalterzeiger liegen.
 - Danach synchronisiert ACB diesen Klon automatisch bei jedem `run start` eines
   RAG-aktivierten Auftrags, wenn ein Maschinenwechsel erkannt wird (`git pull` + `git lfs
   pull`, `src/bridge/gitops.py::rag_index_sync`, fail-soft) - das **Anlegen** des Klons selbst
-  bleibt aber immer ein manueller Erststeep.
+  bleibt aber immer ein bestaetigter Erstschritt (manuell oder per Skript).
+
+## 4. Setup-Skript `scripts/rag-setup.ps1` (BRIDGE-0084)
+
+Auf HAM11/DES11 ausfuehren:
+
+```
+pwsh scripts\rag-setup.ps1
+```
+
+Ablauf: das Skript prueft dieselben drei Signale wie `rag_prereqs.check` (Ollama erreichbar,
+Modell vorhanden, Index-Klon vorhanden), zeigt eine Statusuebersicht, listet bei fehlenden
+Komponenten **vor jeder Aktion** genau auf, was es tun wuerde, und fragt dann ausdruecklich
+nach Bestaetigung ("ja"/"nein"). Nur bei bestaetigter Eingabe installiert es die fehlenden
+Komponenten (Ollama, `ollama pull nomic-embed-text`, `git clone` + `git lfs pull` fuer
+`rag-index`) - jeder Schritt einzeln geprueft, ein Fehlschlag bricht sofort ab. Es gibt
+bewusst keinen Parameter, der die Bestaetigung ueberspringt.
 
 ## Was ACB automatisch tut vs. was manuell bleibt
 
-| Schritt | Automatisch durch ACB | Manuell |
+| Schritt | Automatisch durch ACB | Manuell / bestaetigt |
 |---|---|---|
-| Ollama installieren | nein | ja (einmalig je Maschine) |
-| `nomic-embed-text` laden | nein | ja (einmalig je Maschine) |
-| `rag-index`-Klon anlegen | nein | ja (einmalig je Maschine) |
+| Ollama installieren | nein | ja - manuell oder per `rag-setup.ps1` (bestaetigt) |
+| `nomic-embed-text` laden | nein | ja - manuell oder per `rag-setup.ps1` (bestaetigt) |
+| `rag-index`-Klon anlegen | nein | ja - manuell oder per `rag-setup.ps1` (bestaetigt) |
 | `rag-index` bei Maschinenwechsel aktualisieren | ja (`git pull` + `git lfs pull`) | - |
 | Fehlende Voraussetzung erkennen und melden | ja (`run start`, stderr-Hinweis) | - |
-| Fehlende Voraussetzung beheben | nein (reserviert fuer BRIDGE-0084) | ja, bis BRIDGE-0084 |
+| Fehlende Voraussetzung beheben | nein (erfordert Bestaetigung) | ja, per `rag-setup.ps1` |
 
 ## Fehlermeldung in der Praxis
 
