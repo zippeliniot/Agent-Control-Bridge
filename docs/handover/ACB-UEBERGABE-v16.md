@@ -50,8 +50,18 @@ Retrieval-Pipeline.** Alle sechs Auftraege mit `depends_on`-Kette 0080->0081->..
   der Installation (nur wenn noch nicht gesetzt), da der erste echte Lauf auf HAM11 Modelle auf `C:`
   installiert haette. Dazu `rag-ollama-inventory.ps1` (reine Erkennung/Auflistung von Mehrfach-
   Installationen) - **Loeschung bleibt bewusst manueller, von April bestaetigter Schritt, nicht
-  automatisiert.** Unklar aus den Unterlagen, ob die auf HAM11 tatsaechlich vermutete
-  Doppelinstallation inzwischen bereinigt wurde - **mit April klaeren, nicht annehmen.**
+  automatisiert.**
+  **Nachtrag aus dem Steuerchat-Strang (real auf HAM11 verifiziert, 07.10., nach Erstellung dieser
+  Zeile durch den Browser-Chat):** `rag-ollama-inventory.ps1` lief bereits real auf HAM11 - KEINE
+  echte Doppelinstallation (nur ein winget-Eintrag `Ollama.Ollama 0.40.0`, nur ein
+  Installationsverzeichnis). `OLLAMA_MODELS` war schon vorher auf `d:\OneDrive\_HA\Models\ollama`
+  gesetzt (nicht der ACB-Standardpfad, aber bewusst unangetastet gelassen - korrekt). Standardpfad
+  auf `C:` war leer (0 Blobs) - nichts aufzuraeumen. `nomic-embed-text:latest` (274 MB) bereits
+  geladen. **`rag-index`-Klon wurde per `rag-setup.ps1` erfolgreich unter
+  `E:\_DEV\Agent-Control-Bridge\rag-index` angelegt (git-clone-Ausgabe real gesehen).** Die
+  vermutete Doppelinstallation, die BRIDGE-0086 ausgeloest hat, war ein `winget`-Reinstall derselben
+  Version (kein zweiter Eintrag) - durch die alte Erreichbarkeits-statt-Installiert-Logik verursacht,
+  seit 0086 behoben.
 - **0086**: Nachbesserung - `rag-setup.ps1` unterscheidet jetzt "installiert" (winget/Pfad-Check) von
   "erreichbar" (HTTP); bei installiert-aber-nicht-erreichbar wird der vorhandene Dienst gestartet statt
   erneut `winget install` auszufuehren (verhinderte vorher eine unnoetige Re-Installation auf HAM11,
@@ -105,10 +115,11 @@ immer zuerst gegen vorhandene Dokumentation pruefen, nicht herleiten.**
 ## 6. Offene Punkte - in dieser Reihenfolge
 
 1. **Governance nachholen:** BRIDGE-0084, -0085, -0086 im Web-UI `copied`+`archive`n - stehen seit
-   `COMPLETED` noch aus.
-2. **Klaeren mit April:** ist der `rag-index`-Klon auf HAM11/DES11 tatsaechlich schon angelegt? Ist
-   die vermutete Ollama-Doppelinstallation auf HAM11 inzwischen bereinigt (0085 lieferte nur
-   Erkennung, keine automatische Loeschung)? Beides nicht aus den Unterlagen ablesbar, nicht annehmen.
+   `COMPLETED` noch aus (Stand bei Zusammenfuehrung, per CLI gegengeprueft: alle drei weiterhin
+   `WAITING_FOR_COPY_TO_CONTROL`).
+2. ~~Klaeren mit April: rag-index-Klon angelegt? Doppelinstallation bereinigt?~~ **Erledigt (siehe
+   §1, Nachtrag bei 0085):** Klon existiert real auf HAM11, keine Doppelinstallation vorhanden.
+   DES11 ist davon unberuehrt - dort steht der erste Lauf von `rag-setup.ps1` noch aus.
 3. **Toter Whitelist-Eintrag `kind="claim"`** (seit BRIDGE-0079 unveraendert offen) - entfernen oder
    bewusst als zukuenftige Reserve stehenlassen, einmal final entscheiden.
 4. **Retrieval-/Injection-Pipeline spezifizieren** (das eigentliche `rag query`) - bisher nur
