@@ -63,10 +63,10 @@
    Nur bei "ja" `Remove-Item -Recurse -Force` auf genau diesen einen Pfad.
 3. `docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md`: neuen Abschnitt "Inventar/Aufraeumen"
    mit Nutzungshinweis (`pwsh scripts\rag-ollama-inventory.ps1`).
-- [ ] Skript geschrieben, Review auf Syntax/Logik (kein Ausfuehrungstest moeglich, `pwsh` in
+- [x] Skript geschrieben, Review auf Syntax/Logik (kein Ausfuehrungstest moeglich, `pwsh` in
       dieser Sitzung nicht verfuegbar - wie bereits bei BRIDGE-0084 vermerkt)
-- [ ] Aufraeum-Abschnitt loescht nur nach expliziter Bestaetigung, nie den `OLLAMA_MODELS`-Zielpfad
-- [ ] Doku-Abschnitt ergaenzt
+- [x] Aufraeum-Abschnitt loescht nur nach expliziter Bestaetigung, nie den `OLLAMA_MODELS`-Zielpfad
+- [x] Doku-Abschnitt ergaenzt
 
 ## Abschluss
 1. Volle Suite EINMAL (keine neuen Python-Tests - reine PowerShell-Skripte), letzte 3 Zeilen zeigen.

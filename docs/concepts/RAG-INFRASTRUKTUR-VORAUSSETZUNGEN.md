@@ -85,7 +85,37 @@ Komponenten **vor jeder Aktion** genau auf, was es tun wuerde, und fragt dann au
 nach Bestaetigung ("ja"/"nein"). Nur bei bestaetigter Eingabe installiert es die fehlenden
 Komponenten (Ollama, `ollama pull nomic-embed-text`, `git clone` + `git lfs pull` fuer
 `rag-index`) - jeder Schritt einzeln geprueft, ein Fehlschlag bricht sofort ab. Es gibt
-bewusst keinen Parameter, der die Bestaetigung ueberspringt.
+bewusst keinen Parameter, der die Bestaetigung ueberspringt. Seit BRIDGE-0085 setzt es dabei
+`OLLAMA_MODELS` vorab auf `E:\_DEV\ollama-models`, falls dort noch nichts gesetzt war (siehe
+Abschnitt 1).
+
+## 5. Inventar/Aufraeumen `scripts/rag-ollama-inventory.ps1` (BRIDGE-0085)
+
+Anlass: eine durch `rag-setup.ps1` angestossene Ollama-Installation kann zu einer
+Doppelinstallation fuehren, wenn auf der Maschine (wie auf HAM11, 07.10.2026) bereits ein
+Ollama lief, das die Erkennung aus irgendeinem Grund nicht gefunden hat. Auf HAM11 fuehrte das
+zusaetzlich dazu, dass Modelle unter dem alten Standardpfad auf `C:` lagen (siehe Abschnitt 1).
+
+Auf HAM11/DES11 ausfuehren:
+
+```
+pwsh scripts\rag-ollama-inventory.ps1
+```
+
+Das Skript listet (reine Erkennung, loescht standardmaessig nichts):
+
+1. gefundene Ollama-Installationen (`winget list`, bekannte Installationsverzeichnisse),
+2. beide moeglichen Modellablagen (Standardpfad auf `C:` und der `OLLAMA_MODELS`-Zielpfad,
+   falls gesetzt) mit Groesse und Blob-Anzahl - mit deutlicher Warnung, wenn **beide** Inhalt
+   haben (das deutet auf die Doppelinstallation hin),
+3. die dem laufenden Dienst tatsaechlich bekannten Modelle (`ollama list`).
+
+Erst danach, optional: fragt das Skript, ob der **alte** Modellordner (Standardpfad auf `C:`)
+geloescht werden soll - eine einzelne Ja/Nein-Abfrage, Default bei falscher/leerer Eingabe ist
+"nicht loeschen". Der `OLLAMA_MODELS`-Zielpfad selbst wird vom Skript nie zur Loeschung
+angeboten. Empfehlung: das Skript zunaechst nur zur Erkennung laufen lassen (Abfrage mit
+"nein" beantworten), die Ausgabe pruefen, und erst danach - wenn klar ist, welcher Pfad die
+alte, nicht mehr benoetigte Ablage ist - den Aufraeum-Schritt bestaetigen.
 
 ## Was ACB automatisch tut vs. was manuell bleibt
 
