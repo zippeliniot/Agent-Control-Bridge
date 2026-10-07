@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0087
+project_id: agent-control-bridge
+title: Toten Whitelist-Eintrag kind="claim" aus gitops.expected_git_files entfernen
+description: 'Teile A, B. Details: work-packages/BRIDGE-087.md'
+task_class: REFACTOR
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 91fdc58abfd7165f74d6ef403119850b60c2e681
+  allowed_changed_files:
+  - src/bridge/gitops.py
+  - tests/test_gitops.py
+model: Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0086
+acceptance_criteria:
+- 'Teil A: if kind == "claim"-Zweig in gitops.py vollstaendig entfernt'
+- 'Teil B: test_claim_exact_path_only entfernt, erklaerender Kommentar an der Stelle'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T13:23:00Z'
+created_by: browser-claude
+task_version: 3
