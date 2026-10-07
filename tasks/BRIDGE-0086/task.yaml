@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0086
+project_id: agent-control-bridge
+title: 'rag-setup.ps1: vorhandene Ollama-Instanz erkennen, Modell nicht doppelt laden'
+description: 'Teile A, B. Details: work-packages/BRIDGE-086.md'
+task_class: BUGFIX
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: d7045e97632d6313b33375dccc466ad2476c4b96
+  allowed_changed_files:
+  - scripts/rag-setup.ps1
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0085
+acceptance_criteria:
+- 'Teil A: installiert-vs-erreichbar unterscheiden, Dienst-Start statt Reinstall'
+- 'Teil B: frische ollama list-Pruefung vor Pull, kein doppelter Download'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T11:22:00Z'
+created_by: browser-claude
+task_version: 3
