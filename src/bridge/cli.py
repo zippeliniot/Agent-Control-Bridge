@@ -1056,9 +1056,18 @@ def _cmd_claim(args, store) -> int:
 
 def _cmd_run(args, store) -> int:
     if args.run_cmd == "start":
-        run_id = runner.start(store, args.task_id, args.actor,
-                              registry.machine_name(args.machine))
+        machine = registry.machine_name(args.machine)
+        run_id = runner.start(store, args.task_id, args.actor, machine)
         _print_run(store, args.task_id, run_id, "gestartet")
+        # BRIDGE-0082: Maschinenwechsel-Erkennung + RAG-Index-Sync - rein
+        # informativ, blockiert den Lauf nie (sync is None, wenn RAG nicht
+        # aktiv oder kein Wechsel).
+        sync = runner.maybe_sync_rag_index(store, args.task_id, machine)
+        if sync is not None:
+            if sync.get("error"):
+                print(f"RAG-Index-Sync: Fehler ({sync['error']})", file=sys.stderr)
+            else:
+                print("RAG-Index-Sync: OK")
         if getattr(args, "commit", False):
             rc = _do_commit(args, store, "run_start", args.task_id, args.actor,
                             run_id=run_id)

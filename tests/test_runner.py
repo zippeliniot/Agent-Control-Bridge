@@ -111,6 +111,75 @@ class StartTests(Base):
                           "TASK_CLAIMED", "TASK_STARTED"])
 
 
+class MaybeSyncRagIndexTests(Base):
+    """maybe_sync_rag_index() (BRIDGE-0082): Maschinenwechsel-Erkennung +
+    RAG-Index-Sync, fail-soft, nie Teil von start()s Rückgabewert."""
+
+    def _write_profile(self, rag_enabled):
+        pdir = self.tmp / "projects" / "codex-control-bridge"
+        pdir.mkdir(parents=True, exist_ok=True)
+        (pdir / "project.yaml").write_text(yaml.safe_dump({
+            "schema_version": "1.0", "kind": "bridge_project_profile",
+            "project_id": "codex-control-bridge", "repository": "Codex-Control-Bridge",
+            "default_branch": "main", "task_prefix": "BRIDGE", "read_only": False,
+            "rag_enabled": rag_enabled,
+        }), encoding="utf-8")
+
+    def test_rag_disabled_no_sync(self):
+        self._write_profile(rag_enabled=False)
+        with mock.patch("bridge.runner.gitops.rag_index_sync") as m:
+            result = runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "HAM11")
+        self.assertIsNone(result)
+        m.assert_not_called()
+
+    def test_no_profile_no_sync(self):
+        with mock.patch("bridge.runner.gitops.rag_index_sync") as m:
+            result = runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "HAM11")
+        self.assertIsNone(result)
+        m.assert_not_called()
+
+    def test_machine_switch_triggers_sync(self):
+        self._write_profile(rag_enabled=True)
+        self.store.set_status("BRIDGE-0900", "READY", actor="x", machine="HAM11")
+        with mock.patch("bridge.runner.gitops.rag_index_sync",
+                       return_value={"pulled": True, "lfs_pulled": True, "error": None}) as m:
+            result = runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "DES11")
+        self.assertEqual(result, {"pulled": True, "lfs_pulled": True, "error": None})
+        m.assert_called_once()
+
+    def test_same_machine_no_sync(self):
+        self._write_profile(rag_enabled=True)
+        self.store.set_status("BRIDGE-0900", "READY", actor="x", machine="HAM11")
+        with mock.patch("bridge.runner.gitops.rag_index_sync") as m:
+            result = runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "HAM11")
+        self.assertIsNone(result)
+        m.assert_not_called()
+
+    def test_first_run_no_prior_machine_triggers_sync(self):
+        self._write_profile(rag_enabled=True)
+        with mock.patch("bridge.runner.gitops.rag_index_sync",
+                       return_value={"pulled": True, "lfs_pulled": True, "error": None}) as m:
+            result = runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "HAM11")
+        self.assertIsNotNone(result)
+        m.assert_called_once()
+
+    def test_sync_error_does_not_raise(self):
+        self._write_profile(rag_enabled=True)
+        self.store.set_status("BRIDGE-0900", "READY", actor="x", machine="HAM11")
+        with mock.patch("bridge.runner.gitops.rag_index_sync",
+                       return_value={"pulled": False, "lfs_pulled": False,
+                                     "error": "kein Repo"}):
+            result = runner.maybe_sync_rag_index(self.store, "BRIDGE-0900", "DES11")
+        self.assertEqual(result["error"], "kein Repo")
+
+    def test_start_itself_unaffected_by_rag_sync(self):
+        """start() liefert weiterhin nur den run_id-String - keine
+        Rueckwaertskompatibilitaets-Aenderung durch BRIDGE-0082."""
+        self._write_profile(rag_enabled=True)
+        run_id = runner.start(self.store, "BRIDGE-0900", "a", machine="HAM11", now=T0)
+        self.assertEqual(run_id, "RUN-01")
+
+
 class BeatTests(Base):
     def test_beat_updates_last_seen_of_current_run(self):
         runner.start(self.store, "BRIDGE-0900", "a", now=T0)

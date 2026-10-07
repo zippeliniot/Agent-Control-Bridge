@@ -47,11 +47,11 @@ Geschwisterverzeichnis zum ACB-Checkout angenommen (`<E:\_DEV>/acb-rag-index`, e
    `None` wenn nicht ausgeloest) mitgeben - **kein Blockieren des eigentlichen Laufs bei Sync-Fehler**,
    nur sichtbar im CLI-Output.
 2. `cli.py::_cmd_run` (`run start`): `rag_sync`-Ergebnis zusaetzlich ausgeben, falls vorhanden.
-- [ ] Wechsel erkannt -> Sync ausgeloest (Test mit gemocktem `rag_index_sync`)
-- [ ] Kein `rag_enabled` -> keine Erkennung/Sync (Test)
-- [ ] Sync-Fehler blockiert `start()` nicht (Test: `start()` liefert weiterhin `run_id`)
+- [x] Wechsel erkannt -> Sync ausgeloest (Test mit gemocktem `rag_index_sync`)
+- [x] Kein `rag_enabled` -> keine Erkennung/Sync (Test)
+- [x] Sync-Fehler blockiert `start()` nicht (Test: `start()` liefert weiterhin `run_id`)
 
 ## Abschluss
 1. Volle Suite EINMAL, letzte 3 Zeilen zeigen.
 2. `git status` sauber.
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen

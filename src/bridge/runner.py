@@ -26,7 +26,7 @@ if __package__ in (None, ""):
 
 import yaml
 
-from bridge import heartbeat, importer, state_machine
+from bridge import gitops, heartbeat, importer, profiles, state_machine
 from bridge.store import StoreError
 
 _RUN_RE = re.compile(r"^RUN-[0-9]{2,}$")
@@ -173,6 +173,39 @@ def finish(store, task_id, status, *, draft=None, base_head=None, actor,
                                  actor, machine,
                                  reason="auto: wartet auf Kopie in den Steuerchat")
     return result, event
+
+
+def maybe_sync_rag_index(store, task_id, machine) -> dict | None:
+    """Prüft bei Auftragsstart Maschinenwechsel + RAG-Nutzung und synchronisiert
+    bei Bedarf den lokalen Index-Klon (BRIDGE-0082).
+
+    Fail-soft und nie blockierend: fehlendes/ungültiges Projektprofil, RAG
+    nicht aktiviert, oder jeder Git-Fehler landen nicht als Exception - der
+    eigentliche Auftragslauf (``start()``) ist davon komplett unabhängig.
+    Absichtlich NICHT in ``start()`` selbst verdrahtet, um dessen seit
+    BRIDGE-001 stabilen Rückgabewert (bloßer ``run_id``-String, 17+
+    bestehende Call-Sites) nicht zu ändern - der Aufrufer (CLI ``run start``)
+    ruft diese Funktion zusätzlich auf.
+
+    Rückgabe: ``None`` wenn kein Sync ausgelöst wurde (kein RAG, kein
+    Maschinenwechsel); sonst das dict von ``gitops.rag_index_sync``.
+
+    Annahme zum lokalen Index-Pfad (nicht verifiziert, siehe BRIDGE-082-WP):
+    Geschwisterverzeichnis zum ACB-Checkout, ``<store.root>/../../acb-rag-index``.
+    """
+    try:
+        project_id = store.load_task(task_id).get("project_id")
+        profile = profiles.load_profile(store.root, project_id,
+                                        schema_dir=store.schema_dir)
+    except StoreError:
+        return None
+    if not profile.get("rag_enabled"):
+        return None
+    last_machine = store.last_machine_for_project(project_id)
+    if last_machine == machine:
+        return None
+    index_path = Path(store.root).resolve().parent.parent / "acb-rag-index"
+    return gitops.rag_index_sync(index_path)
 
 
 def resume(store, task_id, actor, machine=None, *, now=None) -> str:
