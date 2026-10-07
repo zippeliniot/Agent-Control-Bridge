@@ -25,7 +25,7 @@ depends_on:
 acceptance_criteria:
 - 'Teil A: if kind == "claim"-Zweig in gitops.py vollstaendig entfernt'
 - 'Teil B: test_claim_exact_path_only entfernt, erklaerender Kommentar an der Stelle'
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-10-07T13:23:00Z'
 created_by: browser-claude
-task_version: 5
+task_version: 7

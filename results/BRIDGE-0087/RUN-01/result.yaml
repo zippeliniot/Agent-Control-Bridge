@@ -1,0 +1,36 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0087
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: baefdf635c93f9b446e0dc522ae6cb2634ac9ee9
+executor: claude-code
+started_at: '2026-10-07T14:25:49Z'
+ended_at: '2026-10-07T16:06:21Z'
+created_by: claude-code@HAM11
+base_head: 91fdc58abfd7165f74d6ef403119850b60c2e681
+commits:
+- sha: 89a38a16c0f2ead5b1712bf0c9caf929ef2b4c56
+  message: 'BRIDGE-0087: task create (Store-Aktion via CLI)'
+- sha: 7c8da9ec5860b9818b62318da7807f1726c72545
+  message: 'Ops: BRIDGE-0087 run_start (Steuerchat-Aktion via CLI)'
+- sha: a62739bd68317cbd30fe38141c4e4078cc4247cc
+  message: 'BRIDGE-0087 Teil A: toten kind=claim-Zweig aus expected_git_files entfernt'
+- sha: 46b2a81394f8a821438c1133e18afbd86cc39fd8
+  message: 'BRIDGE-0087 Teil B: test_claim_exact_path_only entfernt, Kommentar ergaenzt'
+- sha: baefdf635c93f9b446e0dc522ae6cb2634ac9ee9
+  message: 'BRIDGE-0087: Abschluss-Haken (volle Suite gruen)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0087/RUN-01/heartbeat.json
+- src/bridge/gitops.py
+- tasks/BRIDGE-0087/task.yaml
+- tests/test_gitops.py
+- work-packages/BRIDGE-087.md
+summary: Toten kind="claim"-Zweig aus gitops.expected_git_files() entfernt (Teil A),
+  zugehoerigen Unit-Test test_claim_exact_path_only entfernt und durch erklaerenden
+  Kommentar ersetzt (Teil B). Volle Suite 575/575 gruen.
+physical_machine: HAM11
