@@ -1,0 +1,39 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0082
+project_id: agent-control-bridge
+title: Maschinenwechsel-Erkennung + RAG-Index-Sync
+description: 'Teile A, B, C. Details: work-packages/BRIDGE-082.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: cf82d34944c7422a3c0aa2919bce4ce15b46162b
+  allowed_changed_files:
+  - src/bridge/store.py
+  - src/bridge/gitops.py
+  - src/bridge/runner.py
+  - src/bridge/cli.py
+  - tests/test_store.py
+  - tests/test_gitops.py
+  - tests/test_runner.py
+  - tests/test_cli.py
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0081
+acceptance_criteria:
+- 'Teil A: last_machine_for_project'
+- 'Teil B: rag_index_sync'
+- 'Teil C: Verdrahtung in run start, fail-soft'
+- Gesamte Testsuite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T08:19:00Z'
+created_by: browser-claude
+task_version: 3
