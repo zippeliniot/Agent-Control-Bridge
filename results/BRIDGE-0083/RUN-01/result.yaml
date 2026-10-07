@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0083
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: agent-control-bridge
+branch: main
+head: 3a3877397bf0a67fcf1796e7999f412959fd6a7f
+executor: claude-code
+started_at: '2026-10-07T10:14:17Z'
+ended_at: '2026-10-07T10:18:43Z'
+created_by: claude-code@HAM11
+base_head: fcb0a77fc56b526184850f1905587714db9aa42e
+commits:
+- sha: 8c34087d916649587471fb2615e3db702cb1d8f2
+  message: 'Ops: BRIDGE-0083 task_create (Steuerchat-Aktion via CLI)'
+- sha: 6cbf8c596a6c7aafc4d77e9f415f5e5644ee83a0
+  message: 'Ops: BRIDGE-0083 run_start (Steuerchat-Aktion via CLI)'
+- sha: 697e22b1dac180907f8e275e66c2f54bd321e79b
+  message: 'BRIDGE-0083 Teil A: Pfadkorrektur rag-index als Geschwisterklon (Vier-Wege-Topologie)'
+- sha: ad1287c50e6bd50e2d0fa88c2680c10180c7813a
+  message: 'BRIDGE-0083 Teil B: rag_prereqs.check (Ollama/Modell/Index-Klon, fail-soft)'
+- sha: 3a3877397bf0a67fcf1796e7999f412959fd6a7f
+  message: 'BRIDGE-0083 Teil C: Verdrahtung run start (maybe_check_rag_prereqs) +
+    GitHub-Dokumentation'
+changed_files:
+- audit/audit.jsonl
+- docs/architecture/machines.md
+- docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+- results/BRIDGE-0083/RUN-01/heartbeat.json
+- src/bridge/cli.py
+- src/bridge/rag_prereqs.py
+- src/bridge/runner.py
+- tasks/BRIDGE-0083/task.yaml
+- tests/test_rag_prereqs.py
+- tests/test_runner.py
+- work-packages/BRIDGE-083.md
+summary: 'Teil A: Pfadkorrektur rag-index als fuenfter Geschwisterklon (Vier-Wege-Topologie,
+  statt faelschlich zwei Ebenen hoch) + machines.md-Register. Teil B: rag_prereqs.check
+  (Ollama/Modell/Index-Klon, reine Erkennung, fail-soft). Teil C: Verdrahtung in run
+  start (maybe_check_rag_prereqs, blockiert nie) + docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+  (manuelle Schritte, kein Auto-Install). Volle Suite 576 Tests gruen.'
+physical_machine: HAM11
