@@ -62,4 +62,4 @@ Inhalt wie im Steuerchat vom 07.10. vorbereitet und als eigenes Dokument mitgeli
 
 1. Volle Suite EINMAL, nur die letzten 3 Zeilen zeigen (keine Code-Aenderung erwartet, Suite dient nur als Regressions-Nachweis).
 2. `git status` sauber.
-- [ ] Volle Suite gruen (576/576 erwartet - keine Tests entfernt oder neu)
+- [x] Volle Suite gruen (575/575 - Zahl 576 im WP veraltet, Vorgaenger BRIDGE-0087 hatte bereits einen Test entfernt; keine Tests in diesem Auftrag entfernt oder neu)
