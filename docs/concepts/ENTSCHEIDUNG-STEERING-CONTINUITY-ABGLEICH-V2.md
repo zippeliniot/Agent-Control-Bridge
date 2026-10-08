@@ -20,8 +20,14 @@ BRIDGE-0088 (RAG-Retrieval-Pipeline-Spezifikation, Handover v16 §6 Punkt 4/5) b
 Quellenbindung: welche Information gilt noch, welche wurde ersetzt, wodurch. Ohne ein strukturiertes
 Decision-Objekt bleibt das reine Prosa-Verlinkung zwischen `ENTSCHEIDUNG-*.md`-Dateien - fuer eine
 Handvoll Dateien (heute: 5) trotzdem tragbar, fuer eine RAG-gestuetzte Suche ueber viele Sitzungen
-hinweg zunehmend ungenau. Das ist der einzige neue Fakt gegenueber V1; alles andere unten ist
-Verfeinerung derselben Ausgangsfrage.
+hinweg zunehmend ungenau.
+
+Zweiter, von RAG unabhaengiger Anlass: die reine Prosa-Verlinkung zwischen `ENTSCHEIDUNG-*.md`-
+Dateien skaliert auch **ohne** RAG-Suche nicht mehr, sobald mehr als eine Handvoll
+Entscheidungsdokumente existieren und ein Steuerchat beim Sitzungsstart alle lesen muss (vgl.
+`docs/ACB-STEUERCHAT-STANDARDSTART.md` Abschnitt 2 - die Liste der "bei Bedarf"-Dokumente waechst
+bereits). Das ist der einzige neue Fakt gegenueber V1; alles andere unten ist Verfeinerung
+derselben Ausgangsfrage.
 
 ## 3. Vorschlag (nur bei Annahme wirksam)
 
@@ -62,6 +68,10 @@ keinen ein. Fuer Dorfschaft muessen ohnehin zuerst Fachkonzepte, Kapitel, Owners
 referenzierbar sein, lange bevor ein Code-Symbolgraph ueberhaupt in Frage kaeme - das ist eine andere,
 spaetere Frage.
 
+Auch kein Ersatz der bestehenden `ENTSCHEIDUNG-*.md`-Prosadokumente durch strukturierte
+Datensaetze: die Formalisierung ergaenzt sie nur um maschinenlesbare Referenzfelder fuer
+RAG-gestuetzte Suche, der menschlich lesbare Entscheidungstext bleibt die primaere Quelle.
+
 ## 5. Folgefragen, falls angenommen (hier nicht entschieden)
 
 - Neues `schemas/decision.schema.yaml` noetig (analog `open-issue.schema.yaml`, BRIDGE-0075-Muster).
@@ -74,6 +84,12 @@ spaetere Frage.
 
 ## 6. Offene Frage an April
 
-Soll BRIDGE-0073s Decision-Verdikt (Option B) aufgehoben und durch die Formalisierung aus Abschnitt 3
-ersetzt werden - mit allen Folgefragen aus Abschnitt 5 als eigene, spaetere Auftraege? Bis zur
-ausdruecklichen Zustimmung bleibt V1 massgeblich.
+Soll BRIDGE-0073s Decision-Verdikt (Option B) um die Formalisierung aus Abschnitt 3 **teilweise
+revidiert** werden - mit allen Folgefragen aus Abschnitt 5 als eigene, spaetere Auftraege? Die
+Formalisierung aus §3 ergaenzt das Objektmodell um strukturierte Felder (append-only Ereignisse,
+`supersedes`, `affects`/`implemented_by`/`verified_by`); sie hebt **nicht** auf, dass
+Entscheidungen weiterhin als menschlicher Prosa-Text in `ENTSCHEIDUNG-*.md`-Dateien formuliert
+werden (BRIDGE-0073s eigentliche Begruendung "Entscheidungen sind bewusst menschlicher Text", §1
+dieses Dokuments, bleibt davon unberuehrt). Betroffen ist also nur die Formalisierungsebene, nicht
+die Prosa-Ebene - keine pauschale Aufhebung. Bis zur ausdruecklichen Zustimmung bleibt V1
+massgeblich.
