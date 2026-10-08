@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0089
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 9c1a92258dc359681cc8751ec0c2c6a697070aa6
+executor: claude-code
+started_at: '2026-10-08T13:18:11Z'
+ended_at: '2026-10-08T13:37:01Z'
+created_by: claude-code@HAM11
+base_head: 815ec26c55a9bd8c67f08f8bf2335362dd844ea6
+commits:
+- sha: 1ae19cb8f925164feb227bfcbe3bc4b43611a4fd
+  message: 'Ops: BRIDGE-0088 copied (Steuerchat-Aktion via Web-UI)'
+- sha: c01c5b4137996b5e7a9baa3f3878ea3884aa5d97
+  message: 'Ops: BRIDGE-0088 archive (Steuerchat-Aktion via Web-UI)'
+- sha: b0496d138abac6f9dfc6a8847ce08fbef6e0e47e
+  message: 'BRIDGE-0089: task create (Store-Aktion via CLI)'
+- sha: fd6d90f9f5582ef3d8e51738718937ac495a3b15
+  message: 'Ops: BRIDGE-0089 run_start (Steuerchat-Aktion via CLI)'
+- sha: d995661f2172f900f97b14285495274f06b8bfe8
+  message: 'BRIDGE-0089 Teil A+B: Ist/Soll-Korrektur, Herkunftsnachweis verschaerft,
+    V2 praezisiert'
+- sha: 9c1a92258dc359681cc8751ec0c2c6a697070aa6
+  message: 'BRIDGE-0089: Abschluss-Haken (volle Suite gruen, 575/575)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+- docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+- results/BRIDGE-0089/RUN-01/heartbeat.json
+- tasks/BRIDGE-0088/task.yaml
+- tasks/BRIDGE-0089/task.yaml
+- work-packages/BRIDGE-089.md
+summary: 'Nachbesserung BRIDGE-0088: RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md auf Ist-Zustand
+  statt Soll korrigiert (structured_coverage/migration_status/context_sources_used)
+  und Herkunftsnachweis verschaerft (Fundstelle Pflicht, reiner Steuerchat-Verweis
+  reicht nicht). ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md praezisiert: vier
+  Ereignisse (Annahme/Ablehnung/Widerruf/Abloesung) inkl. teilweiser Abloesung, origin_task_id
+  optional, affects/implemented_by/verified_by auf Fachkonzepte/Kapitel/Komponenten
+  erweitert. V1 unangetastet, keine Entscheidung getroffen, Suite 575/575 gruen.'
+physical_machine: HAM11
