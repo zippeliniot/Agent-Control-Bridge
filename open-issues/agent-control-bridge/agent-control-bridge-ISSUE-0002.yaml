@@ -1,0 +1,10 @@
+schema_version: '1.0'
+kind: open_issue
+issue_id: agent-control-bridge-ISSUE-0002
+project_id: agent-control-bridge
+status: OPEN
+summary: 'Konkrete Autorisierung von GIT_COMMIT/GIT_PUSH fuer BRIDGE-0088/0089 nicht
+  gesondert nachgewiesen - nur Schema-Default push_mode: direct belegt die Policy,
+  kein auftragsspezifischer Freigabenachweis dokumentiert'
+origin_task_id: BRIDGE-0089
+created_at: '2026-10-08T15:43:42Z'

@@ -1,0 +1,10 @@
+schema_version: '1.0'
+kind: open_issue
+issue_id: agent-control-bridge-ISSUE-0001
+project_id: agent-control-bridge
+status: OPEN
+summary: 'ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md inhaltlich unvollstaendig:
+  RAG-unabhaengiger Anlass (§2) fehlt, §6 formuliert pauschale Aufhebung von BRIDGE-0073
+  statt Ergaenzung/teilweise Revision, kein expliziter Prosa-Erhalt-Satz (§4)'
+origin_task_id: BRIDGE-0089
+created_at: '2026-10-08T15:43:41Z'
