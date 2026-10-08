@@ -139,6 +139,19 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
   offene Punkte über beliebig viele Sitzungen hinweg, als Ersatz für die
   handgetragene Fortschreibung in der Übergabedatei — Details:
   `docs/concepts/ENTSCHEIDUNG-OPENISSUE-FORMALISIERUNG.md`.
+  - `issue`-Ablauf (ab BRIDGE-0090 verbindlich): Registry abgleichen
+    (`issue list --include-closed`, kein Duplikat anlegen) -> Befund mit
+    Quelle prüfen (Datei+Zeile oder Commit-SHA aus frischem Klon) -> Issue
+    erfassen (`issue open`, `origin_task_id` = Auftrag, aus dem der Befund
+    stammt) -> auf GitHub sichern (kein `--commit`-Flag auf `issue
+    open/close`, manuell `git add open-issues/<project_id>/ && git commit
+    && git push`, sonst nur lokal sichtbar) -> Folgeauftrag verknüpfen (WP
+    nennt `issue_id` im Anlass-Abschnitt, Issue bleibt bis Abschluss OPEN)
+    -> Ergebnis prüfen (frischer Klon, echter Code-/Doku-Stand) -> Issue
+    mit konkretem Nachweis schließen (`note` nennt Akzeptanzkriterium +
+    Datei+Zeile/Kommando-Ausgabe, nicht nur SHA) -> Abschluss auf GitHub
+    verifizieren (`issue list --include-closed` nach frischem Klon zeigt
+    CLOSED mit Nachweis-`note`).
 - **`claim`/`renew`/`release` brauchen seit BRIDGE-0078 Netzwerkzugriff**
   (committen+pushen `claim.json` selbst, klonübergreifend wirksam) — offline
   ist kein Claim möglich, das ist beabsichtigt (siehe

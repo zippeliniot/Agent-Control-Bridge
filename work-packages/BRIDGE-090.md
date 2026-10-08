@@ -97,7 +97,7 @@ uebernehmen, nicht neu formulieren):
 - [x] Teil A: drei Ergaenzungen in `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md` umgesetzt (§2,
       §6, §4 wie oben beschrieben), Datei bleibt Status "ENTWURF - ENTSCHEIDUNG AUSSTEHEND".
 - [x] Teil A: Issue 1 per `bridge issue close` mit konkretem Datei/Abschnitt-Nachweis geschlossen.
-- [ ] Teil B: `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 4 um den neunstufigen Ablauf ergaenzt,
+- [x] Teil B: `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 4 um den neunstufigen Ablauf ergaenzt,
       inkl. Hinweis auf fehlendes `--commit`-Flag.
 - [ ] Volle Suite einmal am Ende, nur letzte 3 Zeilen (reine Doku-Aenderung, keine neue
       Testabdeckung erwartet - Suite dient nur dem Nachweis, dass nichts kaputt ist).
