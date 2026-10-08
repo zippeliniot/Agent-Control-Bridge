@@ -1,0 +1,43 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0090
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: b395f70b303bda8c2e7c152cf113371673955d65
+executor: claude-code
+started_at: '2026-10-08T16:09:57Z'
+ended_at: '2026-10-08T16:37:49Z'
+created_by: claude-code@HAM11
+base_head: 9c24668d5271ebd4b7e016710e2c6a4f49d55e3e
+commits:
+- sha: 535b8e033da010881787621309ba2b77f86698cb
+  message: 'BRIDGE-0090: task create (Store-Aktion via CLI)'
+- sha: 9c377b16546f874c4222355592be61339d683886
+  message: 'Ops: BRIDGE-0090 run_start (Steuerchat-Aktion via CLI)'
+- sha: eb71dc09dd70be959b55848e32b5b5276d105942
+  message: 'BRIDGE-0090 Teil A: V2 praezisiert (RAG-unabh. Anlass, teilweise Revision,
+    Prosa-Erhalt), Issue 1 geschlossen'
+- sha: e3f7ff2f3fea33b0bc3bf74d923661dddab11703
+  message: 'BRIDGE-0090 Teil B: OpenIssue-Ablauf in ARBEITSWEISE.md Abschnitt 4 ergaenzt'
+- sha: 801857cde831e0bcb79587e838e361744b173ca6
+  message: 'BRIDGE-0090: Audit-Nachtrag ISSUE_CLOSED (agent-control-bridge-ISSUE-0001)'
+- sha: b395f70b303bda8c2e7c152cf113371673955d65
+  message: 'BRIDGE-0090: Abschluss-Haken (volle Suite gruen, 575/575)'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+- docs/handover/ACB-UEBERGABE-v17.md
+- open-issues/agent-control-bridge/agent-control-bridge-ISSUE-0001.yaml
+- results/BRIDGE-0090/RUN-01/heartbeat.json
+- tasks/BRIDGE-0090/task.yaml
+- work-packages/BRIDGE-090.md
+summary: 'ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md praezisiert (Issue 1 geschlossen):
+  RAG-unabhaengiger Anlass in Paragraph2, teilweise Revision statt pauschaler Aufhebung
+  in Paragraph6, Prosa-Erhalt-Satz in Paragraph4 - V1 und Entwurfsstatus unveraendert.
+  ACB-STEUERCHAT-ARBEITSWEISE.md Abschnitt4 um den neunstufigen verbindlichen OpenIssue-Ablauf
+  ergaenzt (inkl. fehlendem --commit-Flag). Suite 575/575 gruen, keine Code-/Schema-Aenderung.'
+physical_machine: HAM11
