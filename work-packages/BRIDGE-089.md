@@ -78,12 +78,12 @@ Pruefrunde schliessen:
 Kein `schemas/decision.schema.yaml`, keine Aenderung an `task.schema.yaml` - das bleibt laut V2
 §5 eine eigene, hier nicht mitentschiedene Frage.
 
-- [ ] Alle vier Teil-A-Korrekturen angewendet, keine weitere inhaltliche Aenderung an Teil A
-- [ ] Alle drei Teil-B-Praezisierungen angewendet, Status-Zeile "ENTWURF - ENTSCHEIDUNG AUSSTEHEND"
+- [x] Alle vier Teil-A-Korrekturen angewendet, keine weitere inhaltliche Aenderung an Teil A
+- [x] Alle drei Teil-B-Praezisierungen angewendet, Status-Zeile "ENTWURF - ENTSCHEIDUNG AUSSTEHEND"
       unveraendert, keine Entscheidung getroffen
-- [ ] `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md` (V1) unangetastet (`git diff` zeigt keine
+- [x] `ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md` (V1) unangetastet (`git diff` zeigt keine
       Aenderung)
-- [ ] Kein neues Schema, keine `additionalProperties`-Aenderung
+- [x] Kein neues Schema, keine `additionalProperties`-Aenderung
 
 ## Abschluss
 

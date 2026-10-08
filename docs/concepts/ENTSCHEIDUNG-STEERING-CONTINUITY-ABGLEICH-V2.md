@@ -29,23 +29,31 @@ Verfeinerung derselben Ausgangsfrage.
 
 V1 hat `superseded_by` nicht spezifiziert; ein nachtraeglich auf einen alten Eintrag geschriebenes
 `superseded_by` wuerde Append-only verletzen. Vorschlag: eine neue Entscheidung traegt `supersedes`
-(Verweis auf die alte), dazu ein eigenes Ereignis fuer Annahme/Ablösung. `superseded_by` existiert
-nur in einer daraus berechneten, nicht gespeicherten Ansicht. Eine neu *vorgeschlagene* Entscheidung
-verdraengt eine bereits akzeptierte nicht automatisch - erst das Akzeptanz-Ereignis tut das.
+(Verweis auf die alte), dazu vier getrennte Ereignisse statt nur "Annahme/Ablösung": **Annahme,
+Ablehnung, Widerruf, Ablösung**. `superseded_by` existiert nur in einer daraus berechneten, nicht
+gespeicherten Ansicht. Eine neu *vorgeschlagene* Entscheidung verdraengt eine bereits akzeptierte
+nicht automatisch - erst das Annahme-Ereignis tut das. `supersedes` kann zudem **teilweise**
+geltend sein (eine neue Entscheidung loest nur einen Teilaspekt der alten ab, der Rest bleibt
+gueltig) - das Abloesungs-Ereignis braucht dafuer einen Geltungsbereich, nicht nur einen Verweis
+auf die gesamte alte Entscheidung.
 
 ### 3b. Entscheidung ist nicht an genau einen Task gebunden
 
-Vier getrennte Felder statt einem: `origin_task_id` (Entstehung), `applies_to` (Geltungsbereich),
-`affected_task_ids` (zu ueberpruefende Arbeiten), `source_refs` (Begruendungsquellen). Eine
-Architekturentscheidung kann mehrere Auftraege betreffen oder ihnen vorausgehen - ein einzelnes
-`task_id`-Feld (wie bei `OpenIssue.origin_task_id`) bildet das nicht ab.
+Vier getrennte Felder statt einem: `origin_task_id` (Entstehung, **optional** - eine Entscheidung
+kann einem Auftrag vorausgehen oder unabhaengig davon entstehen), `applies_to`
+(Geltungsbereich), `affected_task_ids` (zu ueberpruefende Arbeiten), `source_refs`
+(Begruendungsquellen). Eine Architekturentscheidung kann mehrere Auftraege betreffen oder ihnen
+vorausgehen - ein einzelnes `task_id`-Feld (wie bei `OpenIssue.origin_task_id`) bildet das nicht
+ab.
 
 ### 3c. Code-Bezug getrennt von Entscheidung
 
-Drei Beziehungen statt `files_touched`: `affects` (betroffene Komponente/Datei, ohne dass schon
-Code geaendert wurde), `implemented_by` (konkrete Umsetzung), `verified_by` (Pruefnachweis). Jeder
-Codebezug ist an Repository + Commit (oder definierten Snapshot) gebunden, nicht nur an Dateipfade -
-sonst liefert er nach Umbenennungen veralteten Kontext.
+Drei Beziehungen statt `files_touched`: `affects` (betroffene Einheit, ohne dass schon Code
+geaendert wurde), `implemented_by` (konkrete Umsetzung), `verified_by` (Pruefnachweis). Die
+"betroffene Einheit" ist nicht auf Code beschraenkt - sie kann ein Fachkonzept, Kapitel, eine
+Komponente oder Schnittstelle sein, nicht nur eine Code-Datei. Jeder Bezug (ob Code oder nicht) ist
+an Repository + Commit (oder definierten Snapshot) gebunden, nicht nur an Dateipfade - sonst
+liefert er nach Umbenennungen veralteten Kontext.
 
 ## 4. Was das NICHT ist
 
