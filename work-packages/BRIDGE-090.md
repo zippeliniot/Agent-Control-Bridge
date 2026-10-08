@@ -99,6 +99,6 @@ uebernehmen, nicht neu formulieren):
 - [x] Teil A: Issue 1 per `bridge issue close` mit konkretem Datei/Abschnitt-Nachweis geschlossen.
 - [x] Teil B: `docs/ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 4 um den neunstufigen Ablauf ergaenzt,
       inkl. Hinweis auf fehlendes `--commit`-Flag.
-- [ ] Volle Suite einmal am Ende, nur letzte 3 Zeilen (reine Doku-Aenderung, keine neue
+- [x] Volle Suite einmal am Ende, nur letzte 3 Zeilen (reine Doku-Aenderung, keine neue
       Testabdeckung erwartet - Suite dient nur dem Nachweis, dass nichts kaputt ist).
-- [ ] `git status` sauber, gepusht, Footer.
+- [x] `git status` sauber, gepusht, Footer.
