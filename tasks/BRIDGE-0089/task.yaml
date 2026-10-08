@@ -1,0 +1,45 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0089
+project_id: agent-control-bridge
+title: Nachbesserung BRIDGE-0088 - Ist/Soll-Korrektur, Herkunftsnachweis, V2-Praezisierung
+description: 'Details: work-packages/BRIDGE-089.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 815ec26c55a9bd8c67f08f8bf2335362dd844ea6
+  allowed_changed_files:
+  - docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+  - docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0088
+allowed_paths:
+- docs/concepts/RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+stop_conditions:
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Teil A: structured_coverage/migration_status/context_sources_used-Zeilen in RAG-RETRIEVAL-PIPELINE-SPEZIFIKATION.md
+  korrigiert - Ist-Zustand statt Soll-Zustand, kein fester Zielwert definiert'
+- 'Teil A: Herkunftsnachweis-Zeile verschaerft - Datei + Revision + Fundstelle Pflicht,
+  reiner Steuerchat-Session-Verweis allein nicht ausreichend'
+- 'Teil B: ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md Paragraph 3a um Ablehnung/Widerruf
+  als eigene Ereignisse und teilweise Abloesung (Geltungsbereich) ergaenzt'
+- 'Teil B: Paragraph 3b origin_task_id ausdruecklich als optional markiert'
+- 'Teil B: Paragraph 3c affects/implemented_by/verified_by ausdruecklich auf Fachkonzepte/Kapitel/Komponenten/Schnittstellen
+  erweitert, nicht nur Code'
+- 'Teil B: Status-Zeile ENTWURF - ENTSCHEIDUNG AUSSTEHEND unveraendert, keine Entscheidung
+  getroffen, V1-Datei unveraendert'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-07T21:29:00Z'
+created_by: browser-claude
+task_version: 3
