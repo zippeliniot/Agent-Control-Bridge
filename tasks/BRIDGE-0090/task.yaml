@@ -1,0 +1,51 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0090
+project_id: agent-control-bridge
+title: Steering-Continuity-V2 praezisieren (Issue 1) + OpenIssue-Verfahren in ARBEITSWEISE.md
+description: 'Details: work-packages/BRIDGE-090.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 9c24668d5271ebd4b7e016710e2c6a4f49d55e3e
+  allowed_changed_files:
+  - docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+  - docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+  - open-issues/agent-control-bridge/
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on:
+- BRIDGE-0089
+allowed_paths:
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- open-issues/agent-control-bridge/
+stop_conditions:
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Teil A: ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md Paragraph 2 um RAG-unabhaengigen
+  Anlass ergaenzt (Prosa-Verlinkung zwischen ENTSCHEIDUNG-*.md skaliert auch ohne
+  RAG nicht)'
+- 'Teil A: Paragraph 6 praezisiert - teilweise Revision der Formalisierungsebene statt
+  pauschaler Aufhebung von BRIDGE-0073 Option B (Prosa-Ebene bleibt unberuehrt)'
+- 'Teil A: Paragraph 4 um expliziten Satz ergaenzt - Formalisierung ersetzt nicht
+  die ENTSCHEIDUNG-*.md-Prosadokumente, ergaenzt sie nur um Referenzfelder'
+- 'Teil A: Issue 1 (agent-control-bridge-ISSUE-0001, sofern Nummer bei Ausfuehrung
+  noch zutrifft - per issue list gegenpruefen) per bridge issue close mit Datei+Abschnitt-Nachweis
+  geschlossen'
+- 'Teil B: ACB-STEUERCHAT-ARBEITSWEISE.md Abschnitt 4 um den neunstufigen OpenIssue-Ablauf
+  ergaenzt (Registry abgleichen bis Abschluss auf GitHub verifizieren), inkl. Hinweis
+  auf fehlendes --commit-Flag bei bridge issue open/close'
+- Status ENTWURF - ENTSCHEIDUNG AUSSTEHEND in ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+  unveraendert, keine neue fachliche Entscheidung getroffen, BRIDGE-0073 V1 unveraendert
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-08T15:32:00Z'
+created_by: browser-claude
+task_version: 3
