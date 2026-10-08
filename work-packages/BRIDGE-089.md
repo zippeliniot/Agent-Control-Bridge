@@ -91,6 +91,6 @@ Kein `schemas/decision.schema.yaml`, keine Aenderung an `task.schema.yaml` - das
    nur als Regressions-Nachweis).
 2. `git status` sauber nach dem Commit (working tree clean - die zwei bearbeiteten Dateien sind
    der erwartete, gewollte Diff).
-- [ ] Volle Suite gruen, Testanzahl identisch zum Stand nach BRIDGE-0088 (laut dessen Ergebnis:
+- [x] Volle Suite gruen, Testanzahl identisch zum Stand nach BRIDGE-0088 (laut dessen Ergebnis:
       575) - keine Zahl vorab fixieren, massgeblich ist "kein Test entfernt, keiner neu, keiner rot"
-- [ ] `git diff --stat` zeigt ausschliesslich die beiden genannten Dokumente (plus `audit.jsonl`)
+- [x] `git diff --stat` zeigt ausschliesslich die beiden genannten Dokumente (plus `audit.jsonl`)
