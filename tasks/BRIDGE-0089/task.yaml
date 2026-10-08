@@ -39,7 +39,7 @@ acceptance_criteria:
   erweitert, nicht nur Code'
 - 'Teil B: Status-Zeile ENTWURF - ENTSCHEIDUNG AUSSTEHEND unveraendert, keine Entscheidung
   getroffen, V1-Datei unveraendert'
-status: REVIEW_REQUIRED
+status: ARCHIVED
 created_at: '2026-10-07T21:29:00Z'
 created_by: browser-claude
-task_version: 8
+task_version: 9
