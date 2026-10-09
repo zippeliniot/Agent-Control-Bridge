@@ -1,0 +1,29 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0018
+project_id: wetter-app
+title: Historie fuer Tages-Boenhoechstwert (max_daily_gust_3) - Pi-seitig
+description: 'Details: work-packages/WETTER-018.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: f6efb5907e5ddff2986c709c1b0849968798d236
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- 'export_daily.py: wind_gust_max im SENSORS-Tupel, erzeugt wind_gust_max_max (und
+  ungenutzte _min/_mean) in months/YYYY-MM.json'
+- 'export_history.py: wind_gust_max_monthly (flaches {jahr: [12 floats|null]}, nur
+  Max) als neues Top-Level-Feld in history.json'
+- Bestehende Felder/Sensoren (inkl. wind/wind_monthly aus WETTER-0017) unveraendert
+- Scope eingehalten (nur export_daily.py/export_history.py), py_compile fehlerfrei
+status: RUNNING
+created_at: '2026-10-10T00:00:00Z'
+created_by: browser-claude
+task_version: 5
