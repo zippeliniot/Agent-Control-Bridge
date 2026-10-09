@@ -102,11 +102,19 @@ Wartbarkeits-Gate - nicht nur "welche Dateien werden geaendert?" (wie heute
 `gitops.expected_git_files()`/`allowed_changed_files`), sondern "welche Dateien/Symbole
 muessen wegen realer Abhaengigkeiten gleichzeitig verstanden werden?".
 
-## 5. Offene Fragen, falls angenommen (hier nicht entschieden)
+## 5. Offene Fragen, falls angenommen
 
-- **Governance-Pfad**: eigenes Gate/eigene BRIDGE-Auftragsfolge, nicht im laufenden Auftrag
-  mitgezogen (wie bei jeder neuen Architektur, `ACB-UMSETZUNGSKONZEPT-V2.md` §1 "ein Auftrag
-  = ein Bereich").
+- **Governance-Pfad (BRIDGE-0096, entschieden):** kein neues Gate. `ACB-UMSETZUNGSKONZEPT-V2.md`
+  §5 definiert G0-G5 als Reifegrade der ACB-**Infrastruktur** selbst (Push-Sperre, CAS/Claim,
+  Parallelitaet, Dorfschaft-Zugriff) - nicht als Feature-Gates. Die Drei-Schichten-Architektur
+  ist ein fachlicher Bereich, kein Infrastruktur-Reifegrad, und faellt damit nicht unter dieses
+  Gate-Modell. Bereits gelebte Praxis bestaetigt das: `BRIDGE-0088/0089/0090/0093/0094` liefen
+  alle als normale `task_class: ARCHITECTURE`-Auftraege ohne Gate-Bezug. Entscheidung: jede
+  weitere Spezifikation dieser Architektur bleibt in diesem Flow (`task create` -> `run start`
+  -> `run finish`, Scope je Auftrag eng wie bisher, "ein Auftrag = ein Bereich"). Nur wenn eine
+  kuenftige Implementierung eine **Infrastruktur**-Faehigkeit beruehrt, die G0-G5 bereits regeln
+  (z. B. Executor-Push-Rechte, Parallelbetrieb mehrerer Indexer-Laeufe), gilt das jeweilige
+  bestehende Gate zusaetzlich - kein eigenes G6-artiges Gate fuer diese Architektur selbst.
 - **Technischer Spike vor Festlegung**: Tree-sitter-Grammatik-Abdeckung fuer PHP/JS/
   PowerShell real pruefen, bevor der Symbol-Graph-Indexer beauftragt wird.
 - **Wer baut/pflegt** den Symbol-/Datei-Graph (Claude Code, Codex, eigenes Tooling) - nicht

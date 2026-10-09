@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0096
+project_id: agent-control-bridge
+title: Governance-Pfad fuer Drei-Schichten-Architektur entscheiden
+description: 'Details: work-packages/BRIDGE-096.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: f8432166f63a8a5c7ea4292fa31d300680e9fae2
+  allowed_changed_files:
+  - docs/concepts/DREI-SCHICHTEN-ARCHITEKTUR-SPEZIFIKATION.md
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- docs/concepts/DREI-SCHICHTEN-ARCHITEKTUR-SPEZIFIKATION.md
+acceptance_criteria:
+- Bestehende Gate-Definition gegen die Frage geprueft
+- Gelebte Praxis als Beleg herangezogen
+- Entscheidung in der Spezifikation festgehalten
+status: WAITING_FOR_COPY_TO_CONTROL
+created_at: '2026-10-09T14:15:00Z'
+created_by: browser-claude
+task_version: 7
