@@ -75,7 +75,7 @@ Aenderung).
   `bridge draft write`
 - [x] Bei `push_mode: direct` (Default, alle anderen sechs Projekte)
   unveraendertes Verhalten - Regressionstest
-- [ ] `projects/agent-control-bridge/project.yaml` auf `push_mode: draft`
+- [x] `projects/agent-control-bridge/project.yaml` auf `push_mode: draft`
   umgestellt
 - [x] `collect_git_info()` liefert `changed_files` nur fuer Pfade des
   eigenen `task_prefix` (+ `open-issues/<project_id>/`), Pfade anderer

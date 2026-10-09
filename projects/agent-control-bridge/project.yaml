@@ -32,3 +32,4 @@ handover_policy:
   require_clean: true
 migration_policy:
   allow_production: false
+push_mode: draft
