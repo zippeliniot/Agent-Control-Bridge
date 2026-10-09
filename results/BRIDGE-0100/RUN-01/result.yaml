@@ -1,0 +1,27 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0100
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: 72733268d856b392a21fa7f3c6e62a2e4853f1ea
+executor: claude-code
+started_at: '2026-10-09T15:54:07Z'
+ended_at: '2026-10-09T15:54:10Z'
+created_by: claude-code@vm
+base_head: b8e8267
+commits:
+- sha: 72733268d856b392a21fa7f3c6e62a2e4853f1ea
+  message: 'BRIDGE-0100: Task angelegt + Stammdaten-Block zu den anderen Eingabebereichen
+    verschoben'
+changed_files:
+- audit/audit.jsonl
+- src/bridge/webui.py
+- tasks/BRIDGE-0100/task.yaml
+- work-packages/BRIDGE-100.md
+summary: Stammdaten-Block (RAG-Einstellungen, BRIDGE-0099) von unterhalb der Tabellen
+  direkt neben die anderen Eingabebereiche (Akteur/Filter) verschoben, vor das Aktions-Log.
+  Keine funktionale Aenderung, Tests unveraendert gruen.
+physical_machine: vm
