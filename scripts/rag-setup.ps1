@@ -251,6 +251,20 @@ if (-not $indexCloneExists) {
         exit 1
     }
     Write-Host "[ OK ] Index-Klon angelegt unter $IndexPath."
+} else {
+    # BRIDGE-0091: ein frueher ohne Git LFS angelegter Klon enthaelt nur
+    # Platzhalterzeiger - LFS-Pull idempotent nachholen, bei Fehlschlag nicht abbrechen.
+    Write-Host "Index-Klon vorhanden - hole fehlende LFS-Dateien nach ..."
+    Push-Location $IndexPath
+    git lfs pull
+    $lfsExit = $LASTEXITCODE
+    Pop-Location
+    if ($lfsExit -ne 0) {
+        Write-Host "[ FAIL ] 'git lfs pull' im vorhandenen Klon fehlgeschlagen - Klon ggf. " `
+                  "ohne grosse Dateien (Skript laeuft weiter)."
+    } else {
+        Write-Host "[ OK ] LFS-Dateien im vorhandenen Klon vollstaendig."
+    }
 }
 
 Write-Host ""

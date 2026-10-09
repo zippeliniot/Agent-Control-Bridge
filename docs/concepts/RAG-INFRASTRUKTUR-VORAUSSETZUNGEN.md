@@ -87,7 +87,9 @@ Komponenten (Ollama, `ollama pull nomic-embed-text`, `git clone` + `git lfs pull
 `rag-index`) - jeder Schritt einzeln geprueft, ein Fehlschlag bricht sofort ab. Es gibt
 bewusst keinen Parameter, der die Bestaetigung ueberspringt. Seit BRIDGE-0085 setzt es dabei
 `OLLAMA_MODELS` vorab auf `E:\_DEV\ollama-models`, falls dort noch nichts gesetzt war (siehe
-Abschnitt 1).
+Abschnitt 1). Git LFS wird seit BRIDGE-0091 vom Skript selbst erkannt und nach Bestaetigung
+installiert (inkl. PATH-Reload in der laufenden Session) und nicht mehr nur als manuelle
+Voraussetzung in Abschnitt 3 beschrieben; Abschnitt 3 bleibt als Fallback-Beschreibung stehen.
 
 ## 5. Inventar/Aufraeumen `scripts/rag-ollama-inventory.ps1` (BRIDGE-0085)
 

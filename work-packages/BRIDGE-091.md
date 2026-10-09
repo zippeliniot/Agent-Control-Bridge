@@ -107,9 +107,9 @@ bei Fehlschlag `[ FAIL ]` mit Hinweis, aber Skript nicht abbrechen (bestehendes 
 - [x] Teil B: fehlendes Git LFS erscheint in der "geplante Schritte"-Liste vor dem Index-Klon-Punkt.
 - [x] Teil C: Installation inkl. PATH-Refresh in derselben Session, `git lfs install` danach
       ausgefuehrt, klare Fail-Meldung falls PATH-Refresh selbst nicht reicht.
-- [ ] Teil D: `git lfs pull` wird auch bei bereits vorhandenem Klon (re-)versucht, nicht nur beim
+- [x] Teil D: `git lfs pull` wird auch bei bereits vorhandenem Klon (re-)versucht, nicht nur beim
       Erstanlegen; Fehlschlag dort haelt das Skript nicht an.
-- [ ] `docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md` Abschnitt 4 um einen Satz ergaenzt: Git
+- [x] `docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md` Abschnitt 4 um einen Satz ergaenzt: Git
       LFS wird seit BRIDGE-0091 vom Skript selbst erkannt/installiert, nicht mehr nur als manuelle
       Voraussetzung in Abschnitt 3 beschrieben (Abschnitt 3 bleibt als Fallback-Beschreibung stehen).
 - [ ] Volle Suite einmal am Ende, nur letzte 3 Zeilen (reines PowerShell-Skript, keine
