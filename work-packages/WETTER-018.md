@@ -54,7 +54,7 @@ Im Ziel-Repo committen und pushen (Commit-Message beginnt mit "WETTER-0018:"). D
 `BR run finish WETTER-0018 --status COMPLETED --actor claude-code --commit --base-head <ACB-Repo-HEAD-SHA zu Beginn deines Laufs, NICHT der Ziel-Repo-SHA> --summary "<Ziel-Repo-HEAD-SHA, welche Spalten/Felder in welcher Datei ergaenzt, py_compile-Ergebnis, Hinweis dass echte Datenverifikation auf pi5-01 durch den Steuerchat erfolgt>"`, `git push`.
 **Hinweis zu `--base-head`:** bei WETTER-0017 hat der automatische Fallback (aus `task.yaml: git.expected_head`, das bei uns den Ziel-Repo-SHA traegt) bei `run finish` einen Fail-Closed-Stopp ausgeloest, weil dieses Feld intern (BRIDGE-0095) als ACB-Repo-interner Ahnen-Check verwendet wird, nicht als Ziel-Repo-Referenz. Bitte DESHALB von Anfang an `--base-head` explizit mit dem ACB-Repo-HEAD-SHA setzen, den du beim `run start` in Schritt 1 notierst (NICHT den Ziel-Repo-SHA aus Schritt 2) - erspart den Nacharbeits-Schritt aus WETTER-0017.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, welche Dateien/Felder ergaenzt, py_compile-Ergebnis, Hinweis Pi-Verifikation steht aus.
-- [ ] `export_daily.py`: `wind_gust_max` im `SENSORS`-Tupel, erzeugt `wind_gust_max_max` (und ungenutzte `_min`/`_mean`) in `months/YYYY-MM.json`
-- [ ] `export_history.py`: `wind_gust_max_monthly` (flaches `{jahr: [12 floats|null]}`, nur Max) als neues Top-Level-Feld in `history.json`
-- [ ] Bestehende Felder/Sensoren (inkl. `wind`/`wind_monthly` aus WETTER-0017) unveraendert
-- [ ] Scope eingehalten (nur `export_daily.py`/`export_history.py`), `py_compile` fehlerfrei
+- [x] `export_daily.py`: `wind_gust_max` im `SENSORS`-Tupel, erzeugt `wind_gust_max_max` (und ungenutzte `_min`/`_mean`) in `months/YYYY-MM.json`
+- [x] `export_history.py`: `wind_gust_max_monthly` (flaches `{jahr: [12 floats|null]}`, nur Max) als neues Top-Level-Feld in `history.json`
+- [x] Bestehende Felder/Sensoren (inkl. `wind`/`wind_monthly` aus WETTER-0017) unveraendert
+- [x] Scope eingehalten (nur `export_daily.py`/`export_history.py`), `py_compile` fehlerfrei
