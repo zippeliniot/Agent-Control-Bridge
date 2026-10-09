@@ -58,8 +58,8 @@ Actor = claude-code
 Im Ziel-Repo committen und pushen (Commit-Message beginnt mit "WETTER-0016:"). Dann im ACB-Repo:
 `BR run finish WETTER-0016 --status COMPLETED --actor claude-code --commit --summary "<Ziel-Repo-HEAD-SHA, Befund Legende/Statzeile/Hoehe, Befund Bugfix getWindCityIdx, Befund Animationen, Regressionscheck andere Bloecke>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, Befund Kopf/Statzeile, Befund Animationen, Regressionscheck.
-- [ ] Wind-Karte nutzt die volle Kartenhoehe (Legende mit Labels, Statzeile Aktuell/Max/Ø, Chart 280px)
-- [ ] Standortwechsel aktualisiert Kopfwert UND Chart synchron (Bugfix getWindCityIdx)
-- [ ] Zahlen/Richtungspfeil animieren sanft bei echten Aenderungen, Hintergrund-Poll bleibt animationsfrei
-- [ ] Balken blenden beim initialen Laden/Range-Wechsel gestaffelt ein
-- [ ] Scope eingehalten (nur index.html Wind-Teil, charts.js Wind-Funktionen, main.js Wind-Funktionen) - andere Bloecke unveraendert
+- [x] Wind-Karte nutzt die volle Kartenhoehe (Legende mit Labels, Statzeile Aktuell/Max/Ø, Chart 280px)
+- [x] Standortwechsel aktualisiert Kopfwert UND Chart synchron (Bugfix getWindCityIdx)
+- [x] Zahlen/Richtungspfeil animieren sanft bei echten Aenderungen, Hintergrund-Poll bleibt animationsfrei
+- [x] Balken blenden beim initialen Laden/Range-Wechsel gestaffelt ein
+- [x] Scope eingehalten (nur index.html Wind-Teil, charts.js Wind-Funktionen, main.js Wind-Funktionen) - andere Bloecke unveraendert
