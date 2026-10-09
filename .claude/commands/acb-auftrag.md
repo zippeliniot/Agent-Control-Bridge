@@ -7,6 +7,7 @@ Setze BR = .venv\Scripts\python.exe src\bridge\cli.py --root . --schema-dir sche
 Actor = claude-code (Codex-Auftraege: codex-executor).
 
 0 MODELL-GATE: Schreibe als erste Zeile "MODELL: <dein Modell> / DENKSTUFE: <deine Stufe>". SOLL steht im WP-Kopf. Abweichung: STOPP, sonst nichts tun.
+  Existiert `scripts\wp-lint.py`, VOR der eigenen Kopf-Lektuere aufrufen: `.venv\Scripts\python.exe scripts\wp-lint.py --wp work-packages\BRIDGE-<3 Ziffern>.md --staging tasks\incoming\<ID>.yaml` und dessen Exit-Code uebernehmen (Exit != 0 = BLOCKED, Fehlermeldung als Beweis). Fehlt das Skript (anderer Checkout): Verhalten wie bisher.
 1 git pull. In tasks\incoming\<ID>.yaml: steht EXPECTED_HEAD -> durch `git rev-parse HEAD` ersetzen; steht schon ein SHA -> NICHT aendern.
 2 Auftrag vorhanden? (BR task show <ID>)
   - nein: BR task create tasks\incoming\<ID>.yaml --commit ; git push

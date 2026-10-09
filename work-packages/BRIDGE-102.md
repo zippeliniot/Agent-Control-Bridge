@@ -66,8 +66,8 @@ Lieferzeile.
 - [x] Erkennt `bridge_task_id`-Inkonsistenz zwischen WP-Titel und YAML
 - [x] YAML-Schema-Verstoss (z. B. fehlendes `acceptance_criteria`) wird ueber
   die bestehende Schema-Validierung erkannt, keine eigene Feldliste gepflegt
-- [ ] `acb-auftrag.md` §0 referenziert das Skript, bestehendes Verhalten ohne
+- [x] `acb-auftrag.md` §0 referenziert das Skript, bestehendes Verhalten ohne
   das Skript (falls in einem anderen Checkout nicht vorhanden) unveraendert
-- [ ] `ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 3 nennt die neue
+- [x] `ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 3 nennt die neue
   Steuerchat-Pflicht
 - [ ] Volle Suite gruen

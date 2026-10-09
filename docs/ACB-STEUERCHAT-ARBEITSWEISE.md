@@ -87,6 +87,11 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
   2. Pflicht zu `git push` am Ende, wenn `GIT_PUSH` im
      Berechtigungsprofil steht — ohne Push kann der Steuerchat das
      Ergebnis nicht per frischem Klon abrufen und prüfen.
+- **WP-Lint vor der Lieferung (BRIDGE-0102):** Der Steuerchat ruft
+  `scripts/wp-lint.py --wp <WP> --staging <YAML>` lokal auf, bevor ein
+  WP samt Staging-YAML als Datei geliefert wird (sofern das Skript im
+  geklonten Repo existiert), und nennt das Ergebnis kurz in der
+  Lieferzeile. Exit != 0 = nicht liefern, erst korrigieren.
 - **Step by step:** ein Arbeitsschritt/eine Entscheidung nach der
   anderen, nicht mehrere Optionen gleichzeitig zur Auswahl stellen, wenn
   eine sinnvolle Standardentscheidung getroffen werden kann — dann
