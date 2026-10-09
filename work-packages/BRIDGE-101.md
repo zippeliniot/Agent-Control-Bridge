@@ -70,10 +70,10 @@ Aenderung).
 
 ## Akzeptanzkriterien
 
-- [ ] `task create`/`run start`/`run finish`/`task copied`/`task archive`
+- [x] `task create`/`run start`/`run finish`/`task copied`/`task archive`
   lehnen bei `push_mode: draft` fail-closed ab, Fehlermeldung verweist auf
   `bridge draft write`
-- [ ] Bei `push_mode: direct` (Default, alle anderen sechs Projekte)
+- [x] Bei `push_mode: direct` (Default, alle anderen sechs Projekte)
   unveraendertes Verhalten - Regressionstest
 - [ ] `projects/agent-control-bridge/project.yaml` auf `push_mode: draft`
   umgestellt
