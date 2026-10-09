@@ -77,11 +77,11 @@ Aenderung).
   unveraendertes Verhalten - Regressionstest
 - [ ] `projects/agent-control-bridge/project.yaml` auf `push_mode: draft`
   umgestellt
-- [ ] `collect_git_info()` liefert `changed_files` nur fuer Pfade des
+- [x] `collect_git_info()` liefert `changed_files` nur fuer Pfade des
   eigenen `task_prefix` (+ `open-issues/<project_id>/`), Pfade anderer
   Projekte im selben Diff-Bereich werden herausgefiltert - neuer Test mit
   gemischtem Diff (zwei Projekte im selben `base_head..HEAD`-Bereich)
-- [ ] `audit/audit.jsonl`-Einschraenkung bewusst nicht umgesetzt, im Code-
+- [x] `audit/audit.jsonl`-Einschraenkung bewusst nicht umgesetzt, im Code-
   Kommentar und in diesem WP begruendet (siehe oben), nicht stillschweigend
   weggelassen
 - [ ] Volle Suite gruen (594 Bestand + neue Tests)

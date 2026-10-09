@@ -20,6 +20,7 @@ Entwurfs (bereits Projektabhängigkeit über die Ablage-Schicht).
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -31,7 +32,8 @@ if __package__ in (None, ""):
 
 import yaml
 
-from bridge import registry
+from bridge import profiles, registry
+from bridge.store import StoreError
 
 
 class ImporterError(Exception):
@@ -97,7 +99,43 @@ def _is_ancestor(root, sha: str, head: str) -> bool:
     return proc.returncode == 0
 
 
-def collect_git_info(root, base_head=None) -> dict:
+_FOREIGN_ID = re.compile(r"^[A-Z][A-Z0-9]*-\d+")
+
+
+def filter_project_files(files, task_prefix, project_id=None) -> list[str]:
+    """BRIDGE-0101 (ISSUE-0005): entfernt Bridge-verwaltete Pfade ANDERER Projekte
+    aus einer ``changed_files``-Liste.
+
+    Betroffen sind nur die Pfadmuster ``tasks/<ID>...``, ``results/<ID>...``,
+    ``work-packages/<ID>...`` (mit ``<ID>`` = Auftrags-ID eines anderen
+    ``task_prefix``) und ``open-issues/<anderes project_id>/``. Alle uebrigen
+    Pfade (Produktcode, Docs, ...) bleiben unveraendert erhalten. Ohne
+    ``task_prefix`` wird nicht gefiltert.
+
+    Bewusste Abgrenzung: ``audit/audit.jsonl`` ist eine gemeinsame
+    Append-only-Datei aller Projekte und laesst sich pfadbasiert keinem Projekt
+    zuordnen - sie bleibt in ``changed_files`` (kein Teil von BRIDGE-0101;
+    inhaltsbasiertes Filtern waere ein eigener, groesserer Auftrag).
+    """
+    if not task_prefix:
+        return list(files)
+    own = f"{task_prefix}-"
+    out = []
+    for path in files:
+        parts = path.replace("\\", "/").split("/")
+        foreign = False
+        if parts[0] == "open-issues" and len(parts) > 1 and project_id:
+            foreign = parts[1] != project_id
+        elif parts[0] in ("tasks", "results", "work-packages") and len(parts) > 1:
+            name = parts[2] if parts[1] == "incoming" and len(parts) > 2 else parts[1]
+            foreign = bool(_FOREIGN_ID.match(name)) and not name.startswith(own)
+        if not foreign:
+            out.append(path)
+    return out
+
+
+def collect_git_info(root, base_head=None, task_prefix=None,
+                     project_id=None) -> dict:
     """Ermittelt Repository/Branch/HEAD sowie - bei gesetztem ``base_head`` -
     die im Lauf erzeugten Commits und geänderten Dateien. Fail-closed bei jedem
     Git-Fehler (nichts erfinden).
@@ -149,6 +187,8 @@ def collect_git_info(root, base_head=None) -> dict:
         info["changed_files"] = _lines(
             _git(root, "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD")
         )
+    info["changed_files"] = filter_project_files(
+        info["changed_files"], task_prefix, project_id)
     return info
 
 
@@ -202,6 +242,15 @@ def build_result(store, bridge_task_id, status, *, run_id=None, draft=None,
 
     git_info_fn = git_info_fn or collect_git_info
     git = git_info_fn(store.root, base_head=base_head)
+    # BRIDGE-0101: Pfade anderer Projekte herausfiltern (Fail-soft ohne Profil).
+    try:
+        prefix = profiles.load_profile(
+            store.root, project_id,
+            schema_dir=store.schema_dir).get("task_prefix")
+    except (profiles.ProfileError, StoreError):
+        prefix = None
+    git = dict(git, changed_files=filter_project_files(
+        git.get("changed_files") or [], prefix, project_id))
 
     ended_at = _utc_now()
     started = started_at if started_at is not None else draft.get("started_at")

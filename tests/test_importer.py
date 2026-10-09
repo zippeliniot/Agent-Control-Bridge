@@ -287,6 +287,39 @@ class CollectGitInfoLiveHeadTests(unittest.TestCase):
         info = importer.collect_git_info(self.tmp, base_head=base)
         self.assertIn("b.txt", info["changed_files"])
 
+    def test_mixed_projects_diff_is_filtered_to_own_prefix(self):
+        # BRIDGE-0101 (ISSUE-0005): zwei Projekte im selben base_head..HEAD-Bereich.
+        base = self._head()
+        files = [
+            "tasks/BRIDGE-0100/task.yaml", "results/BRIDGE-0100/RUN-01/result.yaml",
+            "work-packages/BRIDGE-100.md", "open-issues/acb/ISSUE-1.yaml",
+            "tasks/WETTER-0015/task.yaml", "results/WETTER-0015/RUN-01/result.yaml",
+            "work-packages/WETTER-015.md", "open-issues/wetter/ISSUE-2.yaml",
+            "src/code.py", "audit/audit.jsonl",
+        ]
+        for rel in files:
+            p = self.tmp / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("x\n", encoding="utf-8")
+        self._sp("add", "-A")
+        self._sp("commit", "-m", "gemischt")
+        info = importer.collect_git_info(self.tmp, base_head=base,
+                                         task_prefix="BRIDGE", project_id="acb")
+        got = set(info["changed_files"])
+        self.assertEqual(got, {
+            "tasks/BRIDGE-0100/task.yaml", "results/BRIDGE-0100/RUN-01/result.yaml",
+            "work-packages/BRIDGE-100.md", "open-issues/acb/ISSUE-1.yaml",
+            "src/code.py", "audit/audit.jsonl"})
+        # ohne Prefix: unveraendert (Rueckwaertskompatibilitaet)
+        raw = importer.collect_git_info(self.tmp, base_head=base)
+        self.assertEqual(len(raw["changed_files"]), len(files))
+
+    def test_filter_keeps_incoming_of_own_prefix(self):
+        out = importer.filter_project_files(
+            ["tasks/incoming/BRIDGE-0101.yaml", "tasks/incoming/WETTER-0015.yaml"],
+            "BRIDGE", "acb")
+        self.assertEqual(out, ["tasks/incoming/BRIDGE-0101.yaml"])
+
     def test_non_ancestor_base_head_fails_closed(self):
         # Ein Commit auf einem Nebenzweig ist kein Vorfahr von main -
         # muss die neue Pruefung mit ImporterError ablehnen, nicht
