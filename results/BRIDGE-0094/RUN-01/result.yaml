@@ -1,0 +1,19 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0094
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: d7323138ff6356d783bc8359525f867ff47cbabf
+executor: claude-code
+started_at: '2026-10-09T11:41:10Z'
+ended_at: '2026-10-09T11:41:11Z'
+created_by: claude-code@vm
+base_head: d7323138ff6356d783bc8359525f867ff47cbabf
+summary: 'Drei-Schichten-Architektur spezifiziert: Decision-Log/Symbol-Datei-Graph/Vektor-RAG-Archiv
+  benannt und gegen bestehende Dokumente abgegrenzt, Flag-Routing + Context-Assembler
+  mit Rueckfluss skizziert, Symbol-Graph gegen Dorfschaft-Stack (PHP/MariaDB/JS/PowerShell,
+  Tree-sitter-Kandidat) spezifiziert. Governance/Schema/Spike bleiben eigene Folgeauftraege.'
+physical_machine: vm

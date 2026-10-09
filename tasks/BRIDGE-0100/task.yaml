@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0100
+project_id: agent-control-bridge
+title: Stammdaten-Block im Web UI verschoben
+description: 'Details: work-packages/BRIDGE-100.md'
+task_class: BUGFIX
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: b8e8267
+  allowed_changed_files:
+  - src/bridge/webui.py
+  - work-packages/BRIDGE-100.md
+model: Claude Sonnet 5
+reasoning_level: LOW
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- src/bridge/webui.py
+- work-packages/BRIDGE-100.md
+acceptance_criteria:
+- Block erscheint nur einmal, direkt nach den Filtern
+- Volle Suite gruen
+status: ARCHIVED
+created_at: '2026-10-09T15:50:00Z'
+created_by: browser-claude
+task_version: 9

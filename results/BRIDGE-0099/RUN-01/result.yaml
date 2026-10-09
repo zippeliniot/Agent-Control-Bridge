@@ -1,0 +1,30 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0099
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: 661a7ebd62b9933edc485d3883d650904090fd7b
+executor: claude-code
+started_at: '2026-10-09T15:36:11Z'
+ended_at: '2026-10-09T15:36:17Z'
+created_by: claude-code@vm
+base_head: a7354e4
+commits:
+- sha: 661a7ebd62b9933edc485d3883d650904090fd7b
+  message: 'BRIDGE-0099: Task angelegt + RAG-Stammdaten-Endpunkt/UI im Web UI'
+changed_files:
+- audit/audit.jsonl
+- src/bridge/webui.py
+- tasks/BRIDGE-0099/task.yaml
+- tests/test_webui.py
+- work-packages/BRIDGE-099.md
+summary: 'Neuer Endpunkt GET /api/project/<id>/rag-status zeigt RAG-Einrichtungsstatus
+  je Projekt im Web UI: rag_prereqs.check()-Ergebnis (nur wenn rag_enabled), Pfade
+  zu scripts/rag-setup.ps1, scripts/rag-ollama-inventory.ps1, docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md.
+  Neuer Button ''RAG-Einrichtung pruefen'' im Projekt-Einstellungen-Block. Kein Skriptstart
+  aus dem Web UI (fail-closed, BRIDGE-0084-Grundsatz). 3 neue Tests, volle Suite 594/594
+  gruen.'
+physical_machine: vm

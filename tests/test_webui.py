@@ -620,6 +620,41 @@ class WebUiActionTests(WebUiBase):
                                     {"actor": "april", "confirm": True, "rag_enabled": True})
         self.assertEqual(code, 400)
 
+    # -- GET /api/project/<id>/rag-status (BRIDGE-0099) --------------
+
+    def test_rag_status_disabled_skips_prereqs_check(self):
+        self._write_demo_profile(rag_enabled=False)
+        self.start()
+        with mock.patch("bridge.webui.rag_prereqs.check") as m:
+            code, body = self.get("/api/project/demo-proj/rag-status")
+        data = json.loads(body)
+        self.assertEqual(code, 200)
+        self.assertIs(data["rag_enabled"], False)
+        self.assertIsNone(data["prereqs"])
+        m.assert_not_called()
+
+    def test_rag_status_enabled_runs_prereqs_check(self):
+        self._write_demo_profile(rag_enabled=True)
+        self.start()
+        fake_result = {"ollama_reachable": True, "embed_model_present": False,
+                       "index_clone_exists": True, "missing": ["embed_model:nomic-embed-text"],
+                       "all_ok": False}
+        with mock.patch("bridge.webui.rag_prereqs.check", return_value=fake_result) as m:
+            code, body = self.get("/api/project/demo-proj/rag-status")
+        data = json.loads(body)
+        self.assertEqual(code, 200)
+        self.assertIs(data["rag_enabled"], True)
+        self.assertEqual(data["prereqs"], fake_result)
+        self.assertEqual(data["setup_script"], "scripts/rag-setup.ps1")
+        self.assertEqual(data["docs_ref"],
+                         "docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md")
+        m.assert_called_once()
+
+    def test_rag_status_missing_profile_404(self):
+        self.start()
+        code, body = self.get("/api/project/voellig-unbekannt/rag-status")
+        self.assertEqual(code, 404)
+
     def test_archive_success(self):
         self.make_task("BRIDGE-0901", "REVIEW_REQUIRED")
         self.start()

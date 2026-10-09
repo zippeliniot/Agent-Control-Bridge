@@ -75,10 +75,48 @@ def _lines(text: str) -> list[str]:
     return [line for line in text.splitlines() if line.strip()]
 
 
+def _is_ancestor(root, sha: str, head: str) -> bool:
+    """True, wenn ``sha`` ein Vorfahr (oder gleich) ``head`` ist.
+
+    BRIDGE-0095 (ISSUE-0003, zweiter Teilbefund): ``git merge-base
+    --is-ancestor`` gibt rc=0 (Vorfahr), rc=1 (kein Vorfahr) oder rc>=128
+    (ungueltiges Objekt, z. B. SHA existiert nicht) zurueck. Nur rc=0 ist
+    ``True`` - rc=1 und jeder Fehler gelten als "kein Nachweis", die
+    Aufruferin entscheidet, was das bedeutet (hier: fail-closed ablehnen).
+    Bewusst kein ``_git()``-Aufruf, da der dort generische Non-Zero-Fehler
+    rc=1 (haeufigster, erwarteter Fall: kein Vorfahr) faelschlich als
+    Git-Fehler statt als Nein-Antwort behandeln wuerde.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", sha, head],
+            capture_output=True, text=True, timeout=15, check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return proc.returncode == 0
+
+
 def collect_git_info(root, base_head=None) -> dict:
     """Ermittelt Repository/Branch/HEAD sowie - bei gesetztem ``base_head`` -
     die im Lauf erzeugten Commits und geänderten Dateien. Fail-closed bei jedem
-    Git-Fehler (nichts erfinden)."""
+    Git-Fehler (nichts erfinden).
+
+    BRIDGE-0095 (ISSUE-0003, zweiter Teilbefund): ``base_head`` wird vor der
+    Diff-Bildung gegen den **echten, aktuellen** HEAD geprueft (``git
+    merge-base --is-ancestor``), nicht nur blind als Vergleichsbasis
+    verwendet. Ohne diese Pruefung liefert ein veralteter/falscher
+    ``base_head`` (z. B. aus ``task.yaml: git.expected_head``, wenn das Feld
+    die Auftragsbasis zum Konzeptionszeitpunkt trägt statt des tatsächlichen
+    Git-Parents der Auftragsanlage - siehe der real belegte Befund bei
+    BRIDGE-0089, ``base_head`` `815ec26` statt echtem Parent `c01c5b4`) einen
+    stillschweigend falschen ``changed_files``-Diff, statt early zu scheitern.
+    Diese Pruefung behebt genau den Fallback-ohne-Pruefung-Teil des Befunds;
+    sie führt **keine** neuen Schema-Felder ein, um die drei begrifflich
+    unterschiedenen Zeitpunkte (Auftragsbasis/realer Git-Parent/
+    Vergleichsbasis) tatsächlich zu trennen - das bleibt eine eigene,
+    ausdrücklich nicht hier entschiedene Schema-Governance-Frage.
+    """
     toplevel = _git(root, "rev-parse", "--show-toplevel")
     info = {
         "repository": Path(toplevel).name,
@@ -89,6 +127,16 @@ def collect_git_info(root, base_head=None) -> dict:
         "changed_files": [],
     }
     if base_head:
+        if not _is_ancestor(root, base_head, info["head"]):
+            raise ImporterError(
+                f"base_head {base_head} ist kein Vorfahr des aktuellen HEAD "
+                f"{info['head']} (git merge-base --is-ancestor) - Live-HEAD-"
+                f"Pruefung fehlgeschlagen (BRIDGE-0095/ISSUE-0003). Moegliche "
+                f"Ursachen: veraltetes/falsches git.expected_head in "
+                f"task.yaml, oder --base-head wurde mit dem falschen SHA "
+                f"angegeben. Fail-closed: kein Diff gegen einen unbezogenen "
+                f"Commit."
+            )
         shas = _lines(_git(root, "rev-list", "--reverse", f"{base_head}..HEAD"))
         info["commits"] = [
             {"sha": sha, "message": _git(root, "log", "-1", "--format=%s", sha)}

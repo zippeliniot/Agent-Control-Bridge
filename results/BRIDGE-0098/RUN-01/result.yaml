@@ -1,0 +1,29 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0098
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: 11aeda0e65d4619e02dc11441bc917053188bdc3
+executor: claude-code
+started_at: '2026-10-09T12:26:41Z'
+ended_at: '2026-10-09T12:26:47Z'
+created_by: claude-code@vm
+base_head: 2ccebab
+commits:
+- sha: 11aeda0e65d4619e02dc11441bc917053188bdc3
+  message: 'BRIDGE-0098: Task angelegt + Tree-sitter-Spike-Arbeitspaket/Ergebnis'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/TREE-SITTER-SPIKE-ERGEBNIS.md
+- tasks/BRIDGE-0098/task.yaml
+- work-packages/BRIDGE-098.md
+summary: 'Tree-sitter-Spike: PHP/JS/PowerShell-Grammatiken gegen Dorfschaft-Stack
+  geprueft, alle in BRIDGE-0094 geforderten Kantentypen extrahiert (REQUIRES/USES_NAMESPACE/EXTENDS/IMPLEMENTS/USES_TRAIT,
+  IMPORTS/EXPORTS, DOT_SOURCES/IMPORTS_MODULE/CALLS/DEFINES_FUNCTION). PHP-Grammatik-Eigenheit
+  dokumentiert (child_by_field_name fuer base_clause/class_interface_clause liefert
+  None, Typ-basierter Zugriff als Workaround). Kein Ausschlussgrund gegen Tree-sitter
+  gefunden. Ergebnis in docs/concepts/TREE-SITTER-SPIKE-ERGEBNIS.md.'
+physical_machine: vm

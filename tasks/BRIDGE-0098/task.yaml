@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0098
+project_id: agent-control-bridge
+title: Tree-sitter-Spike durchfuehren
+description: 'Details: work-packages/BRIDGE-098.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 2ccebab
+  allowed_changed_files:
+  - docs/concepts/TREE-SITTER-SPIKE-ERGEBNIS.md
+  - work-packages/BRIDGE-098.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- docs/concepts/TREE-SITTER-SPIKE-ERGEBNIS.md
+- work-packages/BRIDGE-098.md
+acceptance_criteria:
+- PyPI-Verfuegbarkeit aller vier Pakete bestaetigt, inkl. PowerShell-Grammatik
+- Isoliertes venv, keine Repo-Verschmutzung
+- Drei repraesentative Beispiele gegen den Dorfschaft-Stack
+- Alle geforderten Kantentypen je Sprache extrahiert
+- Parser-Eigenheiten dokumentiert
+- Ergebnis als Dokument im Repo, Scope-Abgrenzung begruendet
+status: ARCHIVED
+created_at: '2026-10-09T14:30:00Z'
+created_by: browser-claude
+task_version: 9

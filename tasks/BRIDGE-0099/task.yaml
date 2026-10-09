@@ -1,0 +1,36 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0099
+project_id: agent-control-bridge
+title: RAG-Stammdaten je Projekt im Web UI
+description: 'Details: work-packages/BRIDGE-099.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: a7354e4
+  allowed_changed_files:
+  - src/bridge/webui.py
+  - tests/test_webui.py
+  - work-packages/BRIDGE-099.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- src/bridge/webui.py
+- tests/test_webui.py
+- work-packages/BRIDGE-099.md
+acceptance_criteria:
+- Endpunkt rag-status liefert prereqs nur bei rag_enabled true
+- Fehlendes Projektprofil -> 404
+- Web-UI-Button zeigt Ergebnis lesbar an
+- Neue Tests gruen, volle Suite gruen
+status: ARCHIVED
+created_at: '2026-10-09T15:30:00Z'
+created_by: browser-claude
+task_version: 9

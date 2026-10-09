@@ -186,6 +186,29 @@ den Repo-Zustand gleichermaßen (siehe Abschnitt 5, Punkt 2).
    `work-packages/*.md`) werden dem Nutzer als Datei geliefert, der sie
    selbst per PowerShell committet und pusht. Kein "ich lege das schon
    ins Repo"-Versprechen, das nicht eingehalten werden kann.
+7. **Konzept-/Entscheidungsdokumente sind Momentaufnahmen, kein
+   Live-Zustand — vor jeder Umsetzung selbst gegen den aktuellen
+   Repo-Stand abgleichen, nie dem im Dokument genannten Stand
+   vertrauen.** Betrifft insbesondere hochgeladene/angehängte Dateien
+   (`/root/.claude/uploads/...`) und ältere `docs/concepts/*.md` — beide
+   tragen oft einen eigenen "Stand HEAD `<sha>`"-Vermerk oder eine
+   eigene Registry-Prüfung, die zum Lesezeitpunkt bereits veraltet sein
+   kann, wenn zwischen Dokumenterstellung und Umsetzung ein anderer
+   Auftrag (Steuerchat-Aktion oder BRIDGE-Auftrag) den Repo-Stand
+   weiterbewegt hat. Konkret vor jedem `bridge issue open` und vor jeder
+   Übernahme eines Vorschlags aus einem solchen Dokument: frischer
+   `git log`/`git fetch` gegen den echten `HEAD` **und** `bridge issue
+   list --include-closed` laufen lassen — nicht nur einmal am
+   Sitzungsstart (Abschnitt 1), sondern erneut an dieser Stelle, auch
+   wenn das Dokument selbst behauptet, diesen Abgleich schon gemacht zu
+   haben. Anlass: am 09.10.2026 wurden aus
+   `KONZEPT-PRUEFRUNDEN-INTEGRATION_V2.md` (Stand-Vermerk HEAD `b70ed66`,
+   Abschnitt 0 behauptete fälschlich, `open-issues/` existiere nicht)
+   zunächst vier Issues angelegt, von denen drei bereits als
+   `agent-control-bridge-ISSUE-0001` (CLOSED, durch BRIDGE-0090 behoben)
+   bzw. `-0002`/`-0003` (OPEN) existierten — der Fehler wurde erst vor
+   dem Push bemerkt, der Commit wurde zurückgesetzt und nur der eine
+   tatsächlich neue Befund (`-0004`) angelegt.
 
 ---
 

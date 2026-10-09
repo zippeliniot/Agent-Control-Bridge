@@ -1,0 +1,19 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0095
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: 064ba4c3795c9b6cafe9cd12b989f20bff39a048
+executor: claude-code
+started_at: '2026-10-09T12:06:40Z'
+ended_at: '2026-10-09T12:06:41Z'
+created_by: claude-code@vm
+base_head: 064ba4c3795c9b6cafe9cd12b989f20bff39a048
+summary: 'Live-HEAD-Durchsetzung fuer base_head: collect_git_info() prueft jetzt git
+  merge-base --is-ancestor vor der Diff-Bildung, lehnt nicht-Vorfahr-base_head fail-closed
+  ab (ImporterError). Schema-Trennung der drei Zeitpunkte bewusst nicht mitgezogen
+  (eigene Governance-Frage). 581/581 Tests gruen (4 neu).'
+physical_machine: vm

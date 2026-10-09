@@ -1,0 +1,51 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0016
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 3ccbbaed98bcb9461a56d2ba5f34e7a3a96f2dab
+executor: claude-code
+started_at: '2026-10-09T10:22:45Z'
+ended_at: '2026-10-09T10:50:01Z'
+created_by: claude-code@DES11
+base_head: 15eb654
+commits:
+- sha: 88e6157608e4f6f60144a187dd69ddefe933efba
+  message: 'Ops: WETTER-0016 run_start (Steuerchat-Aktion via CLI)'
+- sha: ee7d969341a4f90087a740c2281e1c7d263c115d
+  message: 'Issue: Testzahl-Diskrepanz 576 vs. 575 als OpenIssue erfasst (ISSUE-0004)'
+- sha: 5a9be415458513c6119a5719f5a45b8cb088f679
+  message: 'ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2: Entscheidung dokumentiert
+    (teilweise Zustimmung)'
+- sha: 3ccbbaed98bcb9461a56d2ba5f34e7a3a96f2dab
+  message: 'ARBEITSWEISE.md: Verifikationspflicht 7 - Konzeptdokumente gegen Live-Repo-Stand
+    abgleichen'
+changed_files:
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+- open-issues/agent-control-bridge/agent-control-bridge-ISSUE-0004.yaml
+- results/WETTER-0016/RUN-01/heartbeat.json
+- tasks/WETTER-0016/task.yaml
+summary: 'Ziel-Repo-HEAD 17a6d6a. Legende (.wind-thr) um Text-Labels (Schwach/Maessig/Stark/Sturm)
+  erweitert, Werte konsistent zu windFill/windZonesPlugin (15/25/50 km/h). Neue Statzeile
+  Aktuell/Max/Oe aus den im Chart geladenen winds-Daten, kein neuer API-Call. Chart-Wrapper
+  #wind-card von 240px auf 280px. Bugfix: updateWindHeader() nutzte hart Index 1 statt
+  getWindCityIdx() - jetzt behoben, Standortwechsel aktualisiert Kopfwert UND Chart
+  synchron (per Playwright verifiziert: HH/GR-Wechsel). Animationen: sanftes Hochzaehlen
+  der Zahlen bei echter Wertaenderung (kein Sprung, keine Animation bei unveraendertem
+  Wert), Richtungspfeil dreht per CSS transform ueber kuerzesten Drehweg, Balken blenden
+  beim initialen Laden gestaffelt ein via animation.delay in getWindChartConfig (greift
+  nachweislich nicht bei windChart.update(''none'') - per Monkeypatch verifiziert:
+  manuelles Aktualisieren nutzt weiterhin ''none''), dezenter Puls in der Legende
+  beim Wechsel der Windstaerke-Zone. Verifikation: node --check beider Dateien OK;
+  Playwright headless Chromium bei 390px und 1366px - kein horizontaler Overflow,
+  Legende/Statzeile korrekt gefuellt, Chart-Hoehe 280px bestaetigt, Range-Wechsel
+  zaehlt Statzeilen-Wert hoch statt Sprung. Regressionscheck: temp-card/taschensee-card/sea-card
+  unveraendert sichtbar; einzige Konsolenfehler sind die bekannten 404 auf data/history.json|hours.json|live.json
+  (Pi-Daten, lokal ohne Pi nicht verfuegbar, laut Auftrag ''bleiben unberuehrt'',
+  kein Zusammenhang mit dieser Aenderung).'
+physical_machine: DES11

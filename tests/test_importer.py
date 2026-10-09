@@ -252,5 +252,70 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(doc["physical_machine"], "EXPLICIT-M")
 
 
+# --------------------------------------------------------------------------- #
+# collect_git_info / _is_ancestor gegen echtes Git (BRIDGE-0095, ISSUE-0003
+# zweiter Teilbefund: Live-HEAD-Durchsetzung statt reinem Fallback-Wert)
+# --------------------------------------------------------------------------- #
+
+class CollectGitInfoLiveHeadTests(unittest.TestCase):
+    """Reales Git-Repo (kein Stub) - prueft die neue Vorfahr-Pruefung in
+    collect_git_info() direkt, unabhaengig vom CLI/Runner-Umweg."""
+
+    def setUp(self):
+        import subprocess
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-gitinfo-"))
+        self._sp = lambda *args: subprocess.run(
+            ["git", *args], cwd=self.tmp, capture_output=True, text=True, timeout=30)
+        self._sp("init", "-b", "main")
+        self._sp("config", "user.email", "test@example.com")
+        self._sp("config", "user.name", "Test")
+        (self.tmp / "a.txt").write_text("1\n", encoding="utf-8")
+        self._sp("add", "a.txt")
+        self._sp("commit", "-m", "erster Commit")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _head(self):
+        return self._sp("rev-parse", "HEAD").stdout.strip()
+
+    def test_ancestor_base_head_succeeds(self):
+        base = self._head()
+        (self.tmp / "b.txt").write_text("2\n", encoding="utf-8")
+        self._sp("add", "b.txt")
+        self._sp("commit", "-m", "zweiter Commit")
+        info = importer.collect_git_info(self.tmp, base_head=base)
+        self.assertIn("b.txt", info["changed_files"])
+
+    def test_non_ancestor_base_head_fails_closed(self):
+        # Ein Commit auf einem Nebenzweig ist kein Vorfahr von main -
+        # muss die neue Pruefung mit ImporterError ablehnen, nicht
+        # stillschweigend einen falschen Diff liefern (BRIDGE-0089-Befund:
+        # base_head 815ec26 statt echtem Parent c01c5b4).
+        self._sp("checkout", "-b", "side")
+        (self.tmp / "side.txt").write_text("seite\n", encoding="utf-8")
+        self._sp("add", "side.txt")
+        self._sp("commit", "-m", "Seitenzweig-Commit")
+        side_head = self._head()
+        self._sp("checkout", "main")
+        with self.assertRaises(importer.ImporterError) as ctx:
+            importer.collect_git_info(self.tmp, base_head=side_head)
+        self.assertIn("kein Vorfahr", str(ctx.exception))
+
+    def test_unknown_sha_fails_closed(self):
+        with self.assertRaises(importer.ImporterError):
+            importer.collect_git_info(self.tmp, base_head="f" * 40)
+
+    def test_is_ancestor_helper_direct(self):
+        base = self._head()
+        (self.tmp / "c.txt").write_text("3\n", encoding="utf-8")
+        self._sp("add", "c.txt")
+        self._sp("commit", "-m", "dritter Commit")
+        head = self._head()
+        self.assertTrue(importer._is_ancestor(self.tmp, base, head))
+        self.assertFalse(importer._is_ancestor(self.tmp, head, base))
+        self.assertFalse(importer._is_ancestor(self.tmp, "f" * 40, head))
+
+
 if __name__ == "__main__":
     unittest.main()

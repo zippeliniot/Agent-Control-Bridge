@@ -1,0 +1,19 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0093
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: d21040f20d70f947f62f6063e538ec818dfc1fb7
+executor: claude-code
+started_at: '2026-10-09T11:15:00Z'
+ended_at: '2026-10-09T11:15:00Z'
+created_by: claude-code@vm
+base_head: d21040f20d70f947f62f6063e538ec818dfc1fb7
+summary: 'Mehrprojekt-RAG spezifiziert: Unterordner pro project_id im bestehenden
+  rag-index-Klon, kein Code-/Schema-Bedarf jetzt (rag_index_clone_path/rag_index_sync
+  bereits projekt-unabhaengig korrekt, kein Indexer-Code vorhanden). Vorbedingung
+  fuer Drei-Schichten-Architektur aufgeloest.'
+physical_machine: vm

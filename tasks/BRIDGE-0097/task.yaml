@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0097
+project_id: agent-control-bridge
+title: Decision-Log-Schema entwerfen
+description: 'Details: work-packages/BRIDGE-097.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 850eb87879a80326066392e8a7bf73169d2a30ca
+  allowed_changed_files:
+  - schemas/decision.schema.yaml
+  - tests/test_decision_schema.py
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- schemas/decision.schema.yaml
+- tests/test_decision_schema.py
+acceptance_criteria:
+- Schema ist valides JSON-Schema, additionalProperties false
+- Alle Ereignistypen aus ENTSCHEIDUNG-V2 Paragraph3a abgedeckt
+- supersedes traegt Geltungsbereich pro Eintrag
+- affects/implemented_by/verified_by/source_refs sind Repo+Commit-gebunden
+- Neue Tests gruen, volle Suite gruen
+status: ARCHIVED
+created_at: '2026-10-09T14:25:00Z'
+created_by: browser-claude
+task_version: 9
