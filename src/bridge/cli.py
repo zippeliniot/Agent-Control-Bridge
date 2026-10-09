@@ -259,11 +259,15 @@ def _build_parser() -> argparse.ArgumentParser:
     iopen.add_argument("--origin-task-id", required=True)
     iopen.add_argument("--actor", default="unknown",
                        help="Audit-Attribution (Standard: unknown)")
+    iopen.add_argument("--commit", action="store_true",
+                       help="Lokalen Commit ausfuehren (kein Push, BRIDGE-0092)")
     iclose = isub.add_parser("close", help="offenen Punkt schliessen")
     iclose.add_argument("issue_id")
     iclose.add_argument("--project-id", required=True)
     iclose.add_argument("--actor", required=True)
     iclose.add_argument("--note")
+    iclose.add_argument("--commit", action="store_true",
+                        help="Lokalen Commit ausfuehren (kein Push, BRIDGE-0092)")
     ilist = isub.add_parser("list", help="offene Punkte auflisten")
     ilist.add_argument("--project-id")
     ilist.add_argument("--include-closed", action="store_true")
@@ -1235,11 +1239,19 @@ def _cmd_issue(args, store) -> int:
             "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         }, actor=args.actor)
         print(f"OK: {doc['issue_id']} angelegt (project={doc['project_id']})")
+        if getattr(args, "commit", False):
+            rc = _do_commit(args, store, "issue_open", args.project_id, args.actor)
+            if rc != 0:
+                return rc
         return 0
     if args.issue_cmd == "close":
         profiles.load_profile(store.root, args.project_id, schema_dir=store.schema_dir)
         doc = store.close_issue(args.issue_id, args.project_id, actor=args.actor, note=args.note)
         print(f"OK: {doc['issue_id']} geschlossen (status={doc['status']})")
+        if getattr(args, "commit", False):
+            rc = _do_commit(args, store, "issue_close", args.project_id, args.actor)
+            if rc != 0:
+                return rc
         return 0
     if args.issue_cmd == "list":
         rows = store.list_open_issues(project_id=args.project_id,

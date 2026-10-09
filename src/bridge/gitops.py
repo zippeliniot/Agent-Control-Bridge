@@ -93,11 +93,19 @@ def expected_git_files(kind: str, task_id: str,
 
     CLI-Arten:
         ``task_create``, ``run_start``, ``run_finish``,
-        ``task_copied``, ``task_archive``, ``draft_write``
+        ``task_copied``, ``task_archive``, ``draft_write``,
+        ``issue_open``, ``issue_close`` (BRIDGE-0092)
     """
     if kind == "draft_write":
         # BRIDGE-0053: Executor-Draft - ausschliesslich die Draft-Datei.
         return [f"drafts/{task_id}/{run_id}/draft.yaml"] if run_id else []
+
+    if kind in ("issue_open", "issue_close"):
+        # BRIDGE-0092 (ISSUE-0003 Teilbefund): OpenIssue-Dateien (BRIDGE-0075)
+        # fehlten bislang als eigener kind - ``bridge issue open/close`` hatte
+        # daher kein ``--commit``-Flag. ``task_id`` ist hier project_id (gleiche
+        # Parameter-Wiederverwendung wie bei ``project_settings`` oben).
+        return [f"open-issues/{task_id}/", "audit/audit.jsonl"]
 
     if kind == "project_settings":
         # BRIDGE-0081: Projekt-Einstellungsformular (z. B. rag_enabled)

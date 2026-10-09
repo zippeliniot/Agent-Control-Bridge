@@ -118,6 +118,19 @@ class ExpectedGitFilesTests(unittest.TestCase):
         files = gitops.expected_git_files("project_settings", "agent-control-bridge")
         self.assertEqual(files, ["projects/agent-control-bridge/project.yaml"])
 
+    def test_issue_open_prefix_match(self):
+        # BRIDGE-0092 (ISSUE-0003 Teilbefund): --commit fuer `bridge issue
+        # open` - Praefix-Match auf das Projekt-Issue-Verzeichnis, nicht nur
+        # die konkrete Datei (Issue-Nummer ist beim Aufruf noch nicht bekannt).
+        files = gitops.expected_git_files("issue_open", "agent-control-bridge")
+        self.assertEqual(files, ["open-issues/agent-control-bridge/", "audit/audit.jsonl"])
+        self.assertTrue(gitops.matches_whitelist(
+            "open-issues/agent-control-bridge/agent-control-bridge-ISSUE-0005.yaml", files))
+
+    def test_issue_close_prefix_match(self):
+        files = gitops.expected_git_files("issue_close", "agent-control-bridge")
+        self.assertEqual(files, ["open-issues/agent-control-bridge/", "audit/audit.jsonl"])
+
 
 # --------------------------------------------------------------------------- #
 # _workpackage_filename (BRIDGE-033)
