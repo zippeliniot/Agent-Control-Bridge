@@ -1,0 +1,18 @@
+schema_version: '1.0'
+kind: open_issue
+issue_id: agent-control-bridge-ISSUE-0006
+project_id: agent-control-bridge
+status: OPEN
+summary: 'BRIDGE-0092 existiert nicht als formaler Auftrag: weder tasks/BRIDGE-0092/task.yaml
+  noch work-packages/BRIDGE-092.md wurden je angelegt (verifiziert per git log, frisch
+  HEAD cc6bdac). Der reale Code-Commit 7fa95f9 (gitops/cli: --commit-Flag fuer bridge
+  issue open/close, Teilbefund ISSUE-0003) lief ohne den sonst durchgaengigen task
+  create/run start/run finish/copied/archive-Zyklus. Die Nummer wird trotzdem an drei
+  Stellen als abgeschlossener Auftrag zitiert: docs/handover/ACB-UEBERGABE-v19.md
+  (Zeilen 5/33/44/74), open-issues/agent-control-bridge/agent-control-bridge-ISSUE-0003.yaml:16,
+  work-packages/BRIDGE-097.md:20. Entscheidung (April, Steuerchat 09.10.2026): KEINE
+  rueckwirkende Nachbuchung (tasks/BRIDGE-0092/task.yaml wird nicht nachtraeglich
+  angelegt) - dieses Issue dokumentiert die Luecke abschliessend, die drei Zitierstellen
+  bleiben unveraendert stehen.'
+origin_task_id: BRIDGE-0095
+created_at: '2026-10-09T21:56:55Z'
