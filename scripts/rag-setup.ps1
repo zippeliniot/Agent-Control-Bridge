@@ -77,6 +77,14 @@ if ($ollamaReachable) {
 
 $indexCloneExists = Test-Path (Join-Path $IndexPath ".git")
 
+# BRIDGE-0091: Git LFS direkt pruefen - 'git lfs version' scheitert, wenn das
+# Subcommand fehlt (DES11-Erfahrung 08.10.2026).
+$gitLfsInstalled = $false
+try {
+    git lfs version 2>$null | Out-Null
+    if ($LASTEXITCODE -eq 0) { $gitLfsInstalled = $true }
+} catch { }
+
 if ($ollamaReachable) { Ok "Ollama erreichbar ($OllamaUrl)" }
 else { Missing "Ollama nicht erreichbar ($OllamaUrl)" }
 
@@ -85,6 +93,9 @@ else { Missing "Ollama nicht installiert" }
 
 if ($embedModelPresent) { Ok "Embedding-Modell '$EmbedModel' vorhanden" }
 else { Missing "Embedding-Modell '$EmbedModel' nicht vorhanden" }
+
+if ($gitLfsInstalled) { Ok "Git LFS installiert" }
+else { Missing "Git LFS nicht installiert" }
 
 if ($indexCloneExists) { Ok "Index-Klon vorhanden ($IndexPath)" }
 else { Missing "Index-Klon nicht vorhanden ($IndexPath)" }
