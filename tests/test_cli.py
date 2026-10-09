@@ -1594,5 +1594,79 @@ class IssueCliTests(unittest.TestCase):
         self.assertIn("OPEN", out)
 
 
+class PushModeEnforcementTests(unittest.TestCase):
+    """BRIDGE-0101 (ISSUE-0005): push_mode: draft wird in der CLI fail-closed
+    durchgesetzt; push_mode: direct bleibt unveraendert (Regression)."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="ccb-pm-"))
+        for name in ("tasks", "results", "audit"):
+            (self.tmp / name).mkdir()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def cli(self, *args):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = main(["--root", str(self.tmp), "--schema-dir", str(SCHEMA_DIR), *args])
+        return code, out.getvalue(), err.getvalue()
+
+    def set_profile(self, push_mode):
+        pdir = self.tmp / "projects" / "codex-control-bridge"
+        pdir.mkdir(parents=True, exist_ok=True)
+        doc = {
+            "schema_version": "1.0", "kind": "bridge_project_profile",
+            "project_id": "codex-control-bridge", "repository": "Codex-Control-Bridge",
+            "default_branch": "main", "task_prefix": "BRIDGE", "read_only": False,
+        }
+        if push_mode is not None:
+            doc["push_mode"] = push_mode
+        (pdir / "project.yaml").write_text(yaml.safe_dump(doc), encoding="utf-8")
+
+    def task_file(self, task_id="BRIDGE-0900"):
+        path = self.tmp / f"{task_id}.yaml"
+        path.write_text(yaml.safe_dump(task_doc(bridge_task_id=task_id)),
+                        encoding="utf-8")
+        return path
+
+    def status(self, task_id="BRIDGE-0900"):
+        _, out, _ = self.cli("task", "show", task_id)
+        return [l for l in out.splitlines() if l.startswith("status:")][0]
+
+    def test_draft_blocks_task_create(self):
+        self.set_profile("draft")
+        code, _, err = self.cli("task", "create", str(self.task_file()))
+        self.assertEqual(code, 1)
+        self.assertIn("bridge draft write", err)
+        code, _, _ = self.cli("task", "show", "BRIDGE-0900")
+        self.assertNotEqual(code, 0)
+
+    def test_draft_blocks_run_and_task_lifecycle_commands(self):
+        self.set_profile("direct")
+        self.assertEqual(self.cli("task", "create", str(self.task_file()))[0], 0)
+        before = self.status()
+        self.set_profile("draft")
+        for argv in (
+            ("run", "start", "BRIDGE-0900", "--actor", "t"),
+            ("run", "finish", "BRIDGE-0900", "--status", "COMPLETED",
+             "--actor", "t", "--base-head", "0" * 40, "--summary", "x"),
+            ("task", "copied", "BRIDGE-0900", "--actor", "t"),
+            ("task", "archive", "BRIDGE-0900", "--actor", "t", "--reason", "x"),
+        ):
+            code, _, err = self.cli(*argv)
+            self.assertEqual(code, 1, argv)
+            self.assertIn("bridge draft write", err, argv)
+        self.assertEqual(self.status(), before)
+
+    def test_direct_and_default_unchanged(self):
+        for mode in ("direct", None):
+            self.set_profile(mode)
+            tid = "BRIDGE-0901" if mode else "BRIDGE-0902"
+            self.assertEqual(self.cli("task", "create", str(self.task_file(tid)))[0], 0)
+            code, _, _ = self.cli("run", "start", tid, "--actor", "t")
+            self.assertEqual(code, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

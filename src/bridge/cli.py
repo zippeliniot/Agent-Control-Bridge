@@ -15,6 +15,8 @@ import subprocess
 import sys
 import threading
 import time
+
+import yaml
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -382,7 +384,43 @@ def _task_brief(store, task_id) -> list:
             for line in lines]
 
 
+def _push_mode_block(store, project_id, action) -> int | None:
+    """BRIDGE-0101 (ISSUE-0005): ``push_mode: draft`` fail-closed durchsetzen.
+
+    Gibt 1 zurueck (nach Fehlermeldung), wenn das Projektprofil ``draft`` setzt.
+    Fehlendes/ungueltiges Profil -> kein Block (Default ``direct``, wie bisher)."""
+    if not project_id:
+        return None
+    try:
+        profile = profiles.load_profile(store.root, project_id,
+                                        schema_dir=store.schema_dir)
+    except (profiles.ProfileError, StoreError):
+        return None
+    if profiles.get_push_mode(profile) != "draft":
+        return None
+    print(f"Fehler: '{action}' ist bei push_mode: draft (Projekt {project_id}) "
+          f"nicht erlaubt (fail-closed). Ergebnis ueber 'bridge draft write' "
+          f"ablegen; Import/Push uebernimmt das Board bzw. der Mensch "
+          f"('bridge task import').", file=sys.stderr)
+    return 1
+
+
 def _cmd_task(args, store) -> int:
+    if args.task_cmd in ("create", "copied", "archive"):
+        if args.task_cmd == "create":
+            try:
+                pid = (yaml.safe_load(Path(args.path).read_text(encoding="utf-8"))
+                       or {}).get("project_id")
+            except (OSError, yaml.YAMLError, AttributeError):
+                pid = None
+        else:
+            try:
+                pid = store.load_task(args.task_id).get("project_id")
+            except StoreError:
+                pid = None
+        blocked = _push_mode_block(store, pid, f"task {args.task_cmd}")
+        if blocked:
+            return blocked
     if args.task_cmd == "create":
         doc = store.create_task(args.path)
         task_id = doc["bridge_task_id"]
@@ -1059,6 +1097,14 @@ def _cmd_claim(args, store) -> int:
 
 
 def _cmd_run(args, store) -> int:
+    if args.run_cmd in ("start", "finish"):
+        try:
+            pid = store.load_task(args.task_id).get("project_id")
+        except StoreError:
+            pid = None
+        blocked = _push_mode_block(store, pid, f"run {args.run_cmd}")
+        if blocked:
+            return blocked
     if args.run_cmd == "start":
         machine = registry.machine_name(args.machine)
         run_id = runner.start(store, args.task_id, args.actor, machine)
