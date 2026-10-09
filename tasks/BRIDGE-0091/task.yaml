@@ -37,7 +37,7 @@ acceptance_criteria:
   nur beim Erstanlegen; Fehlschlag dort haelt das Skript nicht an'
 - 'RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md Abschnitt 4 um Satz ergaenzt: Git LFS wird
   seit BRIDGE-0091 vom Skript selbst erkannt/installiert'
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: RUNNING
 created_at: '2026-10-08T21:26:00Z'
 created_by: browser-claude
-task_version: 3
+task_version: 5
