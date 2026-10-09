@@ -1,0 +1,48 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0101
+project_id: agent-control-bridge
+title: 'ISSUE-0005: push_mode-Durchsetzung + projektbezogene changed_files/base_head'
+description: 'Details: work-packages/BRIDGE-101.md'
+task_class: BUGFIX
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: c9e459a
+  allowed_changed_files:
+  - src/bridge/cli.py
+  - src/bridge/importer.py
+  - projects/agent-control-bridge/project.yaml
+  - tests/test_cli.py
+  - tests/test_importer.py
+  - tests/test_profiles.py
+  - work-packages/BRIDGE-101.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- src/bridge/cli.py
+- src/bridge/importer.py
+- projects/agent-control-bridge/project.yaml
+- tests/test_cli.py
+- tests/test_importer.py
+- tests/test_profiles.py
+- work-packages/BRIDGE-101.md
+acceptance_criteria:
+- task create/run start/run finish/task copied/task archive lehnen bei push_mode draft
+  fail-closed ab, Fehlermeldung verweist auf bridge draft write
+- push_mode direct (alle anderen sechs Projekte) unveraendertes Verhalten - Regressionstest
+- projects/agent-control-bridge/project.yaml auf push_mode draft umgestellt
+- collect_git_info() liefert changed_files nur fuer Pfade des eigenen task_prefix
+  + open-issues/<project_id>/, neuer Test mit gemischtem Diff
+- audit.jsonl-Einschraenkung bewusst nicht umgesetzt, begruendet (siehe WP)
+- Volle Suite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-09T17:41:40Z'
+created_by: browser-claude
+task_version: 3
