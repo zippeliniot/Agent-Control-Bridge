@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0016
+project_id: wetter-app
+title: 'Wind-Karte: Kopf vervollstaendigen (Legende + Statzeile) und Animationen'
+description: 'Details: work-packages/WETTER-016.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: 7df36e7a6a38c36512a9fa58b2665e1c13545a4e
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- Wind-Karte nutzt die volle Kartenhoehe (Legende mit Labels, Statzeile Aktuell/Max/Ø,
+  Chart 280px)
+- Standortwechsel aktualisiert Kopfwert UND Chart synchron (Bugfix getWindCityIdx)
+- Zahlen/Richtungspfeil animieren sanft bei echten Aenderungen, Hintergrund-Poll bleibt
+  animationsfrei
+- Balken blenden beim initialen Laden/Range-Wechsel gestaffelt ein
+- Scope eingehalten (nur index.html Wind-Teil, charts.js Wind-Funktionen, main.js
+  Wind-Funktionen)
+status: RUNNING
+created_at: '2026-10-09T00:00:00Z'
+created_by: browser-claude
+task_version: 5
