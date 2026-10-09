@@ -211,6 +211,29 @@ if (-not $embedModelPresent) {
     }
 }
 
+if (-not $gitLfsInstalled) {
+    Write-Host "Installiere Git LFS (noch nicht installiert) ..."
+    winget install -e --id GitHub.GitLFS
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ FAIL ] Git-LFS-Installation fehlgeschlagen - Abbruch."
+        exit 1
+    }
+    # BRIDGE-0091: winget traegt den neuen Pfad nur in die Registry ein, nicht
+    # ins Environment des laufenden Prozesses - PATH hier nachladen, damit kein
+    # Terminal-Neustart noetig ist (DES11-Erfahrung 08.10.2026).
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
+                [System.Environment]::GetEnvironmentVariable("Path", "User")
+    git lfs version 2>$null | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ FAIL ] Git LFS installiert, aber im laufenden Prozess weiterhin " `
+                  "nicht aufrufbar - bitte Terminal neu oeffnen und Skript erneut starten."
+        exit 1
+    }
+    $gitLfsInstalled = $true
+    git lfs install
+    Write-Host "[ OK ] Git LFS installiert und aktiviert."
+}
+
 if (-not $indexCloneExists) {
     Write-Host "Klone Index-Repository ..."
     git clone $IndexRepo $IndexPath
