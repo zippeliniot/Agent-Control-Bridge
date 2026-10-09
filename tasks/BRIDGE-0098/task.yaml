@@ -29,7 +29,7 @@ acceptance_criteria:
 - Alle geforderten Kantentypen je Sprache extrahiert
 - Parser-Eigenheiten dokumentiert
 - Ergebnis als Dokument im Repo, Scope-Abgrenzung begruendet
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-10-09T14:30:00Z'
 created_by: browser-claude
-task_version: 3
+task_version: 7
