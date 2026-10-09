@@ -108,7 +108,7 @@ else { Missing "OLLAMA_MODELS nicht gesetzt (Standard: `$env:USERPROFILE\.ollama
 
 Write-Host ""
 
-if ($ollamaReachable -and $embedModelPresent -and $indexCloneExists) {
+if ($ollamaReachable -and $embedModelPresent -and $indexCloneExists -and $gitLfsInstalled) {
     Write-Host "Alle Voraussetzungen vorhanden - nichts zu tun."
     exit 0
 }
@@ -124,8 +124,11 @@ if (-not $ollamaReachable -and $ollamaInstalled) {
 if (-not $embedModelPresent) {
     Info "2. ollama pull $EmbedModel"
 }
+if (-not $gitLfsInstalled) {
+    Info "3. Git LFS installieren (winget install -e --id GitHub.GitLFS) + git lfs install"
+}
 if (-not $indexCloneExists) {
-    Info "3. git clone $IndexRepo -> $IndexPath, danach git lfs pull"
+    Info "4. git clone $IndexRepo -> $IndexPath, danach git lfs pull"
 }
 Write-Host ""
 

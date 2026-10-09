@@ -104,7 +104,7 @@ bei Fehlschlag `[ FAIL ]` mit Hinweis, aber Skript nicht abbrechen (bestehendes 
 ## Akzeptanzkriterien
 
 - [x] Teil A: `$gitLfsInstalled`-Erkennung ergaenzt, OK/FEHLT-Zeile wie die vier bestehenden Signale.
-- [ ] Teil B: fehlendes Git LFS erscheint in der "geplante Schritte"-Liste vor dem Index-Klon-Punkt.
+- [x] Teil B: fehlendes Git LFS erscheint in der "geplante Schritte"-Liste vor dem Index-Klon-Punkt.
 - [ ] Teil C: Installation inkl. PATH-Refresh in derselben Session, `git lfs install` danach
       ausgefuehrt, klare Fail-Meldung falls PATH-Refresh selbst nicht reicht.
 - [ ] Teil D: `git lfs pull` wird auch bei bereits vorhandenem Klon (re-)versucht, nicht nur beim
