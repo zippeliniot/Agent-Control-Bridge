@@ -388,6 +388,18 @@ _PAGE = r"""<!doctype html>
   <datalist id="statuslist"></datalist>
 </div>
 
+<h2>Projekt-Einstellungen &amp; Stammdaten</h2>
+<div class="bar" id="proj-settings">
+  <label for="ps-projekt">Projekt-ID:</label>
+  <input id="ps-projekt" size="24" autocomplete="off">
+  <button type="button" id="ps-load">Laden</button>
+  <label><input type="checkbox" id="ps-rag"> RAG aktiviert</label>
+  <button type="button" id="ps-save">Speichern</button>
+  <button type="button" id="ps-ragcheck">RAG-Einrichtung pr&uuml;fen</button>
+  <span id="ps-status" class="note"></span>
+</div>
+<div id="ps-ragstatus" class="note"></div>
+
 <div id="log" aria-label="Aktions-Log"></div>
 
 <h2>Board &ndash; wartet auf Weitergabe / Kopie</h2>
@@ -429,18 +441,6 @@ _PAGE = r"""<!doctype html>
   <th data-sort-col="last_activity_ts" data-label="Aktiv vor">Aktiv vor</th>
   <th data-sort-col="fuehrung" data-label="F&uuml;hrung/Pr&uuml;fung">F&uuml;hrung/Pr&uuml;fung</th>
 </tr></thead><tbody></tbody></table>
-
-<h2>Projekt-Einstellungen &amp; Stammdaten</h2>
-<div class="bar" id="proj-settings">
-  <label for="ps-projekt">Projekt-ID:</label>
-  <input id="ps-projekt" size="24" autocomplete="off">
-  <button type="button" id="ps-load">Laden</button>
-  <label><input type="checkbox" id="ps-rag"> RAG aktiviert</label>
-  <button type="button" id="ps-save">Speichern</button>
-  <button type="button" id="ps-ragcheck">RAG-Einrichtung pr&uuml;fen</button>
-  <span id="ps-status" class="note"></span>
-</div>
-<div id="ps-ragstatus" class="note"></div>
 
 <script>
 %PURE_JS%
