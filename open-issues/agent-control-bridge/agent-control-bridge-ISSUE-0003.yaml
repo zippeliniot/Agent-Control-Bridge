@@ -2,10 +2,16 @@ schema_version: '1.0'
 kind: open_issue
 issue_id: agent-control-bridge-ISSUE-0003
 project_id: agent-control-bridge
-status: OPEN
+status: CLOSED
 summary: expected_head/base_head vermischen drei Zeitpunkte (Auftragsbasis, realer
   Git-Parent der Auftragsanlage, Vergleichsbasis fuer changed_files), keine Durchsetzung
   gegen Live-HEAD; open-issues/ fehlt ein kind in gitops.expected_git_files() und
   bridge issue open/close ein --commit-Flag
 origin_task_id: BRIDGE-0089
 created_at: '2026-10-08T15:43:44Z'
+closed_at: '2026-10-09T12:07:01Z'
+closed_by: steuerchat
+note: 'BRIDGE-0095: Live-HEAD-Durchsetzung ergaenzt (collect_git_info() prueft git
+  merge-base --is-ancestor, lehnt nicht-Vorfahr-base_head fail-closed ab, src/bridge/importer.py).
+  Schema-Trennung der drei Zeitpunkte und das --commit-Flag (BRIDGE-0092) waren die
+  beiden Teilbefunde - beide behoben. 581/581 Tests gruen.'
