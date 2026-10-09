@@ -1,0 +1,43 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0091
+project_id: agent-control-bridge
+title: rag-setup.ps1 um Git-LFS-Praevenz-Pruefung erweitern
+description: 'Details: work-packages/BRIDGE-091.md'
+task_class: BUGFIX
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: 857cb489a49f72c44cfa4de06f78adafc230d8a3
+  allowed_changed_files:
+  - scripts/rag-setup.ps1
+  - docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+depends_on: []
+allowed_paths:
+- scripts/rag-setup.ps1
+- docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+stop_conditions:
+- CONCEPT_CONFLICT
+acceptance_criteria:
+- 'Teil A: $gitLfsInstalled-Erkennung ergaenzt (git lfs version in try/catch), OK/FEHLT-Zeile
+  wie die vier bestehenden Signale'
+- 'Teil B: fehlendes Git LFS erscheint in der geplante-Schritte-Liste vor dem Index-Klon-Punkt'
+- 'Teil C: Installation inkl. PATH-Refresh in derselben Session (Machine+User PATH
+  aus der Registry nachladen), git lfs install danach ausgefuehrt, klare Fail-Meldung
+  falls PATH-Refresh selbst nicht reicht (Hinweis: Terminal neu oeffnen)'
+- 'Teil D: git lfs pull wird auch bei bereits vorhandenem Klon erneut versucht, nicht
+  nur beim Erstanlegen; Fehlschlag dort haelt das Skript nicht an'
+- 'RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md Abschnitt 4 um Satz ergaenzt: Git LFS wird
+  seit BRIDGE-0091 vom Skript selbst erkannt/installiert'
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-08T21:26:00Z'
+created_by: browser-claude
+task_version: 3
