@@ -30,7 +30,7 @@ acceptance_criteria:
 - Fehlendes Projektprofil -> 404
 - Web-UI-Button zeigt Ergebnis lesbar an
 - Neue Tests gruen, volle Suite gruen
-status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-10-09T15:30:00Z'
 created_by: browser-claude
-task_version: 3
+task_version: 7
