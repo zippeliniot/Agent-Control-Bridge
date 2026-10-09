@@ -1,0 +1,13 @@
+schema_version: '1.0'
+kind: open_issue
+issue_id: agent-control-bridge-ISSUE-0005
+project_id: agent-control-bridge
+status: OPEN
+summary: push_mode steht bei keinem der sieben Projekte auf draft (M1 Single-Writer
+  nicht aktiv); der gemeinsame ACB-Store-Branch (main) erlaubt dadurch Commit-Races
+  zwischen gleichzeitig laufenden Steuerchats verschiedener Projekte - git selbst
+  verhindert Datenverlust (kein Force-Push), aber changed_files/base_head in result.yaml
+  werden unprojiziert ueber das ganze Repo berechnet und ziehen fremde Projekt-Commits
+  mit rein (real beobachtet bei BRIDGE-0091, Wetter-Steuerchat-Commits a2600a4/22b4233)
+origin_task_id: BRIDGE-0091
+created_at: '2026-10-09T10:23:34Z'
