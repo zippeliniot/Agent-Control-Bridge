@@ -84,4 +84,4 @@ Aenderung).
 - [x] `audit/audit.jsonl`-Einschraenkung bewusst nicht umgesetzt, im Code-
   Kommentar und in diesem WP begruendet (siehe oben), nicht stillschweigend
   weggelassen
-- [ ] Volle Suite gruen (594 Bestand + neue Tests)
+- [x] Volle Suite gruen (594 Bestand + neue Tests)
