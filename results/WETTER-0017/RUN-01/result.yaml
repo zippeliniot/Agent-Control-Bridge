@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0017
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: cc6bdacd63ea84943f1f76eed38e7b8346c2cd98
+executor: claude-code
+started_at: '2026-10-09T21:53:41Z'
+ended_at: '2026-10-09T21:57:48Z'
+created_by: claude-code@DES11
+base_head: 2e9b487
+commits:
+- sha: cc6bdacd63ea84943f1f76eed38e7b8346c2cd98
+  message: 'Ops: WETTER-0017 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0017/RUN-01/heartbeat.json
+- tasks/WETTER-0017/task.yaml
+summary: 'Ziel-Repo-HEAD f6efb5907e5ddff2986c709c1b0849968798d236 (main, gepusht).
+  Vier neue Sensoren in SENSOR_MEASUREMENTS (climac_sftp.py): wind_speed/wind_gust/wind_dir/wind_gust_max.
+  export_live.py: alle vier liefern aktuelle Werte in live.json (range -30m, nd=1
+  bzw. 0 fuer wind_dir). export_daily.py: wind_speed zusaetzlich in SENSORS-Tupel
+  -> wind_speed_min/_max/_mean in months/YYYY-MM.json. export_history.py: WIND_START=2025-01-22,
+  years.wind + Top-Level wind_monthly in history.json. py_compile aller vier Dateien
+  fehlerfrei. Echte Datenverifikation (laeuft der Export wirklich, sind live.json/months/*.json/history.json
+  korrekt befuellt) steht noch aus - erfolgt separat auf pi5-01 durch den Steuerchat
+  zusammen mit April, NACH diesem Push, VOR Archivierung.'
+physical_machine: DES11

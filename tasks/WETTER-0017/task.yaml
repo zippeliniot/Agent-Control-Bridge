@@ -23,7 +23,7 @@ acceptance_criteria:
 - 'export_history.py: years.wind (Jahresreihe) + wind_monthly (Monats-Min/Max/Ø) ab
   2025-01-22 in history.json'
 - Scope eingehalten (nur die vier pi-scripts/*.py-Dateien), py_compile fehlerfrei
-status: RUNNING
+status: WAITING_FOR_COPY_TO_CONTROL
 created_at: '2026-10-09T00:00:00Z'
 created_by: browser-claude
-task_version: 5
+task_version: 7

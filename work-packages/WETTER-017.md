@@ -70,8 +70,8 @@ Actor = claude-code
 Im Ziel-Repo committen und pushen (Commit-Message beginnt mit "WETTER-0017:"). Dann im ACB-Repo:
 `BR run finish WETTER-0017 --status COMPLETED --actor claude-code --commit --summary "<Ziel-Repo-HEAD-SHA, welche vier Keys/Sensoren in welchen der vier Dateien ergaenzt wurden, py_compile-Ergebnis, Hinweis dass echte Datenverifikation auf pi5-01 durch den Steuerchat erfolgt>"`, `git push`.
 Ausgabe NUR: Footer + max. 5 Zeilen: ACB-HEAD, Ziel-Repo-HEAD, welche Dateien/Keys ergaenzt, py_compile-Ergebnis, Hinweis Pi-Verifikation steht aus.
-- [ ] `climac_sftp.py`: vier neue `SENSOR_MEASUREMENTS`-Keys (`wind_speed`/`wind_gust`/`wind_dir`/`wind_gust_max`)
-- [ ] `export_live.py`: alle vier Keys liefern aktuelle Werte in `live.json`
-- [ ] `export_daily.py`: `wind_speed_min`/`_max`/`_mean` in `months/YYYY-MM.json`
-- [ ] `export_history.py`: `years.wind` (Jahresreihe) + `wind_monthly` (Monats-Min/Max/Ø) ab 2025-01-22 in `history.json`
-- [ ] Scope eingehalten (nur die vier genannten `pi-scripts/*.py`-Dateien), `py_compile` fehlerfrei
+- [x] `climac_sftp.py`: vier neue `SENSOR_MEASUREMENTS`-Keys (`wind_speed`/`wind_gust`/`wind_dir`/`wind_gust_max`)
+- [x] `export_live.py`: alle vier Keys liefern aktuelle Werte in `live.json`
+- [x] `export_daily.py`: `wind_speed_min`/`_max`/`_mean` in `months/YYYY-MM.json`
+- [x] `export_history.py`: `years.wind` (Jahresreihe) + `wind_monthly` (Monats-Min/Max/Ø) ab 2025-01-22 in `history.json`
+- [x] Scope eingehalten (nur die vier genannten `pi-scripts/*.py`-Dateien), `py_compile` fehlerfrei
