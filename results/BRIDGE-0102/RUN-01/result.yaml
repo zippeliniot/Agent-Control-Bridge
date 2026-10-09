@@ -1,0 +1,76 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0102
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: d982ed4b8c15f39a6d614761acc44cf37b040179
+executor: claude-code
+started_at: '2026-10-09T18:24:25Z'
+ended_at: '2026-10-09T21:34:19Z'
+created_by: claude-code@DES11
+base_head: c9e459a
+commits:
+- sha: 4fde65289ccdabb1cc473d9b2da00a57e4714649
+  message: 'BRIDGE-0101: WP'
+- sha: 14b639acb941b6a021af1573281c9f52e191d21e
+  message: 'Ops: BRIDGE-0101 task_create (Steuerchat-Aktion via CLI)'
+- sha: 0cc047d3c6da76f6c26a96f75fef47dc0081a283
+  message: 'Ops: BRIDGE-0101 run_start (Steuerchat-Aktion via CLI)'
+- sha: c8d5d82b09310f7d6eeab90795865dd65de0b72a
+  message: 'BRIDGE-0101 Teil A: push_mode draft fail-closed in CLI (project.yaml-Umschaltung
+    am Ende)'
+- sha: c1ba3d2f4cd1be1b990a547855b7cf6511397eea
+  message: 'BRIDGE-0101 Teil A: Haken'
+- sha: 2e990564f16d32a37b79c4982e0cec0efc5ff2a9
+  message: 'BRIDGE-0101 Teil B: projektbezogene changed_files'
+- sha: 093b50383b8875259cd953a7fed93da5c9d5d66a
+  message: 'BRIDGE-0101: Suite gruen (599)'
+- sha: bc313f95a0883949af4a6ea9c30e6f0593954f1b
+  message: 'Ops: BRIDGE-0101 run_finish (Steuerchat-Aktion via CLI)'
+- sha: dda45236ebb47b6294a2fe386a6fa9f5e15a1cf9
+  message: 'BRIDGE-0101 Teil A (Abschluss): agent-control-bridge push_mode: draft'
+- sha: 2ea9d87ac01390f067ea62b67ed8d3a5d035fb0e
+  message: 'agent-control-bridge: push_mode zurueck auf direct (Selbstbezueglichkeits-Problem
+    BRIDGE-0101)'
+- sha: 8960805a8fa14b47e33430621c626b1da0bf89cb
+  message: 'Ops: BRIDGE-0101 copied (Steuerchat-Aktion via Web-UI)'
+- sha: 39bc230736eedae1e3e8bf21eb29d0fdb3d8fb90
+  message: 'Ops: BRIDGE-0101 archive (Steuerchat-Aktion via Web-UI)'
+- sha: c8ecd92f2305c8cca7b7ed43e663242fd7c9a822
+  message: 'BRIDGE-0102: WP'
+- sha: cb1c7f76af66305b3f93191ddff9ef67636a2913
+  message: 'Ops: BRIDGE-0102 task_create (Steuerchat-Aktion via CLI)'
+- sha: e36e2c20fa26f2ba709efed128373b9acfbf0454
+  message: 'Ops: BRIDGE-0102 run_start (Steuerchat-Aktion via CLI)'
+- sha: 09cf52bf7c5f86894435ad872d2e04a96ee57c97
+  message: 'BRIDGE-0102 Teil A: wp-lint.py + Tests'
+- sha: 3c41acd9e91c6d9c8f1af1a0ecb3104c5ddc9d22
+  message: 'BRIDGE-0102 Teil B: acb-auftrag + Arbeitsweise verweisen auf wp-lint'
+- sha: d982ed4b8c15f39a6d614761acc44cf37b040179
+  message: 'BRIDGE-0102: Suite gruen (607)'
+changed_files:
+- .claude/commands/acb-auftrag.md
+- audit/audit.jsonl
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- projects/agent-control-bridge/project.yaml
+- results/BRIDGE-0101/RUN-01/heartbeat.json
+- results/BRIDGE-0101/RUN-01/result.yaml
+- results/BRIDGE-0102/RUN-01/heartbeat.json
+- scripts/wp-lint.py
+- src/bridge/cli.py
+- src/bridge/importer.py
+- tasks/BRIDGE-0101/task.yaml
+- tasks/BRIDGE-0102/task.yaml
+- tests/test_cli.py
+- tests/test_importer.py
+- tests/test_wp_lint.py
+- work-packages/BRIDGE-101.md
+- work-packages/BRIDGE-102.md
+summary: scripts/wp-lint.py prueft WP-Kopf (Modell/Denkstufe), Staging-YAML per Store.validate
+  sowie Modell-/Denkstufen- und ID-Konsistenz, fail-closed. acb-auftrag.md §0 und
+  ACB-STEUERCHAT-ARBEITSWEISE.md Abschnitt 3 verweisen darauf. Volle Suite 607/607
+  OK.
+physical_machine: DES11
