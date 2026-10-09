@@ -70,4 +70,4 @@ Lieferzeile.
   das Skript (falls in einem anderen Checkout nicht vorhanden) unveraendert
 - [x] `ACB-STEUERCHAT-ARBEITSWEISE.md` Abschnitt 3 nennt die neue
   Steuerchat-Pflicht
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
