@@ -44,7 +44,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bridge import gitops, importer, profiles, registry, runner, state_machine
+from bridge import gitops, importer, profiles, rag_prereqs, registry, runner, state_machine
 # Dieselben Funktionen wie `bridge board` / `bridge task copied` /
 # `bridge task archive` - garantiert keine zweite, abweichende Implementierung.
 from bridge.cli import (
@@ -430,15 +430,17 @@ _PAGE = r"""<!doctype html>
   <th data-sort-col="fuehrung" data-label="F&uuml;hrung/Pr&uuml;fung">F&uuml;hrung/Pr&uuml;fung</th>
 </tr></thead><tbody></tbody></table>
 
-<h2>Projekt-Einstellungen</h2>
+<h2>Projekt-Einstellungen &amp; Stammdaten</h2>
 <div class="bar" id="proj-settings">
   <label for="ps-projekt">Projekt-ID:</label>
   <input id="ps-projekt" size="24" autocomplete="off">
   <button type="button" id="ps-load">Laden</button>
   <label><input type="checkbox" id="ps-rag"> RAG aktiviert</label>
   <button type="button" id="ps-save">Speichern</button>
+  <button type="button" id="ps-ragcheck">RAG-Einrichtung pr&uuml;fen</button>
   <span id="ps-status" class="note"></span>
 </div>
+<div id="ps-ragstatus" class="note"></div>
 
 <script>
 %PURE_JS%
@@ -823,6 +825,39 @@ document.getElementById("ps-save").addEventListener("click", async () => {
     statusEl.textContent = "Netzwerkfehler: " + e.message;
   }
 });
+// BRIDGE-0099: RAG-Stammdaten je Projekt - reine Anzeige (rag_prereqs.check),
+// kein Skriptstart aus dem Web UI (fail-closed, siehe BRIDGE-0084).
+document.getElementById("ps-ragcheck").addEventListener("click", async () => {
+  const pid = document.getElementById("ps-projekt").value.trim();
+  const out = document.getElementById("ps-ragstatus");
+  if (!pid) { out.textContent = "Projekt-ID fehlt."; return; }
+  out.textContent = "Prüfe...";
+  try {
+    const res = await fetch("/api/project/" + encodeURIComponent(pid) + "/rag-status");
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      out.textContent = "Fehler: " + (data.error || "HTTP " + res.status);
+      return;
+    }
+    if (!data.rag_enabled) {
+      out.textContent = "RAG ist für dieses Projekt nicht aktiviert. Setup-Skript: " +
+        data.setup_script + " | Doku: " + data.docs_ref;
+      return;
+    }
+    const p = data.prereqs || {};
+    const missing = (p.missing || []).join(", ") || "keine";
+    out.textContent =
+      "Ollama erreichbar: " + (p.ollama_reachable ? "ja" : "nein") +
+      " | Embedding-Modell vorhanden: " + (p.embed_model_present ? "ja" : "nein") +
+      " | Index-Klon vorhanden: " + (p.index_clone_exists ? "ja" : "nein") +
+      " | Fehlend: " + missing +
+      " | Setup-Skript: " + data.setup_script +
+      " | Inventar-Skript: " + data.inventory_script +
+      " | Doku: " + data.docs_ref;
+  } catch(e) {
+    out.textContent = "Netzwerkfehler: " + e.message;
+  }
+});
 
 refresh();
 setInterval(refresh, REFRESH_MS);
@@ -886,9 +921,41 @@ class _Handler(BaseHTTPRequestHandler):
             self._json(200, payload)
             return
         if route.startswith("/api/project/"):
+            rest = route[len("/api/project/"):]
+            if rest.endswith("/rag-status"):
+                # BRIDGE-0099: GET /api/project/<id>/rag-status - Stammdaten-
+                # Anzeige der RAG-Einrichtung (April-Fund: Setup-Skripte und
+                # Doku aus BRIDGE-0084/0093 existieren im Repo, waren aber im
+                # Web UI an keiner Stelle sichtbar). Reine Erkennung
+                # (rag_prereqs.check, BRIDGE-0083) - keine Installation, kein
+                # Skriptstart aus dem Web UI (fail-closed, Mensch-bestaetigter
+                # Klick bleibt BRIDGE-0084s Grundsatz).
+                project_id = rest[: -len("/rag-status")]
+                try:
+                    profile = profiles.load_profile(
+                        self.server.store.root, project_id,
+                        schema_dir=self.server.store.schema_dir)
+                except profiles.ProfileError as exc:
+                    self._json(404, {"error": str(exc)})
+                    return
+                rag_enabled = profile.get("rag_enabled", False)
+                payload = {
+                    "project_id": project_id,
+                    "rag_enabled": rag_enabled,
+                    "rag_index_repo": profile.get("rag_index_repo"),
+                    "setup_script": "scripts/rag-setup.ps1",
+                    "inventory_script": "scripts/rag-ollama-inventory.ps1",
+                    "docs_ref": "docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md",
+                    "prereqs": None,
+                }
+                if rag_enabled:
+                    index_path = runner.rag_index_clone_path(self.server.store)
+                    payload["prereqs"] = rag_prereqs.check(index_path)
+                self._json(200, payload)
+                return
             # BRIDGE-0081: GET /api/project/<id> - Profil lesen (nur die fuer
             # die Einstellungsseite relevanten Felder, kein Komplettdump).
-            project_id = route[len("/api/project/"):]
+            project_id = rest
             try:
                 profile = profiles.load_profile(self.server.store.root, project_id,
                                                 schema_dir=self.server.store.schema_dir)
