@@ -56,15 +56,15 @@ Lieferzeile.
 
 ## Akzeptanzkriterien
 
-- [ ] `wp-lint.py` lehnt ein WP ohne Modell/Denkstufe-Zeile ab (Regressionstest:
+- [x] `wp-lint.py` lehnt ein WP ohne Modell/Denkstufe-Zeile ab (Regressionstest:
   Kopie von `work-packages/BRIDGE-095.md`, das diese Zeile nachweislich nicht
   hat - Exit 1, konkrete Fehlermeldung)
-- [ ] `wp-lint.py` akzeptiert ein vollstaendiges Paar (Test mit
+- [x] `wp-lint.py` akzeptiert ein vollstaendiges Paar (Test mit
   `work-packages/BRIDGE-090.md` + einer dazu passenden, minimalen Test-YAML)
-- [ ] Erkennt Modell/Denkstufe-Abweichung zwischen WP und YAML (Test:
+- [x] Erkennt Modell/Denkstufe-Abweichung zwischen WP und YAML (Test:
   WP sagt MEDIUM, YAML sagt LOW -> Exit 1)
-- [ ] Erkennt `bridge_task_id`-Inkonsistenz zwischen WP-Titel und YAML
-- [ ] YAML-Schema-Verstoss (z. B. fehlendes `acceptance_criteria`) wird ueber
+- [x] Erkennt `bridge_task_id`-Inkonsistenz zwischen WP-Titel und YAML
+- [x] YAML-Schema-Verstoss (z. B. fehlendes `acceptance_criteria`) wird ueber
   die bestehende Schema-Validierung erkannt, keine eigene Feldliste gepflegt
 - [ ] `acb-auftrag.md` §0 referenziert das Skript, bestehendes Verhalten ohne
   das Skript (falls in einem anderen Checkout nicht vorhanden) unveraendert
