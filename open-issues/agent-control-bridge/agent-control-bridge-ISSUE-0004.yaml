@@ -2,10 +2,15 @@ schema_version: '1.0'
 kind: open_issue
 issue_id: agent-control-bridge-ISSUE-0004
 project_id: agent-control-bridge
-status: OPEN
+status: CLOSED
 summary: Urspruengliche Testzahl-Diskrepanz (576 in BRIDGE-0088 WP, real 575 seit
   BRIDGE-0087) ursaechlich nicht geklaert - durch BRIDGE-0089 nur umformuliert, nicht
   untersucht; kein Suite-Lauf allein dafuer vorgesehen (KONZEPT-PRUEFRUNDEN-INTEGRATION_V2
   Abschnitt 4 Punkt 2)
 origin_task_id: BRIDGE-0088
 created_at: '2026-10-09T10:42:31Z'
+closed_at: '2026-10-09T10:50:52Z'
+closed_by: steuerchat
+note: 'Bereits durch BRIDGE-0087 erklaert (work-packages/BRIDGE-087.md:63/70): test_claim_exact_path_only
+  entfernt, daher 575 statt 576 - kein ungeklaerter Befund. Siehe auch ACB-UEBERGABE-v18.md
+  Abschnitt 1 (Issue bereits dort als entfallen vermerkt, vor Anlage uebersehen).'
