@@ -1,0 +1,29 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0017
+project_id: wetter-app
+title: Export-Pipeline fuer gemessenen Wind (GW2000A) - Pi-seitig
+description: 'Details: work-packages/WETTER-017.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: 17a6d6a1224b7c96ed451b41e4462011233efbb1
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- 'climac_sftp.py: vier neue SENSOR_MEASUREMENTS-Keys (wind_speed/wind_gust/wind_dir/wind_gust_max)'
+- 'export_live.py: alle vier Keys liefern aktuelle Werte in live.json'
+- 'export_daily.py: wind_speed_min/_max/_mean in months/YYYY-MM.json'
+- 'export_history.py: years.wind (Jahresreihe) + wind_monthly (Monats-Min/Max/Ø) ab
+  2025-01-22 in history.json'
+- Scope eingehalten (nur die vier pi-scripts/*.py-Dateien), py_compile fehlerfrei
+status: RUNNING
+created_at: '2026-10-09T00:00:00Z'
+created_by: browser-claude
+task_version: 5
