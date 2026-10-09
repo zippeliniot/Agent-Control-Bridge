@@ -1,0 +1,44 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0102
+project_id: agent-control-bridge
+title: Pruefskript fuer WP-Kopf + Staging-YAML vor Uebergabe (wp-lint.py)
+description: 'Details: work-packages/BRIDGE-102.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: c9e459a
+  allowed_changed_files:
+  - scripts/wp-lint.py
+  - tests/test_wp_lint.py
+  - .claude/commands/acb-auftrag.md
+  - docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+  - work-packages/BRIDGE-102.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- scripts/wp-lint.py
+- tests/test_wp_lint.py
+- .claude/commands/acb-auftrag.md
+- docs/ACB-STEUERCHAT-ARBEITSWEISE.md
+- work-packages/BRIDGE-102.md
+acceptance_criteria:
+- wp-lint.py lehnt WP ohne Modell/Denkstufe-Zeile ab (Exit 1, konkrete Fehlermeldung)
+- wp-lint.py akzeptiert vollstaendiges Paar (Exit 0)
+- erkennt Modell/Denkstufe-Abweichung zwischen WP und YAML
+- erkennt bridge_task_id-Inkonsistenz zwischen WP-Titel und YAML
+- YAML-Schema-Verstoss wird ueber bestehende Schema-Validierung erkannt
+- acb-auftrag.md Paragraph 0 referenziert das Skript
+- ACB-STEUERCHAT-ARBEITSWEISE.md Abschnitt 3 nennt die neue Steuerchat-Pflicht
+- Volle Suite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-09T17:55:00Z'
+created_by: browser-claude
+task_version: 3
