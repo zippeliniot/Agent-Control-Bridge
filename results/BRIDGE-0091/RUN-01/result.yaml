@@ -1,0 +1,47 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0091
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 24f8f1035d906cc473ccfedfcb176295746669c4
+executor: claude-code
+started_at: '2026-10-09T07:38:22Z'
+ended_at: '2026-10-09T09:51:07Z'
+created_by: claude-code@DES11
+base_head: 857cb489a49f72c44cfa4de06f78adafc230d8a3
+commits:
+- sha: aa4ec38bc647764a1490af25a8a533dbdd087cae
+  message: 'BRIDGE-0091: WP + task create (Store-Zustand)'
+- sha: 87ad45efc60d4123e3e53bfc67df0306dbcf7604
+  message: 'Ops: BRIDGE-0091 run_start (Steuerchat-Aktion via CLI)'
+- sha: a2600a48470f0b4e58a9b50ad1dd7bfe38c1e594
+  message: 'Uebergabe Wetter-Steuerchat: Stand nach WETTER-0015 + Standardablauf +
+    Dorfschaft-Deploy'
+- sha: 22b4233f7787e16f3084340a7e0347b4bd96c821
+  message: 'Uebergabe Wetter-Steuerchat: korrekte Fassung Stand 2026-10-09 (Fix a2600a4)'
+- sha: 4f0c8d86028267d333a54b9a456e3f0e4e60b913
+  message: 'BRIDGE-0091 Teil A: Git-LFS-Erkennung'
+- sha: 47ff9a6cd5b91af409568ab8826c8fe2adeb9c79
+  message: 'BRIDGE-0091 Teil B: LFS in Aktionsliste'
+- sha: 6e837255dd2c86adcca29362f88fc1ada7a4697b
+  message: 'BRIDGE-0091 Teil C: LFS-Installation + PATH-Refresh'
+- sha: cce873ae1c0638b74b4eb5bddbea6b9a0ba7973c
+  message: 'BRIDGE-0091 Teil D: LFS-Pull bei vorhandenem Klon + Doku'
+- sha: 24f8f1035d906cc473ccfedfcb176295746669c4
+  message: 'BRIDGE-0091: Abschluss-Haken (Suite 575/575)'
+changed_files:
+- audit/audit.jsonl
+- docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md
+- docs/handover/WETTER-STEUERCHAT-UEBERGABE.md
+- results/BRIDGE-0091/RUN-01/heartbeat.json
+- scripts/rag-setup.ps1
+- tasks/BRIDGE-0091/task.yaml
+- work-packages/BRIDGE-091.md
+summary: rag-setup.ps1 erkennt fehlendes Git LFS vorab, listet es in den geplanten
+  Schritten, installiert es nach Bestaetigung inkl. PATH-Refresh und git lfs install
+  und holt LFS-Dateien auch bei vorhandenem Klon nach. Doku RAG-INFRASTRUKTUR-VORAUSSETZUNGEN
+  Abschnitt 4 ergaenzt. Volle Suite 575/575 OK.
+physical_machine: DES11
