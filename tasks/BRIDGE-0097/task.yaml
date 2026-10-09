@@ -29,7 +29,7 @@ acceptance_criteria:
 - supersedes traegt Geltungsbereich pro Eintrag
 - affects/implemented_by/verified_by/source_refs sind Repo+Commit-gebunden
 - Neue Tests gruen, volle Suite gruen
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-10-09T14:25:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 8
