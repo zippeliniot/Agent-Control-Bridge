@@ -1,0 +1,32 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0094
+project_id: agent-control-bridge
+title: Drei-Schichten-Architektur fuer Steering Continuity spezifizieren
+description: 'Details: work-packages/BRIDGE-094.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: d7323138ff6356d783bc8359525f867ff47cbabf
+  allowed_changed_files:
+  - docs/concepts/DREI-SCHICHTEN-ARCHITEKTUR-SPEZIFIKATION.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- docs/concepts/DREI-SCHICHTEN-ARCHITEKTUR-SPEZIFIKATION.md
+acceptance_criteria:
+- Vorbedingungen (BRIDGE-0090, V2 Paragraph6, Mehrprojekt-RAG) vor Beginn verifiziert
+- Drei Schichten gegen bestehende Dokumente abgegrenzt
+- Symbol-/Datei-Graph gegen echten Dorfschaft-Stack spezifiziert
+- Offene Folgefragen explizit als nicht entschieden markiert
+status: WAITING_FOR_COPY_TO_CONTROL
+created_at: '2026-10-09T13:20:00Z'
+created_by: browser-claude
+task_version: 7
