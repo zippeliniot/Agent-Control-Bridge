@@ -1,0 +1,45 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0101
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 093b50383b8875259cd953a7fed93da5c9d5d66a
+executor: claude-code
+started_at: '2026-10-09T18:00:14Z'
+ended_at: '2026-10-09T18:06:29Z'
+created_by: claude-code@DES11
+base_head: c9e459a
+commits:
+- sha: 4fde65289ccdabb1cc473d9b2da00a57e4714649
+  message: 'BRIDGE-0101: WP'
+- sha: 14b639acb941b6a021af1573281c9f52e191d21e
+  message: 'Ops: BRIDGE-0101 task_create (Steuerchat-Aktion via CLI)'
+- sha: 0cc047d3c6da76f6c26a96f75fef47dc0081a283
+  message: 'Ops: BRIDGE-0101 run_start (Steuerchat-Aktion via CLI)'
+- sha: c8d5d82b09310f7d6eeab90795865dd65de0b72a
+  message: 'BRIDGE-0101 Teil A: push_mode draft fail-closed in CLI (project.yaml-Umschaltung
+    am Ende)'
+- sha: c1ba3d2f4cd1be1b990a547855b7cf6511397eea
+  message: 'BRIDGE-0101 Teil A: Haken'
+- sha: 2e990564f16d32a37b79c4982e0cec0efc5ff2a9
+  message: 'BRIDGE-0101 Teil B: projektbezogene changed_files'
+- sha: 093b50383b8875259cd953a7fed93da5c9d5d66a
+  message: 'BRIDGE-0101: Suite gruen (599)'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0101/RUN-01/heartbeat.json
+- src/bridge/cli.py
+- src/bridge/importer.py
+- tasks/BRIDGE-0101/task.yaml
+- tests/test_cli.py
+- tests/test_importer.py
+- work-packages/BRIDGE-101.md
+summary: 'push_mode: draft wird in task create/copied/archive und run start/finish
+  fail-closed durchgesetzt (Fehlermeldung verweist auf bridge draft write); changed_files
+  filtert Bridge-Pfade anderer Projekte heraus (audit.jsonl bewusst nicht). Volle
+  Suite 599/599 OK. project.yaml-Umschaltung auf draft folgt als letzter Commit nach
+  run finish, da draft run finish sonst blockiert.'
+physical_machine: DES11
