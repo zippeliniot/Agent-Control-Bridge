@@ -1,8 +1,12 @@
 # ENTSCHEIDUNG: Formalisierung von "Decision" - Nachtrag zu BRIDGE-0073 (V2)
 
-**Status: ENTWURF - ENTSCHEIDUNG AUSSTEHEND.** BRIDGE-0073 (`ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md`)
-bleibt bis zu einer ausdruecklichen Entscheidung durch April unveraendert gueltig. Dieses Dokument
-aendert nichts am Repo-Verhalten; es ist ein Vorschlag zur Diskussion, erstellt im Rahmen von BRIDGE-0088.
+**Status: ENTSCHIEDEN (teilweise Zustimmung, 2026-10-09) - siehe Abschnitt 7.** BRIDGE-0073
+(`ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH.md`) Option B bleibt in der Prosa-Begruendung
+("Entscheidungen sind bewusst menschlicher Text") unveraendert gueltig; nur die
+Formalisierungsebene aus Abschnitt 3 ist durch April angenommen. Dieses Dokument aendert fuer
+sich genommen noch nichts am Repo-Verhalten - die Umsetzung (`schemas/decision.schema.yaml`,
+`task.schema.yaml`-Erweiterung) ist ein eigener, hier nicht mitentschiedener Folgeauftrag
+(Abschnitt 5), erstellt im Rahmen von BRIDGE-0088.
 
 Stand 2026-10-07. Nachtrag, kein Ersatz fuer V1.
 
@@ -93,3 +97,20 @@ werden (BRIDGE-0073s eigentliche Begruendung "Entscheidungen sind bewusst mensch
 dieses Dokuments, bleibt davon unberuehrt). Betroffen ist also nur die Formalisierungsebene, nicht
 die Prosa-Ebene - keine pauschale Aufhebung. Bis zur ausdruecklichen Zustimmung bleibt V1
 massgeblich.
+
+## 7. Entscheidung (2026-10-09)
+
+April hat der Formalisierung aus Abschnitt 3 zugestimmt - **teilweise**, wie in Abschnitt 6
+umschrieben: nur die Formalisierungsebene (append-only Ereignisse, `supersedes`,
+`affects`/`implemented_by`/`verified_by`) ist angenommen, nicht die Folgefragen aus Abschnitt 5
+und nicht BRIDGE-0073s Prosa-Begruendung selbst. Damit:
+
+- BRIDGE-0073 Option B bleibt in der Begruendung ("Entscheidungen sind bewusst menschlicher
+  Text") unveraendert gueltig - keine pauschale Aufhebung.
+- Die Formalisierungsebene aus Abschnitt 3 (3a/3b/3c) gilt als angenommenes Zielbild fuer eine
+  kuenftige Umsetzung, ist damit aber **noch nicht umgesetzt**.
+- Jede Folgefrage aus Abschnitt 5 (`schemas/decision.schema.yaml`, `task.schema.yaml`-Erweiterung,
+  Governance-Pfad) bleibt ein eigener, hier nicht mitentschiedener BRIDGE-Auftrag - keine
+  stillschweigende Erweiterung, `additionalProperties: false` bleibt die Grundhaltung.
+- Kein Code, kein Schema-Eintrag aendert sich durch diese Entscheidung allein; die Umsetzung
+  braucht einen eigenen Auftrag mit eigener Pruefrunde.
