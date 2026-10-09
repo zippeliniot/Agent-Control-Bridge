@@ -112,7 +112,7 @@ bei Fehlschlag `[ FAIL ]` mit Hinweis, aber Skript nicht abbrechen (bestehendes 
 - [x] `docs/concepts/RAG-INFRASTRUKTUR-VORAUSSETZUNGEN.md` Abschnitt 4 um einen Satz ergaenzt: Git
       LFS wird seit BRIDGE-0091 vom Skript selbst erkannt/installiert, nicht mehr nur als manuelle
       Voraussetzung in Abschnitt 3 beschrieben (Abschnitt 3 bleibt als Fallback-Beschreibung stehen).
-- [ ] Volle Suite einmal am Ende, nur letzte 3 Zeilen (reines PowerShell-Skript, keine
+- [x] Volle Suite einmal am Ende, nur letzte 3 Zeilen (reines PowerShell-Skript, keine
       Python-Testabdeckung dafuer vorhanden - Suite dient nur dem Nachweis, dass der restliche
       Bridge-Code unberuehrt ist).
-- [ ] `git status` sauber, gepusht, Footer.
+- [x] `git status` sauber, gepusht, Footer.
