@@ -26,7 +26,7 @@ acceptance_criteria:
 - Drei Schichten gegen bestehende Dokumente abgegrenzt
 - Symbol-/Datei-Graph gegen echten Dorfschaft-Stack spezifiziert
 - Offene Folgefragen explizit als nicht entschieden markiert
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-10-09T13:20:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 8
