@@ -1,0 +1,19 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0097
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: ccb-session
+branch: main
+head: 850eb87879a80326066392e8a7bf73169d2a30ca
+executor: claude-code
+started_at: '2026-10-09T12:19:00Z'
+ended_at: '2026-10-09T12:19:00Z'
+created_by: claude-code@vm
+base_head: 850eb87879a80326066392e8a7bf73169d2a30ca
+summary: 'Decision-Log-Schema entworfen: schemas/decision.schema.yaml (decision_event,
+  append-only, 5 Ereignistypen, supersedes mit Geltungsbereich, affects/implemented_by/verified_by/source_refs
+  Repo+Commit-gebunden). Keine CLI-/Store-Anbindung, bewusst abgegrenzt. 591/591 Tests
+  gruen (10 neu).'
+physical_machine: vm

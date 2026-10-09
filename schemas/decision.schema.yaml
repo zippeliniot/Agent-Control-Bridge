@@ -1,0 +1,218 @@
+# Agent Control Bridge - Decision-Event-Schema
+# BRIDGE-0097 . Entscheidung: docs/concepts/ENTSCHEIDUNG-STEERING-CONTINUITY-ABGLEICH-V2.md
+# §3/§5/§7 (April, 09.10.2026 - Formalisierungsebene angenommen, Folgefragen eigene Auftraege).
+#
+# Ein Objekt dieses Schemas ist EIN append-only Ereignis in der Geschichte einer
+# Entscheidung - niemals ein mutierter Gesamtzustand. Mehrere Ereignisse zur
+# gleichen decision_id bilden zusammen den Verlauf; "aktueller Status" oder
+# "wodurch abgeloest" sind daraus BERECHNETE Ansichten, kein gespeichertes Feld
+# (ENTSCHEIDUNG-V2 §3a: "superseded_by existiert nur in einer daraus
+# berechneten, nicht gespeicherten Ansicht"). Ein spaeteres Ereignis darf ein
+# frueheres nie nachtraeglich aendern oder ersetzen - nur ein neues Ereignis
+# anhaengen.
+#
+# Ersetzt NICHT die menschliche Prosa-Entscheidung (`docs/concepts/
+# ENTSCHEIDUNG-*.md`, BRIDGE-0073 §1: "Entscheidungen sind bewusst
+# menschlicher Text") - jedes Ereignis verweist per `doc_ref` auf genau die
+# Prosadatei, die es betrifft, und ergaenzt sie nur um maschinenlesbare
+# Referenzfelder.
+#
+# Reiner Schema-Entwurf (BRIDGE-0097), KEINE CLI-/Store-Anbindung - die
+# Speicherform (eine Datei pro decision_id mit append-only Ereignisliste,
+# analog `audit/audit.jsonl`, oder eigenes Verzeichnis je Ereignis) ist eine
+# eigene, hier nicht entschiedene Folgefrage.
+#
+# JSON Schema (Draft 2020-12) in YAML-Form, additionalProperties: false (fail-closed).
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/zippeliniot/Agent-Control-Bridge/schemas/decision.schema.yaml"
+title: "Agent Control Bridge Decision Event"
+description: >-
+  Ein append-only Ereignis im Verlauf einer Entscheidung (Vorschlag, Annahme,
+  Ablehnung, Widerruf oder - ggf. teilweise - Abloesung).
+type: object
+additionalProperties: false
+
+$defs:
+  revision_ref:
+    description: >-
+      Repo+Commit-gebundener Verweis (ENTSCHEIDUNG-V2 §3c: "an Repository +
+      Commit, nicht nur an Dateipfade" - sonst nach Umbenennungen veraltet).
+    type: object
+    additionalProperties: false
+    required: [repo, revision, path]
+    properties:
+      repo:
+        description: "GitHub-Slug oder lokaler Repo-Name, z. B. zippeliniot/Agent-Control-Bridge."
+        type: string
+        minLength: 1
+      revision:
+        description: "Commit-SHA oder definierter Snapshot-Bezeichner."
+        type: string
+        minLength: 1
+      path:
+        description: >-
+          Pfad relativ zum Repo. Die betroffene Einheit ist nicht auf Code
+          beschraenkt - kann ein Fachkonzept, Kapitel, eine Komponente oder
+          Schnittstelle sein (ENTSCHEIDUNG-V2 §3c).
+        type: string
+        minLength: 1
+      note:
+        description: "Optionale Praezisierung (z. B. Zeilenbereich, Funktionsname)."
+        type: ["string", "null"]
+        default: null
+
+  scoped_decision_ref:
+    description: >-
+      Verweis auf eine andere Entscheidung mit Geltungsbereich - eine
+      Abloesung kann nur einen Teilaspekt der alten Entscheidung betreffen,
+      der Rest bleibt gueltig (ENTSCHEIDUNG-V2 §3a).
+    type: object
+    additionalProperties: false
+    required: [decision_id, scope]
+    properties:
+      decision_id:
+        type: string
+        minLength: 1
+      scope:
+        description: >-
+          Welcher Teilaspekt der referenzierten Entscheidung betroffen ist -
+          "gesamt" fuer vollstaendige Abloesung, sonst ein kurzer Freitext-
+          Bezug (z. B. Abschnittsnummer der Prosadatei).
+        type: string
+        minLength: 1
+
+required:
+  - schema_version
+  - kind
+  - decision_id
+  - project_id
+  - event_type
+  - event_at
+  - actor
+  - title
+  - doc_ref
+
+properties:
+  schema_version:
+    description: "Version dieses Schemas, fuer sichere Weiterentwicklung."
+    type: string
+    pattern: "^[0-9]+\\.[0-9]+$"
+
+  kind:
+    description: "Fester Diskriminator. Schuetzt fail-closed vor Fehlinterpretation fremder Dateien."
+    const: "decision_event"
+
+  decision_id:
+    description: "Systemweit eindeutige ID, <project_id>-DECISION-NNNN."
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*-DECISION-[0-9]{4}$"
+
+  project_id:
+    description: "Projektkennung, z. B. agent-control-bridge oder dorfschaft."
+    type: string
+    minLength: 1
+
+  event_type:
+    description: >-
+      Vier getrennte Ereignisse statt nur "Annahme/Ablehnung"
+      (ENTSCHEIDUNG-V2 §3a) - PROPOSED ist die Entstehung (i. d. R. das
+      Anlegen der Prosadatei selbst), die uebrigen drei sind die moeglichen
+      Folgeereignisse. Eine neu vorgeschlagene Entscheidung verdraengt eine
+      bereits ACCEPTED nicht automatisch - erst ein eigenes ACCEPTED-Ereignis
+      tut das.
+    type: string
+    enum: [PROPOSED, ACCEPTED, REJECTED, REVOKED, SUPERSEDED]
+
+  event_at:
+    description: "Zeitpunkt dieses Ereignisses (ISO 8601 / RFC 3339)."
+    type: string
+    format: date-time
+
+  actor:
+    description: "Wer dieses Ereignis ausgeloest/festgehalten hat (Mensch oder Steuerchat-Rolle)."
+    type: string
+    minLength: 1
+
+  title:
+    description: "Kurztitel der Entscheidung, menschenlesbar."
+    type: string
+    minLength: 1
+
+  doc_ref:
+    description: >-
+      Pfad zur menschlichen Prosa-Entscheidungsdatei (docs/concepts/
+      ENTSCHEIDUNG-*.md), die primaere Quelle bleibt diese Datei, nicht
+      dieses Ereignis (BRIDGE-0073 §1).
+    type: string
+    minLength: 1
+
+  origin_task_id:
+    description: >-
+      Entstehungsauftrag - OPTIONAL (ENTSCHEIDUNG-V2 §3b: "eine Entscheidung
+      kann einem Auftrag vorausgehen oder unabhaengig davon entstehen").
+    type: ["string", "null"]
+    default: null
+
+  applies_to:
+    description: >-
+      Geltungsbereich der Entscheidung (ENTSCHEIDUNG-V2 §3b) - Freitext oder
+      kurze Liste betroffener Bereiche/Komponenten.
+    type: ["string", "null"]
+    default: null
+
+  affected_task_ids:
+    description: >-
+      Zu ueberpruefende Arbeiten (ENTSCHEIDUNG-V2 §3b) - Auftraege, die im
+      Licht dieser Entscheidung erneut betrachtet werden sollten.
+    type: array
+    items:
+      type: string
+    default: []
+
+  source_refs:
+    description: "Begruendungsquellen (ENTSCHEIDUNG-V2 §3b)."
+    type: array
+    items:
+      $ref: "#/$defs/revision_ref"
+    default: []
+
+  affects:
+    description: >-
+      Betroffene Einheit, ohne dass bereits Code geaendert wurde
+      (ENTSCHEIDUNG-V2 §3c) - z. B. ein Fachkonzept oder eine Komponente.
+    type: array
+    items:
+      $ref: "#/$defs/revision_ref"
+    default: []
+
+  implemented_by:
+    description: "Konkrete Umsetzung (ENTSCHEIDUNG-V2 §3c)."
+    type: array
+    items:
+      $ref: "#/$defs/revision_ref"
+    default: []
+
+  verified_by:
+    description: "Pruefnachweis (ENTSCHEIDUNG-V2 §3c)."
+    type: array
+    items:
+      $ref: "#/$defs/revision_ref"
+    default: []
+
+  supersedes:
+    description: >-
+      NUR auf einem SUPERSEDED-Ereignis gesetzt (Schema erzwingt das nicht -
+      fail-closed pruefbar in einem spaeteren Validierungsschritt, nicht hier
+      ueber JSON-Schema-Konditionale, um die Lesbarkeit zu erhalten). Jeder
+      Eintrag trägt einen eigenen Geltungsbereich - eine Abloesung kann
+      teilweise sein (ENTSCHEIDUNG-V2 §3a).
+    type: array
+    items:
+      $ref: "#/$defs/scoped_decision_ref"
+    default: []
+
+  note:
+    description: "Optionale Zusatznotiz (z. B. Begruendung bei REJECTED/REVOKED)."
+    type: ["string", "null"]
+    default: null
