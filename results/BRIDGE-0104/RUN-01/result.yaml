@@ -1,0 +1,38 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: BRIDGE-0104
+project_id: agent-control-bridge
+run_id: RUN-01
+status: COMPLETED
+repository: dev
+branch: main
+head: 949c1765f08bfba445245b02ead20e19402b009d
+executor: claude-code
+started_at: '2026-10-10T16:23:28Z'
+ended_at: '2026-10-10T17:14:09Z'
+created_by: claude-code@DES11
+base_head: cee9353eac5b3f7a5d0618deea234eaae13e6c80
+commits:
+- sha: 489d6c3109c0fdabc2144486407b6cee2941324b
+  message: 'BRIDGE-0104: Arbeitspaket'
+- sha: 5624ddedf3d00a88462b8e678ae5ec697de1f075
+  message: 'Ops: BRIDGE-0104 task_create (Steuerchat-Aktion via CLI)'
+- sha: ca4652a404c622e9647ae770b7d602720b4c6d05
+  message: 'Ops: BRIDGE-0104 run_start (Steuerchat-Aktion via CLI)'
+- sha: e2cc82d05237d11fef3da02108e8e7bcf5e0807e
+  message: 'BRIDGE-0104 Teil A: wp-lint Pruefungen 5-7 + Tests'
+- sha: 949c1765f08bfba445245b02ead20e19402b009d
+  message: 'BRIDGE-0104 Teil B: Suite 617/617 gruen, Kriterium abgehakt'
+changed_files:
+- audit/audit.jsonl
+- results/BRIDGE-0104/RUN-01/heartbeat.json
+- scripts/wp-lint.py
+- tasks/BRIDGE-0104/task.yaml
+- tests/test_wp_lint.py
+- work-packages/BRIDGE-104.md
+summary: scripts/wp-lint.py um Pruefung 5 (ISSUE-Referenzen aufloesbar, Exit 1), 6
+  (abgeschlossen zitierte BRIDGE-ID ohne task.yaml, nur Warnung) und 7 (Akzeptanzkriterien-Sektion
+  + nichtleere Scope-Zeile, Exit 1) erweitert, neuer Parameter --root. tests/test_wp_lint.py
+  um 10 Tests ergaenzt, 090-Fixture durch synthetisches WP ersetzt. Volle Suite 617/617
+  gruen.
+physical_machine: DES11
