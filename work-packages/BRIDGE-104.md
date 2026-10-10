@@ -78,21 +78,21 @@ Bei jedem Verstoss: genau benannte Fehler-/Warnmeldung auf stderr
 
 ## Akzeptanzkriterien
 
-- [ ] Pruefung 5: WP mit einer frei erfundenen, nicht existierenden
+- [x] Pruefung 5: WP mit einer frei erfundenen, nicht existierenden
   ISSUE-Referenz wird abgelehnt (Exit 1, konkrete Fehlermeldung)
-- [ ] Pruefung 5: WP mit einer tatsaechlich existierenden ISSUE-Referenz
+- [x] Pruefung 5: WP mit einer tatsaechlich existierenden ISSUE-Referenz
   (z. B. `ISSUE-0006`) wird akzeptiert
-- [ ] Pruefung 6: WP mit `BRIDGE-Referenz` + Abschlusswort ohne
+- [x] Pruefung 6: WP mit `BRIDGE-Referenz` + Abschlusswort ohne
   zugehoeriges `task.yaml` erzeugt eine Warnung auf stderr, Exit bleibt 0
   (Regressionstest analog dem `BRIDGE-0092`/`ISSUE-0006`-Fall)
-- [ ] Pruefung 6: WP mit `BRIDGE-Referenz` + Abschlusswort UND
+- [x] Pruefung 6: WP mit `BRIDGE-Referenz` + Abschlusswort UND
   existierendem `task.yaml` erzeugt keine Warnung
-- [ ] Pruefung 7: WP ohne `## Akzeptanzkriterien`-Sektion wird abgelehnt,
+- [x] Pruefung 7: WP ohne `## Akzeptanzkriterien`-Sektion wird abgelehnt,
   Exit 1
-- [ ] Pruefung 7: WP ohne (oder mit leerer) `Scope`-Zeile in der
+- [x] Pruefung 7: WP ohne (oder mit leerer) `Scope`-Zeile in der
   Kopftabelle wird abgelehnt, Exit 1
-- [ ] Die bestehenden vier Pruefungen aus BRIDGE-0102 bleiben unveraendert
+- [x] Die bestehenden vier Pruefungen aus BRIDGE-0102 bleiben unveraendert
   gruen (volle Regressionssuite)
-- [ ] `tests/test_wp_lint.py` um Tests fuer alle drei neuen Pruefungen
+- [x] `tests/test_wp_lint.py` um Tests fuer alle drei neuen Pruefungen
   erweitert
 - [ ] Volle Suite gruen
