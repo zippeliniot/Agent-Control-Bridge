@@ -36,7 +36,7 @@ acceptance_criteria:
 - Bestehende vier Pruefungen aus BRIDGE-0102 bleiben gruen
 - tests/test_wp_lint.py um alle drei neuen Pruefungen erweitert
 - Volle Suite gruen
-status: WAITING_FOR_COPY_TO_CONTROL
+status: REVIEW_REQUIRED
 created_at: '2026-10-10T15:45:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 8
