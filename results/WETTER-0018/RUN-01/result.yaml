@@ -1,0 +1,31 @@
+schema_version: '1.0'
+kind: bridge_result
+bridge_task_id: WETTER-0018
+project_id: wetter-app
+run_id: RUN-01
+status: COMPLETED
+repository: wetter-app
+branch: main
+head: 084592f14904e6b18395342f6d54f5d1a253197d
+executor: claude-code
+started_at: '2026-10-09T22:31:10Z'
+ended_at: '2026-10-09T22:45:17Z'
+created_by: claude-code@DES11
+base_head: 057df00
+commits:
+- sha: 084592f14904e6b18395342f6d54f5d1a253197d
+  message: 'Ops: WETTER-0018 run_start (Steuerchat-Aktion via CLI)'
+changed_files:
+- audit/audit.jsonl
+- results/WETTER-0018/RUN-01/heartbeat.json
+- tasks/WETTER-0018/task.yaml
+summary: 'Ziel-Repo-HEAD 13dee9f8d6d1afebeb5c09c419e60077f6428ab0 (main, gepusht).
+  export_daily.py: wind_gust_max zusaetzlich im SENSORS-Tupel -> erzeugt wind_gust_max_min/_max/_mean
+  in months/YYYY-MM.json (nur _max semantisch sinnvoll, Doku-Kommentar ergaenzt).
+  export_history.py: neue Konstante WIND_GUST_MAX_MEASUREMENTS, wind_gust_max_monthly
+  (flaches {jahr:[12 floats|null]}, nur Max-Reihe aus query_months) als neues Top-Level-Feld
+  in history.json, Logging-Zeile ergaenzt, Docstring-Kopf aktualisiert. Bestehende
+  Sensoren/Felder (inkl. wind/wind_monthly aus WETTER-0017) unveraendert. py_compile
+  beider Dateien fehlerfrei. Echte Datenverifikation steht aus - erfolgt separat auf
+  pi5-01 durch den Steuerchat mit April, NACH diesem Push, VOR Archivierung.'
+physical_machine: DES11
