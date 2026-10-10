@@ -64,5 +64,5 @@ Neues Dokument `docs/concepts/QUALITAETSRAHMEN-STEUERCHAT-UEBERGABEN.md` mit min
   Dopplung/kein Widerspruch zu deren bestehendem Inhalt
 - [x] Jeder Pflichtbestandteil hat eine Pruefbarkeitsfrage
 - [x] Kein Code, kein Schema, keine Aenderung an anderen Dateien als dem neuen Dokument
-- [ ] Volle Suite bleibt gruen (reine Doku-Aenderung, keine Regression zu erwarten, trotzdem
+- [x] Volle Suite bleibt gruen (reine Doku-Aenderung, keine Regression zu erwarten, trotzdem
   einmal am Ende laufen lassen und Zahl nennen)
