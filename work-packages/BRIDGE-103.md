@@ -56,13 +56,13 @@ Neues Dokument `docs/concepts/QUALITAETSRAHMEN-STEUERCHAT-UEBERGABEN.md` mit min
 
 ## Akzeptanzkriterien
 
-- [ ] Dokument enthaelt alle sechs in der externen Pruefung genannten Pflichtbestandteile,
+- [x] Dokument enthaelt alle sechs in der externen Pruefung genannten Pflichtbestandteile,
   nicht nur eine Teilmenge
-- [ ] Regel zur sichtbaren Ungeklaertheit ist enthalten und mit einem konkreten Beispiel aus
+- [x] Regel zur sichtbaren Ungeklaertheit ist enthalten und mit einem konkreten Beispiel aus
   dem Repo belegt (z. B. der v24-Kernbefund)
-- [ ] Abgrenzungstabelle zu `STANDARDSTART.md`/`ARBEITSWEISE.md` vorhanden, keine
+- [x] Abgrenzungstabelle zu `STANDARDSTART.md`/`ARBEITSWEISE.md` vorhanden, keine
   Dopplung/kein Widerspruch zu deren bestehendem Inhalt
-- [ ] Jeder Pflichtbestandteil hat eine Pruefbarkeitsfrage
-- [ ] Kein Code, kein Schema, keine Aenderung an anderen Dateien als dem neuen Dokument
+- [x] Jeder Pflichtbestandteil hat eine Pruefbarkeitsfrage
+- [x] Kein Code, kein Schema, keine Aenderung an anderen Dateien als dem neuen Dokument
 - [ ] Volle Suite bleibt gruen (reine Doku-Aenderung, keine Regression zu erwarten, trotzdem
   einmal am Ende laufen lassen und Zahl nennen)
