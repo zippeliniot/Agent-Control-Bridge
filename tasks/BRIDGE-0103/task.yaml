@@ -1,0 +1,35 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0103
+project_id: agent-control-bridge
+title: Qualitaetsrahmen fuer Steuerchat-Uebergaben spezifizieren
+description: 'Details: work-packages/BRIDGE-103.md'
+task_class: ARCHITECTURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: ba9d15de8805588b6f4df0b3ceb03da886525beb
+  allowed_changed_files:
+  - docs/concepts/QUALITAETSRAHMEN-STEUERCHAT-UEBERGABEN.md
+  - work-packages/BRIDGE-103.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- docs/concepts/QUALITAETSRAHMEN-STEUERCHAT-UEBERGABEN.md
+- work-packages/BRIDGE-103.md
+acceptance_criteria:
+- Dokument enthaelt alle sechs Pflichtbestandteile einer gueltigen Uebergabe
+- Regel zur sichtbaren Ungeklaertheit enthalten, mit Beispiel aus dem Repo belegt
+- Abgrenzungstabelle zu STANDARDSTART.md/ARBEITSWEISE.md vorhanden, keine Dopplung
+- Jeder Pflichtbestandteil hat eine Pruefbarkeitsfrage
+- Keine Code-/Schema-Aenderung, nur das neue Dokument
+- Volle Suite gruen
+status: RUNNING
+created_at: '2026-10-10T14:00:00Z'
+created_by: browser-claude
+task_version: 5
