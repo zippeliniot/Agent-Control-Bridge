@@ -95,4 +95,4 @@ Bei jedem Verstoss: genau benannte Fehler-/Warnmeldung auf stderr
   gruen (volle Regressionssuite)
 - [x] `tests/test_wp_lint.py` um Tests fuer alle drei neuen Pruefungen
   erweitert
-- [ ] Volle Suite gruen
+- [x] Volle Suite gruen
