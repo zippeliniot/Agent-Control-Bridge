@@ -23,7 +23,7 @@ acceptance_criteria:
   Max) als neues Top-Level-Feld in history.json'
 - Bestehende Felder/Sensoren (inkl. wind/wind_monthly aus WETTER-0017) unveraendert
 - Scope eingehalten (nur export_daily.py/export_history.py), py_compile fehlerfrei
-status: WAITING_FOR_COPY_TO_CONTROL
+status: ARCHIVED
 created_at: '2026-10-10T00:00:00Z'
 created_by: browser-claude
-task_version: 7
+task_version: 9

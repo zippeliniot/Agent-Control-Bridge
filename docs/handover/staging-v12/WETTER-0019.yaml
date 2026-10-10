@@ -1,0 +1,29 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: WETTER-0019
+project_id: wetter-app
+title: 'Wind-Card Umbau - Header analog Taschensee, Tabs, Tages-Max-Linien'
+description: 'Details: work-packages/WETTER-019.md'
+task_class: FEATURE
+repository: wetter-app
+branch: main
+git:
+  expected_head: 13dee9f8d6d1afebeb5c09c419e60077f6428ab0
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_PUSH
+acceptance_criteria:
+- '#wind-stats (Aktuell/Max/Oe-Zeile) aus index.html entfernt, .wind-thr-Legende bleibt im chart-head-value-Bereich erhalten (nicht entfernt)'
+- 'Neue Tab-Leiste (Aktuell/Woche/Monat/Jahr/Vergleich) in #wind-card analog .sw-tabs, neues js/wind.js vorhanden'
+- 'Tab Aktuell: bestehender Forecast-Balkenchart (getWindChartConfig) unveraendert, zusaetzlich horizontale Tages-Max-Linie pro Tag (heute aus live.json wind_gust_max, Zukunft aus Max der Forecast-Stundenwerte)'
+- 'Tabs Woche/Monat/Jahr/Vergleich: gemessene GW2000A-Historie (months/*.json wind_gust_max_max, history.json wind_gust_max_monthly), keine Forecast-Daten'
+- 'js/seewasser.js und #taschensee-card unveraendert, windZonesPlugin in charts.js unveraendert (4 Farbzonen bleiben)'
+- 'main.js: updateWindStatLine() und direkte windChart/getWindChartConfig-Aufrufe entfernt, stattdessen wind.initWind()/wind.refreshLive() eingebunden'
+- 'Scope eingehalten (index.html, js/wind.js neu, js/main.js), keine Aenderung an pi-scripts/*, py_compile/Syntax fehlerfrei'
+status: CREATED
+created_at: '2026-10-10T16:43:51Z'
+created_by: browser-claude
