@@ -1,0 +1,42 @@
+schema_version: '1.0'
+kind: bridge_task
+bridge_task_id: BRIDGE-0104
+project_id: agent-control-bridge
+title: wp-lint.py (BRIDGE-0102) um drei Pruefungen erweitern
+description: 'Details: work-packages/BRIDGE-104.md'
+task_class: FEATURE
+repository: Agent-Control-Bridge/dev
+branch: main
+git:
+  expected_head: cee9353eac5b3f7a5d0618deea234eaae13e6c80
+  allowed_changed_files:
+  - scripts/wp-lint.py
+  - tests/test_wp_lint.py
+  - work-packages/BRIDGE-104.md
+model: Claude Sonnet 5
+reasoning_level: MEDIUM
+executor: claude-code
+permissions:
+- WORKTREE_WRITE
+- TEST_EXECUTION
+- GIT_COMMIT
+- GIT_PUSH
+allowed_paths:
+- scripts/wp-lint.py
+- tests/test_wp_lint.py
+- work-packages/BRIDGE-104.md
+acceptance_criteria:
+- 'Pruefung 5: WP mit erfundener ISSUE-Referenz abgelehnt (Exit 1)'
+- 'Pruefung 5: WP mit existierender ISSUE-Referenz akzeptiert'
+- 'Pruefung 6: BRIDGE-Referenz+Abschlusswort ohne task.yaml erzeugt Warnung, Exit
+  0'
+- 'Pruefung 6: BRIDGE-Referenz+Abschlusswort mit existierendem task.yaml ohne Warnung'
+- 'Pruefung 7: fehlende Akzeptanzkriterien-Sektion abgelehnt (Exit 1)'
+- 'Pruefung 7: fehlende/leere Scope-Zeile abgelehnt (Exit 1)'
+- Bestehende vier Pruefungen aus BRIDGE-0102 bleiben gruen
+- tests/test_wp_lint.py um alle drei neuen Pruefungen erweitert
+- Volle Suite gruen
+status: WAITING_FOR_HANDOFF_TO_EXECUTOR
+created_at: '2026-10-10T15:45:00Z'
+created_by: browser-claude
+task_version: 3
